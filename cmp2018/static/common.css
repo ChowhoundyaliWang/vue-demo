@@ -1,0 +1,19 @@
+.mb-16{margin-bottom: 16px;}
+.fl{float:left;}
+.min-w{min-width: 1280px;}
+.page-content .el-form-item{margin-bottom: 0;}
+#userCreate .el-form-item .el-card.is-always-shadow{ width: 50%;}
+.page-content .el-card.is-always-shadow{ box-shadow: 0 2px 12px 0 rgba(0,0,0,.14); }
+.page-content .mx-tool-bar{ padding: 15px;background-color: #f2f2f2;border-radius: 3px;}
+.page-content h3{ border-bottom: 1px solid #e6e6e6; margin: 0 0 20px 0;padding-bottom: 10px;color: #48576a;}
+.page-content .el-form-item{margin:20px 0;}
+#userCreate .inp-long .el-input{width: 400px;}
+.page-content .el-input, #userCreate .inp-middle .el-input{width: 246px;}
+#userCreate .el-input{width:150px;}
+
+/* TABLE 样式设置 */
+.page-content .el-table td,.page-content .el-table th.is-leaf{border-bottom: 1px solid #cacbce;}
+.page-content .el-table--border td,.page-content .el-table--border th,.page-content .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed{border-right: 1px solid #cacbce;}
+.page-content .el-table--border,.page-content .el-table--group { border: 1px solid #cacbce; border-radius: 4px;}
+.page-content .el-table td,.page-content .el-table th{text-align: center;}
+.page-content .el-button--text,.page-content .el-button--text.is-disabled,.page-content .el-button--text.is-disabled:focus,.page-content .el-button--text.is-disabled:hover, .page-content .el-button--text:active{padding: 0;}
