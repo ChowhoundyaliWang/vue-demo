@@ -12,8 +12,12 @@
 #userCreate .el-input{width:150px;}
 
 /* TABLE 样式设置 */
-.page-content .el-table td,.page-content .el-table th.is-leaf{border-bottom: 1px solid #cacbce;}
+.page-content .mx-table .el-input__inner{height:29px;line-height: 29px;}
+.page-content .mx-table .el-input__icon{ line-height: 30px; }
+.page-content .mx-table .el-table__empty-block{min-height: 40px;}
+.page-content .el-table td,.page-content .el-table th.is-leaf{border-bottom: 1px solid #cacbce;padding: 5px 0;}
 .page-content .el-table--border td,.page-content .el-table--border th,.page-content .el-table__body-wrapper .el-table--border.is-scrolling-left~.el-table__fixed{border-right: 1px solid #cacbce;}
 .page-content .el-table--border,.page-content .el-table--group { border: 1px solid #cacbce; border-radius: 4px;}
 .page-content .el-table td,.page-content .el-table th{text-align: center;}
 .page-content .el-button--text,.page-content .el-button--text.is-disabled,.page-content .el-button--text.is-disabled:focus,.page-content .el-button--text.is-disabled:hover, .page-content .el-button--text:active{padding: 0;}
+#userCreate .hr-table td:nth-child(3) .el-input{width: 56px;}

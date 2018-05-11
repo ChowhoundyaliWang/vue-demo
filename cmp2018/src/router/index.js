@@ -4,6 +4,7 @@ import MyHomePage from '@/pages/MyHomePage'
 import UserManage from '@/pages/UserManage'
 import UserCreate from '@/pages/UserCreate'
 import TaskBookCreate from '@/pages/TaskBookCreate'
+import TaskBookNew from '@/pages/TaskBookNew'
 import TaskBookUnaudited from '@/pages/TaskBookUnaudited'
 import TaskBookPassed from '@/pages/TaskBookPassed'
 import TaskBookNotPassed from '@/pages/TaskBookNotPassed'
@@ -35,7 +36,7 @@ export default new Router({
     {
       path: '/TaskBookCreate',
       name: 'TaskBookCreate',
-      component: TaskBookCreate
+      component: TaskBookNew
     },
     {
       path:'/TaskBookUnaudited',
