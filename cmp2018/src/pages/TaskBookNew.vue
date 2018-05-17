@@ -61,50 +61,49 @@
 			            </el-select>
 				        <el-input v-model="tbInfos.triForm.defineEnd"></el-input>
 					</el-form-item>
-					<el-form-item label="项目类型" v-if="tbInfos.type == 3">
+					<el-form-item label="国内海外" v-if="tbInfos.type == 3">
 						<el-radio-group v-model="tbInfos.desForm.domesticOrOversea" @change="desRadioChange">
 							<el-radio :label="1">国内</el-radio>
 							<el-radio :label="2">海外</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item label="项目名称" v-if="tbInfos.type==3&&desType == 1">
-						<!-- <el-select placeholder="请选择" v-model="tbInfos.domProName.desInstitute">
+					<el-form-item label="项目名称" v-if="tbInfos.type == 3&& tbInfos.desForm.domesticOrOversea ==1">
+						<el-select placeholder="请选择" v-model="tbInfos.desForm.domProName.desInstitute">
 							<el-option v-for="item in desFirstList" :key="item.id" :label="item.name" :value="item.name"> 
 							</el-option>
 						</el-select>
-						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="tbInfos.domProName.city"></el-cascader>
-						<el-select placeholder="请选择" v-model="tbInfos.domProName.operator">
+						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="tbInfos.desForm.domProName.city"></el-cascader>
+						<el-select placeholder="请选择" v-model="tbInfos.desForm.domProName.operator">
 							<el-option v-for="item in desThirdList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="tbInfos.domProName.proType">
+						<el-select placeholder="请选择" v-model="tbInfos.desForm.domProName.proType">
 							<el-option v-for="item in desFourthList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="tbInfos.domProName.year">
+						<el-select placeholder="请选择" v-model="tbInfos.desForm.domProName.year">
 							<el-option v-for="item in yearList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-input v-model="tbInfos.domProName.defineEnd"></el-input>  -->
+						<el-input v-model="tbInfos.desForm.domProName.defineEnd"></el-input>
 					</el-form-item>
-					<el-form-item label="项目名称" v-if="tbInfos.type == 3&&desType ==2">
-						<!-- <el-select placeholder="请选择" v-model="tbInfos.domProName.desInstitute">
+					<el-form-item label="项目名称" v-if="tbInfos.type == 3&& tbInfos.desForm.domesticOrOversea ==2">
+						 <el-select placeholder="请选择" v-model="tbInfos.desForm.oveProName.desInstitute">
 							<el-option v-for="item in desFirstList" :key="item.id" :label="item.name" :value="item.name"> 
 							</el-option>
 						</el-select>
-						后台 创建项目任务书-设计-海外接口
 						<el-select placeholder="请选择海外区域">
 							<el-option></el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="tbInfos.domProName.proType">
+						<el-select placeholder="请选择" v-model="tbInfos.desForm.oveProName.proType">
 							<el-option v-for="item in desFourthList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="tbInfos.domProName.year">
+						<el-select placeholder="请选择" v-model="tbInfos.desForm.oveProName.year">
 							<el-option v-for="item in yearList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
-						</el-select> -->
-						<!-- <el-input v-model="tbInfos.oveProName.defineEnd"></el-input> -->
+						</el-select>
+						<el-input v-model="tbInfos.desForm.oveProName.defineEnd"></el-input>
 					</el-form-item>
 					<el-form-item label="项目名称" v-if="tbInfos.type == 4">
 						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="tbInfos.sofForm.proName.city">
@@ -169,6 +168,34 @@
 					<el-form-item label="联系电话" v-model="tbInfos.marketPhone">
 						<el-input></el-input>
 					</el-form-item>
+					<el-form-item label="投资金额类型" v-if="tbInfos.type==3">
+						<el-radio-group v-model="tbInfos.desForm.billType">
+							<el-radio :label="1">运营商当期投资金额</el-radio>
+							<el-radio :label="2">院方当期设计费</el-radio>
+						</el-radio-group>
+					</el-form-item>
+					<div v-if="tbInfos.desForm.billType == 1&&tbInfos.type==3">
+						<el-form-item label="投资金额">
+							<el-input v-model="tbInfos.desForm.amountOfdesign"></el-input>
+						</el-form-item>
+						<el-form-item label="投资金额大写">
+							<span v-model="tbInfos.desForm.desInstitute"></span>
+						</el-form-item>
+						<el-form-item label="取费标准">
+							<el-input v-model="tbInfos.desForm.chargeStandard"></el-input>%
+						</el-form-item>
+					</div>
+					<div v-if="tbInfos.desForm.billType ==2&&tbInfos.type==3">
+						<el-form-item label="当期设计费">
+							<el-input v-model="tbInfos.desForm.amountOfdesign"></el-input>
+						</el-form-item>
+						<el-form-item label="当期设计费大写">
+							<span v-model="tbInfos.desForm.designChinesize"></span>
+						</el-form-item>
+					</div>
+					<el-form-item label="分包比例" v-if='tbInfos.type==3'>
+							<el-input v-model="tbInfos.desForm.chargePercent"></el-input>%
+						</el-form-item>	
 					<el-form-item label="执行周期">
 						<el-date-picker v-model="tbInfos.executeCycle" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
 						</el-date-picker>
@@ -211,7 +238,7 @@
 					<el-table-column prop="scale" label="级别" width='180'>
 					    <template slot-scope="scope">
 							<el-select placeholder="请选择" v-model="scope.row.scale">
-								<el-option v-for="item in gprsList" :key="item.id" :label="item.name" :value="item.name"></el-option>
+								<el-option v-for="item in empGradeList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 							</el-select>
 						</template>	
 					</el-table-column>
@@ -287,9 +314,9 @@
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>固定资产</h3>
 				<el-table :data="fixedAssets" border style="width:80%;" class="mx-table">
-					<el-table-column prop="scale" label="设备类型">
+					<el-table-column prop="type" label="设备类型">
 					    <template slot-scope="scope">
-							<el-select placeholder="请选择" v-model="scope.row.scale">
+							<el-select placeholder="请选择" v-model="scope.row.type">
 								<el-option v-for="item in fixList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 							</el-select>
 						</template>	
@@ -311,53 +338,67 @@
 					</el-table-column>
 					<el-table-column label="操作" width="80px">
 						<template slot-scope="scope">
-							<el-button size="mini" type="danger" @click="carDelRow(scope.$index,scope.row)">移除</el-button>
+							<el-button size="mini" type="danger" @click="fixDelRow(scope.$index,scope.row)">移除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<div style="margin-top:20px;width:80%;height:40px;position:relative;">
-					<el-button @click="addRow" type="primary" class="el-icon-plus" style="position:absolute;top:0;right:0;">添加</el-button>
+					<el-button @click="fixAddRow" type="primary" class="el-icon-plus" style="position:absolute;top:0;right:0;">添加</el-button>
 				</div>
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>低值易耗</h3>
-				<el-table :data="consumeTbData" border style="width:80%;" class="mx-table">
-					<el-table-column prop="deviceType" label="设备类型"> 
+				<el-table :data="lowExpends" border style="width:80%;" class="mx-table">
+					<el-table-column prop="type" label="设备类型">
+					    <template slot-scope="scope">
+							<el-select placeholder="请选择" v-model="scope.row.type">
+								<el-option v-for="item in lowList" :key="item.id" :label="item.name" :value="item.name"></el-option>
+							</el-select>
+						</template>	
 					</el-table-column>
-					<el-table-column prop="number" label="数量"> 
+					<el-table-column prop="count" label="数量">
+					    <template slot-scope='scope'>
+							<el-input v-model='scope.row.count'></el-input>
+						</template> 
 					</el-table-column>
-					<el-table-column prop="workMonths" label="参与工期（月）">
+					<el-table-column prop="month" label="参与工期（月）">
+					    <template slot-scope='scope'>
+							<el-input v-model='scope.row.month'></el-input>
+						</template>  
 					</el-table-column>
-					<el-table-column prop="remarks" label="备注"> 
+					<el-table-column prop="remark" label="备注">
+					    <template slot-scope='scope'>
+							<el-input v-model='scope.row.remark'></el-input>
+						</template>  
 					</el-table-column>
 					<el-table-column label="操作" width="80px">
 						<template slot-scope="scope">
-							<el-button size="mini" type="danger" @click="tbDelRow(scope.$index,scope.row)">移除</el-button>
+							<el-button size="mini" type="danger" @click="lowDelRow(scope.$index,scope.row)">移除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 				<div style="margin-top:20px;width:80%;height:40px;position:relative;">
-					<el-button @click="addRow" type="primary" class="el-icon-plus" style="position:absolute;top:0;right:0;">添加</el-button>
+					<el-button @click="lowAddRow" type="primary" class="el-icon-plus" style="position:absolute;top:0;right:0;">添加</el-button>
 				</div>
 			</el-card>
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
 				<h3>项目执行</h3>
 				<el-form label-width="150px">
 					<el-form-item label="项目执行主体">
-						<el-select placeholder="请选择" style="width:300px;">
-							<el-option v-for="item in facFirstList"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value"> 
+						<el-select placeholder="请选择" style="width:300px;" v-model="proDeptId" @change="proDeptChange">
+							<el-option v-for="item in proDeptList"
+							:key="item.id"
+							:label="item.name"
+							:value="item.id"> 
 						    </el-option>
 					    </el-select>
 				    </el-form-item>
 				    <el-form-item label="具体执行人">
-						<el-select placeholder="请选择" style="width:300px;">
-							<el-option v-for="item in facFirstList"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value"> 
+						<el-select placeholder="请选择" style="width:300px;" v-model='proManager'>
+							<el-option v-for="item in proManagerList"
+							:key="item.id"
+							:label="item.name"
+							:value="item.id"> 
 						    </el-option>
 					    </el-select>
 				    </el-form-item>
@@ -375,7 +416,6 @@ export default {
 	name: 'TaskBookNew',
 	data () {
 		return {
-			desType:1,
 			tbInfos:{
                 type:1, 
                 facForm:{
@@ -409,7 +449,7 @@ export default {
                 desForm:{
                 	domesticOrOversea:1,
                 	domProName:{
-                		desInstitute:'江苏院-',
+                		desInstitute:'',
                 		city:[],
                 		operator:'',
                 		proType:'',
@@ -417,7 +457,7 @@ export default {
                 		defineEnd:''
                 	},
                 	oveProName:{
-                		desInstitute:'江苏院-',
+                		desInstitute:'',
                 		oversea:'',  // 后台 加接口 设计-海外-项目名称-海外区域
                 		proType:'',
                 		year:'',
@@ -428,7 +468,12 @@ export default {
                 		define:''
                 	},
                 	projectManager:'', //项目负责人
-                	managerPhone:''  //联系电话
+                	managerPhone:'',  //联系电话
+                	billType:1,
+                	amountOfdesign:100,  
+                	designChinesize:'',
+                    chargeStandard: 59.6,
+                	chargePercent:12.2
                 },
                 sofForm:{
                 	proName:{
@@ -474,22 +519,17 @@ export default {
 			sofUserNameList:[],
 			humanResources:[],
 			gprsList:[],
+			empGradeList:[],
 			carResources:[],
 			carList:[],
 			fixedAssets:[],
 			fixList:[],
-			assetTbData:[{
-				deviceType:"1",
-				number:"20",
-				workMonths:"222",
-				remarks:"这是备注"
-			}],
-			consumeTbData:[{
-				deviceType:"1",
-				number:"20",
-				workMonths:"222",
-				remarks:"这是备注"
-			}],
+			lowExpends:[],
+			lowList:[],
+			proDeptList:[],  //项目执行主体列表
+			proDeptId:'', //项目执行主体值 
+			proManagerList:[], //项目执行人列表
+			proManager:'', //项目执行人
 			pickStartDate:{
 				disabledDate:(time)=>{
 					// 开始日期只能选择结束日期之前的
@@ -564,6 +604,8 @@ export default {
 			const data = res.data;
 			const model = data.model;
 			this.desFirstList = model;
+			console.log("yali desFirstList");
+			console.log(this.desFirstList);
 		});
 		this.axios.get('/api/design/third/list').then((res)=>{
 			const data = res.data;
@@ -615,6 +657,11 @@ export default {
 			const model = data.model;
 			this.gprsList = model;
 		});
+		this.axios.get('/api/emp-grade/list').then((res)=>{
+			const data = res.data;
+			const model = data.model;
+			this.empGradeList = model;
+		});
 		this.axios.get('/api/car/list').then((res)=>{
 			const data = res.data;
 			const model = data.model;
@@ -625,11 +672,18 @@ export default {
 			const model = data.model;
 			this.fixList = model;
 		});
+		this.axios.get('/api/low-expend/list').then((res)=>{
+			const data = res.data;
+			const model = data.model;
+			this.lowList = model;
+		});
+		this.axios.get('/api/pro-dept/list').then((res)=>{
+			const data = res.data;
+			const model = data.model;
+			this.proDeptList = model;
+		});
 	},
 	methods:{
-		desRadioChange(value){
-		    this.desType = value	
-		},
 		handleRemove(file,fileList){
 
 		},
@@ -643,8 +697,6 @@ export default {
 			return this.$confirm('确定移除${file.name}?');
 		},
 		hrDelRow(index,row){
-			console.log(index);
-			console.log(row);
 			this.humanResources.splice(index,1);
 		},
 		hrAddRow(){
@@ -653,8 +705,6 @@ export default {
 			this.humanResources.push(rowData);
 		},
 		carDelRow(index,row){
-			console.log(index);
-			console.log(row);
 			this.carResources.splice(index,1);
 		},
 		carAddRow(){
@@ -662,9 +712,38 @@ export default {
 			let rowData = {scale:"",count:"", month:"", remark:""};
 			this.carResources.push(rowData);
 		},
+		fixDelRow(index,row){
+			this.fixedAssets.splice(index,1);
+		},
+		fixAddRow(){
+			//往表格里添加数据
+			let rowData = {type:"",count:"", month:"", remark:""};
+			this.fixedAssets.push(rowData);
+		},
+		lowDelRow(index,row){
+			this.lowExpends.splice(index,1);
+		},
+		lowAddRow(){
+			//往表格里添加数据
+			let rowData = {type:"",count:"", month:"", remark:""};
+			this.lowExpends.push(rowData);
+		},
+		proDeptChange(val){
+			this.axios.get('/api/pro-management/list',{params:{'id': val}}).then((res)=>{
+				const data = res.data;
+				const model = data.model;
+				this.proManagerList = model;
+			});
+		},
 		taskBookSave(){
 			// 项目任务书提交
-			console.log("项目任务书提交");
+			let params={};
+			this.axios.post('/api/task/save',params).then((res)=>{
+                const data = res.data;
+                console.log(data);
+			}).catch((error)=>{
+               
+			});
 		}
 	}
 }
