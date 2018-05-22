@@ -16,6 +16,25 @@ Vue.prototype.axios=axios
 
 Vue.config.productionTip = false
 
+/*登录路由验证*/
+router.beforeEach((to, from, next) =>{
+	console.log(to);
+	let token = localStorage.getItem('token');
+	if(to.path === '/Login'){
+		next();
+	}else{
+		//需要登录权限且token等于空
+		if(to.meta.reqiuresAuth && (token === null)){
+			next({
+				path:'/Login',
+				query:{ redirect:to.fullPath }
+			});
+		}else{
+			next();
+		}
+	}
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

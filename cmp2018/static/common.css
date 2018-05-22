@@ -21,3 +21,7 @@
 .page-content .el-table td,.page-content .el-table th{text-align: center;}
 .page-content .el-button--text,.page-content .el-button--text.is-disabled,.page-content .el-button--text.is-disabled:focus,.page-content .el-button--text.is-disabled:hover, .page-content .el-button--text:active{padding: 0;}
 #userCreate .hr-table td:nth-child(3) .el-input{width: 56px;}
+
+/* login 登录界面样式设置 */
+.log-content .el-form-item__label{color:#ffffff;font-size: 16px;}
+.log-content .el-input__inner{width: calc(100% - 60px);}

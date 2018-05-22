@@ -26,7 +26,7 @@ module.exports = {
      */
 
     // https://webpack.js.org/configuration/devtool/#development
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'source-map',  //原来：cheap-module-eval-source-map 
 
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help
@@ -36,11 +36,7 @@ module.exports = {
     cssSourceMap: true,
     proxyTable: {
       '/api': {
-        target: 'http://192.168.1.3:2000',
-        changeOrigin: true //允许跨域
-      },
-      '/pro-name': {
-        target: 'http://192.168.1.3:2000',
+        target: 'http://192.168.1.2:2000',
         changeOrigin: true //允许跨域
       }
     }
