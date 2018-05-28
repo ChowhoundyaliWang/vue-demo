@@ -41,6 +41,7 @@ export default {
           let model = data.model;
           localStorage.removeItem('token');
           localStorage.setItem('token', model.token);
+          /*localStorage.setItem('userData',model.)*/
           let redirect = decodeURIComponent(this.$route.query.redirect||'');
           if (redirect) { // 跳转到指定链接
             this.$router.push({path: redirect});

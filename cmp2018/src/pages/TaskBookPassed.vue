@@ -22,27 +22,27 @@
 				</el-col>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
 				<el-table :data="tableData" stripe height="550" border style="width:80%;" class="mb-16">
-					<el-table-column prop="operate" label="操作" width="100px"> 
+					<el-table-column prop="operate" label="操作" width="100px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 							<el-button type="text" @click="handleUpdate(scope.$index,scope.row)">更新</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="proName" label="项目名称"> 
+					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="proNumber" label="项目号">
+					<el-table-column prop="projectNumber" label="项目号" show-overflow-tooltip>
 					</el-table-column>
-					<el-table-column prop="appField" label="应用区域"> 
+					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="creater" label="创建人"> 
+					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="startTime" label="创建时间"> 
+					<el-table-column prop="createTime" label="创建时间" width='200px' show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditResult" label="审核结果"> 
+					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditor" label="审核人"> 
+					<el-table-column prop="auditor" label="审核人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间"> 
+					<el-table-column prop="auditTime" label="审核时间" width='200px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div style="width:80%;">
@@ -50,10 +50,10 @@
 						<el-pagination 
 						background 
 						@current-change="handleCurrentChange"
-						:current-page.sync="currentPage"
-						:page-size="10"
+						:current-page.sync="pageNum"
+						:page-size="pageSize"
 						layout="total,prev,pager,next"
-						:total="totalPage"></el-pagination>
+						:total="totalNum"></el-pagination>
 						<!-- current-change currentPage改变时会触发 -->
 					</div>
 				</div>
@@ -68,60 +68,24 @@ export default {
 	name: 'TaskBookPassed',
 	data () {
 		return {
-			okType:1,
-			taskBookInfos:{
-                type:1,
-                domesticOrOversea:1
-			},
-			manufactorList:[{
-				value:"1",
-				label:"111"
-			}],
-			tableData:[{
-				proName:'传输',
-				proNumber:"中级",
-				appField:"1",
-				creater:"2017-01-16",
-				startTime:"2017-12-31",
-				auditResult:"350",
-				auditor:'11.67',
-		        auditTime:"这是备注"
-			},{
-				proName:'传输',
-				proNumber:"中级",
-				appField:"1",
-				creater:"2017-01-16",
-				startTime:"2017-12-31",
-				auditResult:"350",
-				auditor:'11.67',
-		        auditTime:"这是备注"
-			},{
-				proName:'传输',
-				proNumber:"中级",
-				appField:"1",
-				creater:"2017-01-16",
-				startTime:"2017-12-31",
-				auditResult:"350",
-				auditor:'11.67',
-		        auditTime:"这是备注"
-			},{
-				proName:'传输',
-				proNumber:"中级",
-				appField:"1",
-				creater:"2017-01-16",
-				startTime:"2017-12-31",
-				auditResult:"350",
-				auditor:'11.67',
-		        auditTime:"这是备注"
-			}],
-			totalPage:120,
-			currentPage:5
+			tableData:[],
+			totalNum:0,
+			pageNum:0,
+			pageSize:0
 		}
 	},
 	mounted (){
-		/*this.axios.get('/pro-name/first/list').then(function(res){
-			console.log(res);
-		});*/
+		// 请求参数 status 1-未审核；2-已通过；3-；4-未通过
+		this.axios.get('/api/task/list?status=2').then((res)=>{
+			let data = res.data;
+			if(data.code == 200){
+				let model = data.model;
+				this.tableData = model.data;
+				this.totalNum = model.totalNum;
+				this.pageNum = model.pageNum;
+				this.pageSize = model.pageSize;
+			}
+		});
 	},
 	methods:{
 		//表格搜索过滤事件
@@ -130,7 +94,10 @@ export default {
 		},
 		// 表格点击查看事件
 		handleView(index,row){
-            console.log(index,row);
+            let curId = row.id;
+            this.$router.push({
+            	name:'TaskBookView', params:{ id: curId}
+            })
 		},
 		// 表格点击更新事件
 		handleUpdate(index,row){

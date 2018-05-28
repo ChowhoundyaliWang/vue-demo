@@ -8,17 +8,17 @@
 			<template slot="title"  class="menu-title first-title"><i class="el-icon-document"></i>项目任务书</template>
 			<el-submenu index="2-1">
 				<template slot="title"  class="menu-title">项目任务书</template>
-				<el-menu-item index="/TaskBookCreate" v-if="!TaskBookCreateFlag">创建项目任务书</el-menu-item>
+				<el-menu-item index="/TaskBookCreate">创建项目任务书</el-menu-item>
 				<el-menu-item index="/TaskBookUnaudited">未审核的项目任务书</el-menu-item>
 				<el-menu-item index="/TaskBookPassed">已通过的项目任务书</el-menu-item>
 				<el-menu-item index="/TaskBookNotPassed">未通过的项目任务书</el-menu-item>
-				<el-menu-item index="2-1-5">查看项目任务书</el-menu-item>
+				<el-menu-item index="/TaskBooksView">查看项目任务书</el-menu-item>
 				<el-menu-item index="2-1-6">执行主体为本部门的项目</el-menu-item>
 				<el-menu-item index="2-1-7">设计类项目任务书</el-menu-item>
 			</el-submenu>
 			<el-submenu index="2-2">
 				<template slot="title"  class="menu-title">项目任务书审核</template>
-				<el-menu-item index="2-2-1">待审核的项目任务书</el-menu-item>
+				<el-menu-item index="/TaskBookToBeAudited">待审核的项目任务书</el-menu-item>
 				<el-menu-item index="2-2-2">已审核的项目任务书</el-menu-item>
 			</el-submenu>
 			<el-submenu index="2-3">
@@ -157,7 +157,7 @@ export default {
 	name: 'NavMenu',
 	data () {
 		return {
-			TaskBookCreateFlag:false
+			menus:[]
 		}
 	}
 }

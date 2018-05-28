@@ -34,12 +34,12 @@
 					</el-form-item>
 					<el-form-item label="职务" :rules="[{required:true,message:'职务为必填项'}]"> 
 						<el-card>
-							<el-tree :data="dutiesData" show-checkbox :default-expand-all="true" @node-click="handleNodeClick" @check-change="handleCheckChange"></el-tree>
+							<el-tree ref="dutyTree" :data="dutiesData" show-checkbox node-key="id" :default-expand-all="true" @node-click="handleNodeClick" @check-change="handleCheckChange"></el-tree>
 						</el-card>
 					</el-form-item>
 
 					<!-- 职务选择销售会出现 销售所属大区-->
-					<el-form-item label="销售所属大区" :rules="[{required:true,message:'职务为必填项'}]" v-if="regionShowFlag">
+					<el-form-item label="销售所属大区" :rules="[{required:true,message:'职务为必填项'}]" v-show="regionShowFlag">
 						<el-select placeholder="请选择" v-model="userData.regionId">
 							<el-option v-for="item in regionList" :key="item.id" :label="item.name" :value="item.id"></el-option>
 						</el-select>
@@ -55,7 +55,7 @@
 					<el-form-item label="权限" :rules="[
 					{required:true,message:'权限为必填项'}]"> 
 						<el-card>
-							<el-tree :data="menuList" show-checkbox :default-expand-all="true"></el-tree>
+							<el-tree ref="authorityTree" node-key="id" :data="menuList" show-checkbox :default-expand-all="true"></el-tree>
 						</el-card>
 					</el-form-item>
 					<el-form-item label=" "> 
@@ -105,6 +105,9 @@ export default {
 	mounted (){
 		let dutiesData = sessionStorage.getItem('dutiesData');
 		dutiesData = JSON.parse(dutiesData);
+		dutiesData.forEach((val, ind)=>{
+			val.disabled = "true";
+		})
 		this.dutiesData = dutiesData;
 
 		let menuList = sessionStorage.getItem('menuList');
@@ -125,39 +128,57 @@ export default {
 	methods:{
 		handleNodeClick(data, node, obj){
 			// 点击节点时回调
-			console.log(data);
+			/*console.log(data);
 			console.log(node);
-			console.log(obj);
+			console.log(obj);*/
 		},
 		handleCheckChange(data, checked, indeterminate){
+			//节点选中状态发生变化时的回调
 			// data —— 节点对应的对象
 			// checked —— 节点本身是否被选中
 			// indeterminate —— 节点的子树中是否有被选中的节点
 			console.log(data);
-			if(data.id == 1 && checked){
+			console.log(checked);
+			//销售ID为11
+			if(data.id == 11 && checked){
 				this.regionShowFlag = true;
 			}
-			if(data.id == 1 && !checked){
+			if(data.id == 11 && !checked){
 				this.regionShowFlag = false;
 			}
 
-			// 
-			if(data.id == 3 && checked){
-				this.deptShowFlag = true;
-			}
-			if(data.id == 3 && !checked){
+			// 项目执行中心ID为3
+			if(data.id == 3 && this.deptShowFlag){
 				this.deptShowFlag = false;
 			}
-			if(data.id == 4 && checked){
+			if(data.id == 3 && !this.deptShowFlag){
 				this.deptShowFlag = true;
 			}
-			if(data.id == 4 && !checked){
-				this.deptShowFlag = false;
+
+			//总经理ID为18
+			if(data.id == 18 && checked){
+				let arrId = [1,94,9,41,42,18,67,68];
+				this.$refs.authorityTree.setCheckedKeys(arrId, true);
 			}
 		},
 		createUser(){
 			this.userData.type = parseInt(this.userData.type);
+			this.userData.roleIds = this.$refs.dutyTree.getCheckedKeys();
+			this.userData.pramsList = this.$refs.authorityTree.getCheckedKeys();
 			console.log(this.userData);
+			let params = this.userData;
+			this.axios.post("/api/user/save",params,{ headers:{'Content-Type':'application/json;charset=UTF-8'} }).then((res)=>{
+				let data = res.data;
+				if(data.code == 200){
+					//待做 增加提示框，提示添加成功
+					let message = data.message;
+                }else{
+                    //请求失败
+                    console.log("请求失败");
+                }
+            }).catch((res)=>{
+               //请求异常处理
+            })
 		}
 	}
 }
