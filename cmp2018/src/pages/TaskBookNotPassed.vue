@@ -21,7 +21,7 @@
 					</el-form>
 				</el-col>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
-				<el-table :data="tableData" stripe height="550" border style="width:80%;" class="mb-16">
+				<el-table :data="tableData" stripe border style="width:80%;" class="mb-16">
 					<el-table-column prop="operate" label="操作" width="100px" tooltip-effect='dark'> 
 						<template slot-scope="scope" width='60px'>
 							<el-button type="text" @click="handleModify(scope.$index,scope.row)">修改</el-button>
@@ -93,15 +93,20 @@ export default {
 		},
 		// 表格点击查看事件
 		handleModify(index,row){
-            console.log(index,row);
+            let curId = row.id;
+            this.$router.push({
+            	name:'TaskBookModify', params:{ id: curId}
+            })
 		},
 		// 表格点击更新事件
 		handleDel(index,row){
 			let curId = row.id;
-			this.$alert('是否要删除该项目任务书？','提示',{
-				confirmButtonText:'确定',
-				callback: action => {
-					this.axios.get('/api/task/delete/'+curId).then((res)=>{
+			this.$confirm('此操作将永久删除该项目任务书，是否继续？','提示',{
+				confirmButtonText: '确定',
+                cancelButtonText: '取消',
+				type:'warning'
+			}).then(()=>{
+				this.axios.get('/api/task/delete/'+curId).then((res)=>{
 						let data = res.data;
 						if(data.code == 200){
 							this.axios.get('/api/task/list?status=4').then((res)=>{
@@ -115,11 +120,12 @@ export default {
 								}
 							});
 						}
-			        }).catch((error)=>{
+			    }).catch((error)=>{
 
-			        });
-				}	
-			})
+			    });
+			}).catch(()=>{
+
+			})			
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){

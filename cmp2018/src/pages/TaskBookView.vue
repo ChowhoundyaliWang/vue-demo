@@ -113,10 +113,10 @@
                         <span>{{tbInfos.region}}</span>
 					</el-form-item>
 					<el-form-item label="项目执行要求">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand"></el-input>
+						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand" readonly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="备注">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark"></el-input>
+						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark" readonly='true'></el-input>
 					</el-form-item>
 				</el-form>
 			</el-card>
@@ -178,7 +178,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>低值易耗</h3>
-				<el-table :data="tbInfos.lowExpends" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.lowExpend" border style="width:80%;" class="mx-table">
 					<el-table-column prop="type" label="设备类型">
 					</el-table-column>
 					<el-table-column prop="count" label="数量">
@@ -214,12 +214,15 @@
 			</el-card>
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
 				<h3>任务书审核</h3>
-				<el-form label-width="150px">
+				<el-form label-width="150px"  v-for="(record, index) in tbInfos.records" :key='index'>
+					<el-form-item label= 'temp'>
+						<span slot="label" v-text='"第"+(index+1)+"次审核结果："'></span>
+				    </el-form-item>
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' value='审核意见待做' readonly='true'></el-input>
+						<el-input type='textarea' :rows='4' v-model='record.remark' readonly='true' style="width: 40%;"></el-input>
 				    </el-form-item>
 				    <el-form-item label="审核结果">
-						<span>审核结果待做</span>
+						<span v-text="record.status == 2?'通过':'不通过'"></span>
 				    </el-form-item>
 				</el-form>
 			</el-card>

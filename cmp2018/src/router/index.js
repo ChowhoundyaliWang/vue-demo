@@ -18,7 +18,8 @@ import TaskBookView from '@/pages/TaskBookView'  //项目任务书查看单页
 import TaskBookToBeAudited from '@/pages/TaskBookToBeAudited'  //待审核的项目任务书
 import TaskBookAuditing from '@/pages/TaskBookAuditing'  //项目任务书审核单页
 import TaskBookModify from '@/pages/TaskBookModify'    //项目任务书修改单页
-
+import TaskBookAudited from '@/pages/TaskBookAudited'   //已审核的项目任务书
+import TaskBookUpdate from '@/pages/TaskBookUpdate'   //项目任务书更新单页
 
 Vue.use(Router)
 
@@ -48,7 +49,9 @@ export default new Router({
         {path:'/TaskBookView/:id', name: 'TaskBookView', component: TaskBookView, meta:{reqiuresAuth:true }},   // 在子组件$route.params.id来获取参数
         {path:'/TaskBookToBeAudited', component: TaskBookToBeAudited, meta:{reqiuresAuth:true }},
         {path:'/TaskBookAuditing/:id', name: 'TaskBookAuditing', component: TaskBookAuditing, meta:{reqiuresAuth:true }},   // 在子组件$route.params.id来获取参数
-        {path:'/TaskBookModify/:id', name: 'TaskBookModify', component: TaskBookModify, meta:{reqiuresAuth:true }}
+        {path:'/TaskBookModify/:id', name: 'TaskBookModify', component: TaskBookModify, meta:{reqiuresAuth:true }},
+        {path:'/TaskBookAudited', component: TaskBookAudited, meta:{reqiuresAuth:true }},
+        {path:'/TaskBookUpdate/:id', name: 'TaskBookUpdate', component: TaskBookUpdate, meta:{reqiuresAuth:true }},
       ]
     }
   ]

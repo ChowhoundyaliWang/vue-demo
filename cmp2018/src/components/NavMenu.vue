@@ -19,7 +19,7 @@
 			<el-submenu index="2-2">
 				<template slot="title"  class="menu-title">项目任务书审核</template>
 				<el-menu-item index="/TaskBookToBeAudited">待审核的项目任务书</el-menu-item>
-				<el-menu-item index="2-2-2">已审核的项目任务书</el-menu-item>
+				<el-menu-item index="/TaskBookAudited">已审核的项目任务书</el-menu-item>
 			</el-submenu>
 			<el-submenu index="2-3">
 				<template slot="title"  class="menu-title">项目号分配</template>

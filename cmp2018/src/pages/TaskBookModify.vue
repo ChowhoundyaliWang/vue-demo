@@ -12,7 +12,7 @@
 				<h3>任务书信息</h3>
 				<el-form :model="tbInfos" label-width="150px">
 					<el-form-item label="项目类型" :rules="[{required:true,message:'项目类型为必填项'}]">
-						<el-radio-group v-model="tbInfos.type">
+						<el-radio-group v-model="tbInfos.type" @change="emptyProName">
 							<el-radio :label="1">厂家</el-radio>
 							<el-radio :label="2">三方</el-radio>
 							<el-radio :label="3">设计</el-radio>
@@ -62,7 +62,7 @@
 				        <el-input v-model="tbInfos.typeForm.proName.defineEnd"></el-input>
 					</el-form-item>
 					<el-form-item label="国内海外" v-if="tbInfos.type == 3" :rules="[{required:true,message:'国内海外为必填项'}]">
-						<el-radio-group v-model="tbInfos.domesticOrOversea">
+						<el-radio-group v-model="tbInfos.domesticOrOversea" @change="emptyDesProName">
 							<el-radio :label="1">国内</el-radio>
 							<el-radio :label="2">海外</el-radio>
 						</el-radio-group>
@@ -359,7 +359,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>低值易耗</h3>
-				<el-table :data="tbInfos.lowExpends" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.lowExpend" border style="width:80%;" class="mx-table">
 					<el-table-column prop="type" label="设备类型">
 					    <template slot-scope="scope">
 							<el-select placeholder="请选择" v-model="scope.row.type">
@@ -414,7 +414,7 @@
 					    </el-select>
 				    </el-form-item>
 				    <el-form-item label="">
-						<el-button type="primary" class="el-icon-check" @click="taskBookSave">添加</el-button>
+						<el-button type="primary" class="el-icon-check" @click="taskBookSave">重新发送</el-button>
 				    </el-form-item>
 				</el-form>
 			</el-card>
@@ -427,53 +427,7 @@ export default {
 	name: 'TaskBookModify',
 	data () {
 		return {
-			tbInfos:{
-                /*type:1, 
-                typeForm:{
-                	proName:{
-                		facName:'', 
-		                desInstitute:'',
-		                city:[],
-		                operator:'',
-		                define:'', 
-		                oversea:'', 
-		                proType:'',
-		                year:'',
-                        defineEnd:''
-                	},
-                	customer:{}
-                },
-                projectName:'',
-                userName:'',
-                appField:'',
-                contractName:'',
-                marketUser:'',
-                marketPhone:'',
-                executeCycle:[],
-                contractBill:'',
-                contractBillChinesize:'',
-                contractBillRemark:'',
-                region:'一大区',
-                proDemand:'',
-                proDemandRemark:'',
-                domesticOrOversea:1,
-                projectManager:'', //项目负责人
-                managerPhone:'',  //联系电话
-                billType:1,
-                amountOfInvest:'',  
-                investChinesize:'',
-                chargeStandard: '',
-                chargePercent:'',
-                returnBillRecycle:"",
-                jiaLeader:'',
-                jiaManager:'',
-                humanResources:[],
-                carResources:[],
-                fixedAssets:[],
-                lowExpends:[],
-                proExecuteSubject:'',
-                proExecutePeople:''*/
-			},
+			tbInfos:{},
 			facFirstList:[],
 			facThirdList:[],
 			facFourthList:[],
@@ -521,8 +475,8 @@ export default {
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
-				console.log(model);
 				this.tbInfos = model;
+				console.log(this.tbInfos);
 				this.axios.get('/api/pro-management/list',{params:{'id': this.tbInfos.proExecuteSubject}}).then((res)=>{
 			       const data = res.data;
 			       const model = data.model;
@@ -673,6 +627,30 @@ export default {
 		});
 	},
 	methods:{
+		emptyProName(){
+            this.tbInfos.typeForm.proName.city=[];
+            this.tbInfos.typeForm.proName.facName='';
+            this.tbInfos.typeForm.proName.desInstitute='';
+            this.tbInfos.typeForm.proName.operator='';
+            this.tbInfos.typeForm.proName.define='';
+            this.tbInfos.typeForm.proName.oversea='';
+            this.tbInfos.typeForm.proName.proType='';
+            this.tbInfos.typeForm.proName.year='';
+            this.tbInfos.typeForm.proName.defineEnd='';
+            this.tbInfos.typeForm.customer.company='';
+            this.tbInfos.typeForm.customer.define='';
+		},
+		emptyDesProName(){
+            this.tbInfos.typeForm.proName.city=[];
+            this.tbInfos.typeForm.proName.facName='';
+            this.tbInfos.typeForm.proName.desInstitute='';
+            this.tbInfos.typeForm.proName.operator='';
+            this.tbInfos.typeForm.proName.define='';
+            this.tbInfos.typeForm.proName.oversea='';
+            this.tbInfos.typeForm.proName.proType='';
+            this.tbInfos.typeForm.proName.year='';
+            this.tbInfos.typeForm.proName.defineEnd='';
+		},
 		handleRemove(file,fileList){
 
 		},
@@ -710,12 +688,12 @@ export default {
 			this.tbInfos.fixedAssets.push(rowData);
 		},
 		lowDelRow(index,row){
-			this.tbInfos.lowExpends.splice(index,1);
+			this.tbInfos.lowExpend.splice(index,1);
 		},
 		lowAddRow(){
 			//往表格里添加数据
 			let rowData = {type:"",count:"", month:"", remark:""};
-			this.tbInfos.lowExpends.push(rowData);
+			this.tbInfos.lowExpend.push(rowData);
 		},
 		proDeptChange(val){
 			this.axios.get('/api/pro-management/list',{params:{'id': val}}).then((res)=>{
@@ -726,53 +704,50 @@ export default {
 		},
 		taskBookSave(){
 			// 项目任务书提交
+			// 项目任务书提交
 			let params={};
 			let tbInfos = this.tbInfos;
-			/*if(tbInfos.type == 1){
-				tbInfos.tbInfos.typeForm = this.tbInfos.typeForm;
-				let proName = this.tbInfos.typeForm.proName;
+			let typeForm = tbInfos.typeForm;
+			console.log(typeForm);
+			if(tbInfos.type == 1){
+				let proName = typeForm.proName;
 				let str = '';
 				str = proName.facName + (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
 				tbInfos.projectName = str;
-				let userName = this.tbInfos.typeForm.customer;
+				let userName = typeForm.customer;
 				tbInfos.userName = userName.company +(userName.define?("（"+ userName.define +"）"):'');
 			}else if(tbInfos.type == 2){
-				tbInfos.tbInfos.typeForm = this.tbInfos.typeForm;
-                let proName = this.tbInfos.typeForm.proName;
+                let proName = typeForm.proName;
 				let str = '';
 				str = (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator + proName.proType+proName.year+ (proName.defineEnd?'（'+proName.defineEnd+'）':'');
 				tbInfos.projectName = str;
-				let userName = this.tbInfos.typeForm.customer;
+				let userName = typeForm.customer;
 				tbInfos.userName = userName.company + (userName.define?("（"+ userName.define +"）"):'');
 			}else if(tbInfos.type == 3){
-				tbInfos.tbInfos.typeForm.customer = this.tbInfos.typeForm.customer;
 				if(tbInfos.domesticOrOversea == 1){
-					let proName = this.tbInfos.typeForm.proName;
+					let proName = typeForm.proName;
 				    let str = '';
 				    str = proName.desInstitute + (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator + proName.proType+proName.year+(proName.defineEnd?'（'+proName.defineEnd+'）':'');
 				    tbInfos.projectName = str;
-				    tbInfos.tbInfos.typeForm.proName = this.tbInfos.typeForm.proName;
 				}else if(tbInfos.domesticOrOversea == 2){
-					let proName = this.tbInfos.typeForm.proName;
+					let proName = typeForm.proName;
 				    let str = '';
 				    str = proName.desInstitute + proName.oversea + proName.operator + proName.proType + proName.year+ (proName.defineEnd?'（'+proName.defineEnd+'）':'') ;
 				    tbInfos.projectName = str;
-				    tbInfos.tbInfos.typeForm.proName = this.tbInfos.typeForm.proName;
 				}
-				let userName = this.tbInfos.typeForm.customer;
+				let userName = typeForm.customer;
 				tbInfos.userName = userName.company + (userName.define?("（"+ userName.define +"）"):'');
 			}else if(tbInfos.type == 4){
-				tbInfos.tbInfos.typeForm = this.tbInfos.typeForm;
-				let proName = this.tbInfos.typeForm.proName;
+				let proName = typeForm.proName;
 				let str = '';
 				str = (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator + proName.proType+proName.year+ (proName.defineEnd?'（'+proName.defineEnd+'）':'');
 				tbInfos.projectName = str;
-				let userName = this.tbInfos.typeForm.customer;
+				let userName = typeForm.customer;
 				tbInfos.userName = userName.company + (userName.define? ("（"+ userName.define +"）"):'');
-			}*/
+			}
             params = this.tbInfos;
 			console.log(params);
-			this.axios.post('/api/task/add',params).then((res)=>{
+			this.axios.post('/api/task/save',params).then((res)=>{
                 const data = res.data;
                 console.log(data);
 			}).catch((error)=>{

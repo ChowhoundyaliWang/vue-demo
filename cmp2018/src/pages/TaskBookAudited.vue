@@ -4,7 +4,7 @@
 			<el-breadcrumb separator="/">
 				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
 				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>查看项目任务书</el-breadcrumb-item>
+				<el-breadcrumb-item>已审核的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
 		<div class="page-content">
@@ -27,7 +27,7 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='220px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
@@ -106,7 +106,7 @@
 <script>
 import contrastUpdate from '../components/contrastUpdate'
 export default {
-	name: 'TaskBooksView',
+	name: 'TaskBookAudited',
 	components:{
 		"contrast-update":contrastUpdate
 	},
@@ -128,8 +128,8 @@ export default {
 		}
 	},
 	mounted (){
-		// 请求参数 status 1-未审核；2-已通过；3-已分配；4-未通过
-		this.axios.get('/api/task/list').then((res)=>{
+		// 请求参数 status 1-未审核；2-已通过；3-已分配；4-未通过;5-待审核；6-已审核
+		this.axios.get('/api/task/list?status=6').then((res)=>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
@@ -150,7 +150,7 @@ export default {
 		doFilter(){
 			console.log('table过滤');
 		},
-		// 表格点击查看事件
+		// 表格点击 审核任务书事件
 		handleView(index,row){
             let curId = row.id;
             this.$router.push({

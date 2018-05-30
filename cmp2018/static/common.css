@@ -25,3 +25,7 @@
 /* login 登录界面样式设置 */
 .log-content .el-form-item__label{color:#ffffff;font-size: 16px;}
 .log-content .el-input__inner{width: calc(100% - 60px);}
+
+.constrat .el-card {border: 1px solid #c2c6d0;}
+.changed .el-form-item__label{color: red;}
+h3.red{color: red;}

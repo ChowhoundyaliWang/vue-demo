@@ -113,10 +113,10 @@
                         <span>{{tbInfos.region}}</span>
 					</el-form-item>
 					<el-form-item label="项目执行要求">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand"></el-input>
+						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand" readonly="true"></el-input>
 					</el-form-item>
 					<el-form-item label="备注">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark"></el-input>
+						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark" readonly="true"></el-input>
 					</el-form-item>
 				</el-form>
 			</el-card>
@@ -178,7 +178,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>低值易耗</h3>
-				<el-table :data="tbInfos.lowExpends" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.lowExpend" border style="width:80%;" class="mx-table">
 					<el-table-column prop="type" label="设备类型">
 					</el-table-column>
 					<el-table-column prop="count" label="数量">
@@ -216,7 +216,7 @@
 				<h3>任务书审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='remark'></el-input>
+						<el-input type='textarea' :rows='4' v-model='remark' style="width:40%;"></el-input>
 				    </el-form-item>
 				    <el-form-item label=" "> 
 						<el-button type="primary" @click="pass" class="fl" icon="el-icon-circle-check-outline">通过</el-button>
@@ -262,26 +262,52 @@ export default {
 	},
 	methods:{
 		pass(){
-            let params = {};
-            params.status = 2;
-            params.taskId = this.taskId;
-            params.remark = this.remark;
-            this.axios.post('/api/task/audit',params).then((res)=>{
+			this.$confirm('确定审核通过吗？','提示',{
+				confirmButtonText:'确定',
+				cancelButtonText:'取消',
+				type:'info'
+			}).then(()=>{
+				let params = {};
+				params.status = 2;
+				params.taskId = this.taskId;
+				params.remark = this.remark;
+				this.axios.post('/api/task/audit',params).then((res)=>{
+					let data = res.data;
+					if(data.code == 200){
+						this.$alert("审核成功！",'提示')
+					}
+				}).catch((error)=>{
 
-            }).catch((error)=>{
-               
-			});
+				});
+			}).catch(()=>{
+
+			})
 		},
 		notPass(){
-			let params = {};
-            params.status = 4;
-            params.taskId = this.taskId;
-            params.remark = this.remark;
-            this.axios.post('/api/task/audit',params).then((res)=>{
-            	
-            }).catch((error)=>{
-               
+			this.$confirm('确定审核不通过吗？', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'info'
+			}).then(() => {
+				let params = {};
+				params.status = 4;
+				params.taskId = this.taskId;
+				params.remark = this.remark;
+				this.axios.post('/api/task/audit',params).then((res)=>{
+					let data = res.data;
+					if(data.code == 200){
+						this.$alert("审核成功！",'提示')
+					}
+				}).catch((error)=>{
+
+				});
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '已取消审核通过'
+				});          
 			});
+			
 		}
 	}
 }
