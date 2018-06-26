@@ -75,7 +75,7 @@
 							<el-form-item label="分包比例" v-if='tbInfos.type==3' :class="{ changed: tbInfos.chargePercent !== another.chargePercent}">
 								<el-input v-model="tbInfos.chargePercent"  readonly='true'></el-input>%
 							</el-form-item>	
-							<el-form-item label="执行周期" :class="{ changed: tbInfos.executeCycle !== another.executeCycle}">
+							<el-form-item label="执行周期" :class="{ changed: JSON.stringify(tbInfos.executeCycle) !== JSON.stringify(another.executeCycle)}">
 								<el-date-picker v-model="tbInfos.executeCycle" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" disabled>
 								</el-date-picker>
 							</el-form-item>
@@ -100,8 +100,9 @@
 								</el-form-item>
 							</div>
 							<el-form-item label="相关附件">
-								<el-upload action="127.0.0.1:2000/ossUrl">
-									<el-button size="default" type="primary">点击上传</el-button>
+								<el-upload action='' :file-list='tbInfos.files' disabled :on-preview='handlePreview'>
+									<el-button size="default" type="primary">选择文件</el-button>
+									<div slot="tip" class="el-upload__tip">文件大小不超过5M</div>
 								</el-upload>
 							</el-form-item>
 							<el-form-item label="发起人归属大区" v-show="tbInfos.type!==3" :class="{ changed: tbInfos.region !== another.region}">
@@ -117,7 +118,7 @@
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(tbInfos.humanResources )!== JSON.stringify(another.humanResources)}">人力资源</h3>
-						<el-table :data="tbInfos.humanResources" border style="width:100%;" class="mx-table hr-table">
+						<el-table :data="tbInfos.humanResources" border style="width:100%;" class="mx-table hr-table" height='200px' show-summary :summary-method="getSummaries">
 							<el-table-column prop="gprs" label="网络制式" width='180'>
 
 							</el-table-column>
@@ -129,17 +130,17 @@
 							</el-table-column>
 							<el-table-column prop="startTime" label="开始日期" width='180'>
 								<template slot-scope="scope">
-									<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled></el-date-picker>
+									<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp"></el-date-picker>
 								</template> 
 							</el-table-column>
 							<el-table-column prop="endTime" label="结束日期" width='180'>
 								<template slot-scope="scope">
-									<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled></el-date-picker>
+									<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp"></el-date-picker>
 								</template>  
 							</el-table-column>
-							<el-table-column prop="product" label="投入人天" > 
+							<el-table-column prop="product" label="投入人天">
 							</el-table-column>
-							<el-table-column prop="average" label="折合人月"> 
+							<el-table-column prop="average" label="折合人月">
 							</el-table-column>
 							<el-table-column prop="remark" label="备注" width='180'>
 							</el-table-column>
@@ -147,7 +148,7 @@
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(tbInfos.carResources )!== JSON.stringify(another.carResources)}">车辆资源</h3>
-						<el-table :data="tbInfos.carResources" border style="width:100%;" class="mx-table">
+						<el-table :data="tbInfos.carResources" border style="width:100%;" class="mx-table" height='200px'>
 							<el-table-column prop="scale" label="级别">
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
@@ -160,7 +161,7 @@
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(tbInfos.fixedAssets )!== JSON.stringify(another.fixedAssets)}">固定资产</h3>
-						<el-table :data="tbInfos.fixedAssets" border style="width:100%;" class="mx-table">
+						<el-table :data="tbInfos.fixedAssets" border style="width:100%;" class="mx-table" height='200px'>
 							<el-table-column prop="type" label="设备类型">
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
@@ -173,7 +174,7 @@
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(tbInfos.lowExpend )!== JSON.stringify(another.lowExpend)}">低值易耗</h3>
-						<el-table :data="tbInfos.lowExpend" border style="width:100%;" class="mx-table">
+						<el-table :data="tbInfos.lowExpend" border style="width:100%;" class="mx-table" height='200px'>
 							<el-table-column prop="type" label="设备类型">
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
@@ -199,17 +200,14 @@
 							</el-form-item>
 						</el-form>
 					</el-card>
-					<el-card class="box-card mb-16 inp-middle" shadow="always">
+					<el-card class="box-card mb-16 inp-middle" shadow="always" v-if='tbInfos.status !== 1'>
 						<h3>任务书审核</h3>
-						<el-form label-width="150px"  v-for="(record, index) in tbInfos.records" :key='index'>
-							<el-form-item label= 'temp'>
-								<span slot="label" v-text='"第"+(index+1)+"次审核结果："'></span>
-							</el-form-item>
+						<el-form label-width="150px">
 							<el-form-item label="审核意见">
-								<el-input type='textarea' :rows='4' v-model='record.remark' readonly='true' style="width: 40%;"></el-input>
+								<el-input type='textarea' :rows='4' v-model='tbInfos.record.remark' readonly='true' style="width: 80%;"></el-input>
 							</el-form-item>
 							<el-form-item label="审核结果">
-								<span v-text="record.status == 2?'通过':'不通过'"></span>
+								<span v-text="tbInfos.record.status == 2 ?'通过':'不通过'"></span>
 							</el-form-item>
 						</el-form>
 					</el-card>
@@ -258,7 +256,7 @@
 							<el-form-item label="市场归口人"  :class="{ changed: tbInfos.marketUser !== another.marketUser}">
 								<el-input v-model="another.marketUser"  readonly='true'></el-input>
 							</el-form-item>
-							<el-form-item label="联系电话" :class="{ changed: tbInfos.managerPhone !== another.marketPhone}">
+							<el-form-item label="联系电话" :class="{ changed: tbInfos.marketPhone !== another.marketPhone}">
 								<el-input v-model="another.marketPhone"  readonly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="投资金额类型" v-if="another.type==3"  :class="{ changed: tbInfos.billType !== another.billType}">
@@ -289,7 +287,7 @@
 							<el-form-item label="分包比例" v-if='another.type==3' :class="{ changed: tbInfos.chargePercent !== another.chargePercent}">
 								<el-input v-model="another.chargePercent"  readonly='true'></el-input>%
 							</el-form-item>	
-							<el-form-item label="执行周期" :class="{ changed: tbInfos.executeCycle !== another.executeCycle}">
+							<el-form-item label="执行周期" :class="{ changed: JSON.stringify(tbInfos.executeCycle) !== JSON.stringify(another.executeCycle)}">
 								<el-date-picker v-model="another.executeCycle" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" disabled>
 								</el-date-picker>
 							</el-form-item>
@@ -314,8 +312,9 @@
 								</el-form-item>
 							</div>
 							<el-form-item label="相关附件">
-								<el-upload action="127.0.0.1:2000/ossUrl">
-									<el-button size="default" type="primary">点击上传</el-button>
+								<el-upload action="" :file-list='another.files' disabled :on-preview='handlePreview'>
+									<el-button size="default" type="primary">选择上传</el-button>
+									<div slot="tip" class="el-upload__tip">文件大小不超过5M</div>
 								</el-upload>
 							</el-form-item>
 							<el-form-item label="发起人归属大区" v-show="another.type!==3" :class="{ changed: tbInfos.region !== another.region}">
@@ -331,7 +330,7 @@
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(tbInfos.humanResources )!== JSON.stringify(another.humanResources)}">人力资源</h3>
-						<el-table :data="another.humanResources" border style="width:100%;" class="mx-table hr-table">
+						<el-table :data="another.humanResources" border style="width:100%;" class="mx-table hr-table" height='200px' show-summary :summary-method="getSummaries">
 							<el-table-column prop="gprs" label="网络制式" width='180'>
 							</el-table-column>
 							<el-table-column prop="scale" label="级别" width='180'>
@@ -340,17 +339,17 @@
 							</el-table-column>
 							<el-table-column prop="startTime" label="开始日期" width='180'>
 								<template slot-scope="scope">
-									<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled></el-date-picker>
+									<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp"></el-date-picker>
 								</template> 
 							</el-table-column>
 							<el-table-column prop="endTime" label="结束日期" width='180'>
 								<template slot-scope="scope">
-									<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled></el-date-picker>
+									<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp"></el-date-picker>
 								</template>  
 							</el-table-column>
-							<el-table-column prop="product" label="投入人天" > 
+							<el-table-column prop="product" label="投入人天"> 
 							</el-table-column>
-							<el-table-column prop="average" label="折合人月"> 
+							<el-table-column prop="average" label="折合人月">
 							</el-table-column>
 							<el-table-column prop="remark" label="备注" width='180'>
 							</el-table-column>
@@ -358,7 +357,7 @@
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(tbInfos.carResources )!== JSON.stringify(another.carResources)}">车辆资源</h3>
-						<el-table :data="another.carResources" border style="width:100%;" class="mx-table">
+						<el-table :data="another.carResources" border style="width:100%;" class="mx-table" height='200px'>
 							<el-table-column prop="scale" label="级别">
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
@@ -371,7 +370,7 @@
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(tbInfos.fixedAssets )!== JSON.stringify(another.fixedAssets)}">固定资产</h3>
-						<el-table :data="another.fixedAssets" border style="width:100%;" class="mx-table">
+						<el-table :data="another.fixedAssets" border style="width:100%;" class="mx-table" height='200px'>
 							<el-table-column prop="type" label="设备类型">
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
@@ -384,7 +383,7 @@
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(tbInfos.lowExpend )!== JSON.stringify(another.lowExpend)}">低值易耗</h3>
-						<el-table :data="another.lowExpend" border style="width:100%;" class="mx-table">
+						<el-table :data="another.lowExpend" border style="width:100%;" class="mx-table" height='200px'>
 							<el-table-column prop="type" label="设备类型">
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
@@ -410,17 +409,14 @@
 							</el-form-item>
 						</el-form>
 					</el-card>
-					<el-card class="box-card mb-16 inp-middle" shadow="always">
+					<el-card class="box-card mb-16 inp-middle" shadow="always" v-if='another.status !== 1'>
 						<h3>任务书审核</h3>
-						<el-form label-width="150px"  v-for="(record, index) in another.records" :key='index'>
-							<el-form-item label= 'temp'>
-								<span slot="label" v-text='"第"+(index+1)+"次审核结果："'></span>
-							</el-form-item>
+						<el-form label-width="150px">
 							<el-form-item label="审核意见">
-								<el-input type='textarea' :rows='4' v-model='record.remark' readonly='true' style="width: 40%;"></el-input>
+								<el-input type='textarea' :rows='4' v-model='another.record.remark' readonly='true' style="width: 80%;"></el-input>
 							</el-form-item>
 							<el-form-item label="审核结果">
-								<span v-text="record.status == 2?'通过':'不通过'"></span>
+								<span v-text="another.record.status == 2?'通过':'不通过'"></span>
 							</el-form-item>
 						</el-form>
 					</el-card>
@@ -434,6 +430,7 @@ export default {
 	name: 'contrastUpdate',
 	data () {
 		return {
+
 		}
 	},
 	props:{
@@ -456,6 +453,22 @@ export default {
 		managerList:{
 			type: Array,
 			required: true
+		}
+	},
+	methods:{
+		getSummaries(param) {
+			return this.tableSum(param);
+		},
+		handlePreview(file){
+			let fileName = file.name;
+			let url = file.url;
+			let aLink = document.createElement('a');
+			aLink.setAttribute('download', fileName);
+			aLink.style.display = 'none';
+			aLink.href = url;
+			document.body.appendChild(aLink);
+			aLink.click();
+			document.body.removeChild(aLink);
 		}
 	}
 }

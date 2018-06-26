@@ -7,7 +7,7 @@
 		<div class="userInfo">
 			<el-dropdown trigger="click">
 				<span class="el-dropdown-link name-span">
-					{{userName}}<i class="el-icon-arrow-down el-icon--right"></i>
+					{{userInfo.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
 				<el-dropdown-menu slot="dropdown">
 					<!-- command 指令事件 -->
@@ -28,8 +28,12 @@ export default {
 	data () {
 		return {
 			mxTitle: '明讯网络项目流程控制平台CMPv1.0',
-			userName:'Admin'
+			userInfo:{}
 		}
+	},
+	mounted(){
+		let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+		this.userInfo = userInfo;
 	},
 	methods:{
 		logOut(){

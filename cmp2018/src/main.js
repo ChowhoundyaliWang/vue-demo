@@ -6,19 +6,20 @@ import router from './router'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-Vue.use(ElementUI)
-
 import Vuex from 'Vuex'
-Vue.use(Vuex)
-
 import axios from 'axios'
+
+Vue.use(ElementUI)
+Vue.use(Vuex)
 Vue.prototype.axios=axios
+
+import Common from '../src/util/util.js'
+Vue.use(Common)
 
 Vue.config.productionTip = false
 
 /*登录路由验证*/
 router.beforeEach((to, from, next) =>{
-	console.log(to);
 	let token = localStorage.getItem('token');
 	if(to.path === '/Login'){
 		next();
@@ -33,6 +34,17 @@ router.beforeEach((to, from, next) =>{
 			next();
 		}
 	}
+})
+
+/* axios请求头带token 拦截 */
+axios.interceptors.request.use(config => {
+	const token = localStorage.getItem('token');
+	if(token){
+		config.headers.Authorization = token;
+	}
+	return config
+},error => {
+	return Promise.reject(error)
 })
 
 /* eslint-disable no-new */

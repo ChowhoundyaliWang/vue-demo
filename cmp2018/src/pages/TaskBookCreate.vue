@@ -9,151 +9,168 @@
 		</div>
 		<div class="page-content min-w" id="userCreate"> 
 			<el-card class="box-card mb-16" shadow="always">
+				<el-row>
+					<el-col :span='20'>
+						<el-steps :active="1">
+							<el-step title="步骤 1"></el-step>
+							<el-step title="步骤 2"></el-step>
+							<el-step title="步骤 3"></el-step>
+							<el-step title="步骤 4"></el-step>
+							<el-step title="步骤 5"></el-step>
+							<el-step title="步骤 6"></el-step>
+						</el-steps>
+					</el-col>
+					<el-col :span='4'>
+						
+					</el-col>
+				</el-row>
+			</el-card>
+			<el-card class="box-card mb-16" shadow="always">
 				<h3>任务书信息</h3>
-				<el-form :model="tbInfos" label-width="150px">
-					<el-form-item label="项目类型" :rules="[{required:true,message:'项目类型为必填项'}]">
-						<el-radio-group v-model="tbInfos.type">
+				<el-form :model="tbInfos" :rules='rules' ref='ruleForm' label-width="150px">
+					<el-form-item label="项目类型" prop='type'>
+						<el-radio-group v-model="tbInfos.type" @change='emptyProName'>
 							<el-radio :label="1">厂家</el-radio>
 							<el-radio :label="2">三方</el-radio>
 							<el-radio :label="3">设计</el-radio>
 							<el-radio :label="4">软件</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item label="项目名称" v-if="tbInfos.type == 1" :rules="[{required:true,message:'项目名称为必填项'}]">
-						<el-select placeholder="请选择" v-model="facForm.proName.facName">
+					<el-form-item label="项目名称" v-if="tbInfos.type == 1" prop='proName'>
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.facName">
 							<el-option v-for="item in facFirstList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 						</el-select>
-						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="facForm.proName.city"></el-cascader>
-						<el-select placeholder="请选择" v-model="facForm.proName.operator">
+						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="tbInfos.typeForm.proName.city" filterable placeholder='试试搜索城市名'></el-cascader>
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.operator">
 							<el-option v-for="item in facThirdList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 						</el-select>
-						<el-input v-model="facForm.proName.define"></el-input>
-						<el-select placeholder="请选择" v-model="facForm.proName.proType">
+						<el-input v-model="tbInfos.typeForm.proName.define"></el-input>
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.proType">
 							<el-option v-for="item in facFourthList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="facForm.proName.year">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.year">
 							<el-option v-for="item in yearList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 						</el-select>
-						<el-input v-model="facForm.proName.defineEnd"></el-input>
+						<el-input v-model="tbInfos.typeForm.proName.defineEnd"></el-input>
 					</el-form-item>
-					<el-form-item label="项目名称" v-if="tbInfos.type == 2" :rules="[{required:true,message:'项目名称为必填项'}]">
-						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="triForm.proName.city"></el-cascader>
-						<el-select placeholder="请选择" v-model="triForm.proName.operator">
+					<el-form-item label="项目名称" v-if="tbInfos.type == 2" prop='proName'>
+						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="tbInfos.typeForm.proName.city" filterable placeholder='试试搜索城市名'></el-cascader>
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.operator">
 							    <el-option v-for="item in triSecondList"
 								:key="item.id"
 								:label="item.name"
 								:value="item.name">
 						        </el-option>
 					    </el-select>
-					    <el-select placeholder="请选择" v-model="triForm.proName.proType">
+					    <el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.proType">
 						        <el-option v-for="item in triThirdList"
 								:key="item.id"
 								:label="item.name"
 								:value="item.name">
 					            </el-option>
 				        </el-select>
-				        <el-select placeholder="请选择" v-model="triForm.proName.year">
+				        <el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.year">
 					            <el-option v-for="item in yearList"
 								:key="item.id"
 								:label="item.name"
 								:value="item.name">
 				                </el-option>
 			            </el-select>
-				        <el-input v-model="triForm.proName.defineEnd"></el-input>
+				        <el-input v-model="tbInfos.typeForm.proName.defineEnd"></el-input>
 					</el-form-item>
-					<el-form-item label="国内海外" v-if="tbInfos.type == 3" :rules="[{required:true,message:'国内海外为必填项'}]">
-						<el-radio-group v-model="tbInfos.domesticOrOversea">
+					<el-form-item label="国内海外" v-if="tbInfos.type == 3" prop='domesticOrOversea'>
+						<el-radio-group v-model="tbInfos.domesticOrOversea" @change='emptyDesProName'>
 							<el-radio :label="1">国内</el-radio>
 							<el-radio :label="2">海外</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<el-form-item label="项目名称" v-if="tbInfos.type == 3 && tbInfos.domesticOrOversea ==1" :rules="[{required:true,message:'项目名称为必填项'}]">
-						<el-select placeholder="请选择" v-model="desForm.domProName.desInstitute">
+					<el-form-item label="项目名称" v-if="tbInfos.type == 3 && tbInfos.domesticOrOversea ==1" prop='proName'>
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.desInstitute">
 							<el-option v-for="item in desFirstList" :key="item.id" :label="item.name" :value="item.name"> 
 							</el-option>
 						</el-select>
-						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="desForm.domProName.city"></el-cascader>
-						<el-select placeholder="请选择" v-model="desForm.domProName.operator">
+						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="tbInfos.typeForm.proName.city" filterable placeholder='试试搜索城市名'></el-cascader>
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.operator">
 							<el-option v-for="item in desThirdList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="desForm.domProName.proType">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.proType">
 							<el-option v-for="item in desFourthList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="desForm.domProName.year">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.year">
 							<el-option v-for="item in yearList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-input v-model="desForm.domProName.defineEnd"></el-input>
+						<el-input v-model="tbInfos.typeForm.proName.defineEnd"></el-input>
 					</el-form-item>
-					<el-form-item label="项目名称" v-if="tbInfos.type == 3 && tbInfos.domesticOrOversea ==2" :rules="[{required:true,message:'项目名称为必填项'}]">
-						 <el-select placeholder="请选择" v-model="desForm.oveProName.desInstitute">
+					<el-form-item label="项目名称" v-if="tbInfos.type == 3 && tbInfos.domesticOrOversea ==2" prop='proName'>
+						 <el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.desInstitute">
 							<el-option v-for="item in desFirstList" :key="item.id" :label="item.name" :value="item.name"> 
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择海外区域" v-model="desForm.oveProName.oversea">
+						<el-select placeholder="请选择海外区域" v-model="tbInfos.typeForm.proName.oversea">
 							<el-option v-for="item in desOverList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="desForm.oveProName.proType">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.proType">
 							<el-option v-for="item in desFourthList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="desForm.oveProName.year">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.year">
 							<el-option v-for="item in yearList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-input v-model="desForm.oveProName.defineEnd"></el-input>
+						<el-input v-model="tbInfos.typeForm.proName.defineEnd"></el-input>
 					</el-form-item>
-					<el-form-item label="项目名称" v-if="tbInfos.type == 4" :rules="[{required:true,message:'项目名称为必填项'}]">
-						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="sofForm.proName.city">
+					<el-form-item label="项目名称" v-if="tbInfos.type == 4" prop='proName'>
+						<el-cascader change-on-select :show-all-levels="false" :options="provincesList" v-model="tbInfos.typeForm.proName.city" filterable placeholder='试试搜索城市名'>
 						</el-cascader>
-						<el-select placeholder="请选择" v-model="sofForm.proName.operator">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.operator">
 							<el-option v-for="item in sofSecondList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="sofForm.proName.proType">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.proType">
 							<el-option v-for="item in sofThirdList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-select placeholder="请选择" v-model="sofForm.proName.year">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.proName.year">
 							<el-option v-for="item in yearList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-input v-model="sofForm.proName.defineEnd"></el-input>
+						<el-input v-model="tbInfos.typeForm.proName.defineEnd"></el-input>
 					</el-form-item>
-					<el-form-item label="应用区域" :rules="[{required:true,message:'应用区域为必填项'}]">
-						<el-select placeholder="请选择" v-model="tbInfos.appField">
+					<el-form-item label="应用区域" prop='appField'>
+						<el-select v-model="tbInfos.appField" filterable placeholder="试试搜索省份名">
 							<el-option v-for="item in appAreaList" :key="item.id" :label="item.proName" :value="item.proName">
 							</el-option>
 						</el-select>
 					</el-form-item>	
-					<el-form-item label="用户名称" v-if="tbInfos.type == 1" :rules="[{required:true,message:'用户名称为必填项'}]">
-						<el-select placeholder="请选择" v-model="facForm.customer.company" class="inp-middle">
+					<el-form-item label="用户名称" v-if="tbInfos.type == 1">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.customer.company" class="inp-middle">
 							<el-option v-for="item in facUserNameList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 						</el-select>
-						<el-input v-model="facForm.customer.define"></el-input>
+						<el-input v-model="tbInfos.typeForm.customer.define"></el-input>
 					</el-form-item>
-					<el-form-item label="用户名称" v-if="tbInfos.type == 2" :rules="[{required:true,message:'用户名称为必填项'}]">
-						<el-select placeholder="请选择" v-model="triForm.customer.company" class="inp-middle">
+					<el-form-item label="用户名称" v-if="tbInfos.type == 2">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.customer.company" class="inp-middle">
 							<el-option v-for="item in triUserNameList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 						</el-select>
-						<el-input  v-model="triForm.customer.define"></el-input>
+						<el-input  v-model="tbInfos.typeForm.customer.define"></el-input>
 					</el-form-item>
-					<el-form-item label="用户名称" v-if="tbInfos.type == 3" :rules="[{required:true,message:'用户名称为必填项'}]">
-						<el-select placeholder="请选择" v-model="desForm.customer.company" class="inp-middle">
+					<el-form-item label="用户名称" v-if="tbInfos.type == 3">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.customer.company" class="inp-middle">
 							<el-option v-for="item in desUserNameList" :key="item.id" :label="item.name" :value="item.name">
 							</el-option>
 						</el-select>
-						<el-input v-model="desForm.customer.define"></el-input>
+						<el-input v-model="tbInfos.typeForm.customer.define"></el-input>
 					</el-form-item>
-					<el-form-item label="用户名称"  v-if="tbInfos.type == 4" :rules="[{required:true,message:'用户名称为必填项'}]">
-						<el-select placeholder="请选择" v-model="sofForm.customer.company" class="inp-middle">
+					<el-form-item label="用户名称"  v-if="tbInfos.type == 4">
+						<el-select placeholder="请选择" v-model="tbInfos.typeForm.customer.company" class="inp-middle">
 							<el-option v-for="item in sofUserNameList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 						</el-select>
-						<el-input v-model="sofForm.customer.define"></el-input>
+						<el-input v-model="tbInfos.typeForm.customer.define"></el-input>
 					</el-form-item>
-					<el-form-item label="合同名称" class="inp-long" v-show="tbInfos.type !== 3" :rules="[{required:true,message:'合同名称为必填项'}]">
+					<el-form-item label="合同名称" class="inp-long" v-show="tbInfos.type !== 3" prop='contractName'>
 						<el-input v-model="tbInfos.contractName"></el-input>
 					</el-form-item>
 					<el-form-item label="项目负责人" v-if="tbInfos.type==3">
@@ -163,10 +180,10 @@
 						<el-input v-model="tbInfos.managerPhone"></el-input>
 					</el-form-item>
 					<el-form-item label="市场归口人">
-						<el-input v-model="tbInfos.marketUser"></el-input>
+						<el-input v-model="tbInfos.marketUser" readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="联系电话">
-						<el-input v-model="tbInfos.marketPhone"></el-input>
+						<el-input v-model="tbInfos.marketPhone" readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="投资金额类型" v-if="tbInfos.type==3">
 						<el-radio-group v-model="tbInfos.billType">
@@ -176,10 +193,10 @@
 					</el-form-item>
 					<div v-if="tbInfos.billType == 1 && tbInfos.type==3">
 						<el-form-item label="投资金额">
-							<el-input v-model="tbInfos.amountOfInvest"></el-input>
+							<el-input v-model="tbInfos.amountOfInvest" @blur='investHandleUppercase($event)'></el-input>
 						</el-form-item>
 						<el-form-item label="投资金额大写">
-							<span v-model="tbInfos.investChinesize"></span>
+							<span v-text="tbInfos.investChinesize"></span>
 						</el-form-item>
 						<el-form-item label="取费标准">
 							<el-input v-model="tbInfos.chargeStandard"></el-input>%
@@ -187,24 +204,24 @@
 					</div>
 					<div v-if="tbInfos.billType ==2&&tbInfos.type==3">
 						<el-form-item label="当期设计费">
-							<el-input v-model="tbInfos.amountOfInvest"></el-input>
+							<el-input v-model="tbInfos.amountOfInvest" @blur='investHandleUppercase($event)'></el-input>
 						</el-form-item>
 						<el-form-item label="当期设计费大写">
-							<span v-model="tbInfos.investChinesize"></span>
+							<span v-text="tbInfos.investChinesize"></span>
 						</el-form-item>
 					</div>
 					<el-form-item label="分包比例" v-if='tbInfos.type==3'>
 							<el-input v-model="tbInfos.chargePercent"></el-input>%
 						</el-form-item>	
-					<el-form-item label="执行周期" :rules="[{required:true,message:'执行周期为必填项'}]">
+					<el-form-item label="执行周期" prop='executeCycle'>
 						<el-date-picker v-model="tbInfos.executeCycle" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
 						</el-date-picker>
 					</el-form-item>
-					<el-form-item label="合同金额" :rules="[{required:true,message:'合同金额为必填项'}]">
-						<el-input  v-model="tbInfos.contractBill"></el-input>
+					<el-form-item label="合同金额" prop='contractBill'>
+						<el-input  v-model="tbInfos.contractBill" min='0.01' step='0.01' @blur='handleUppercase($event)'></el-input>
 					</el-form-item>
-					<el-form-item label="合同金额大写" v-model="tbInfos.contractBillChinesize">
-						无
+					<el-form-item label="合同金额大写">
+						<span v-text='tbInfos.contractBillChinesize'></span>
 					</el-form-item>
 					<el-form-item label="金额备注" class="inp-long">
 						<el-input v-model="tbInfos.contractBillRemark"></el-input>
@@ -220,9 +237,11 @@
 						     <el-input v-model="tbInfos.jiaManager"></el-input>
 					    </el-form-item>
                     </div>
-					<el-form-item label="相关附件">
-						<el-upload action="http://192.168.1.2:2000/api/upload-files" :on-preview="handlePreview"  :on-remove="handleRemove"  :before-remove="beforeRemove">
-							<el-button size="default" type="primary">点击上传</el-button>
+					<el-form-item label="相关附件" prop='tbFile'>
+						<!-- limit——限制上传文件的个数； -->
+						<el-upload :action="uploadUrl()" ref='upload' :auto-upload="false" :file-list='fileList' :data='taskIdObj' :before-remove="beforeRemove">
+							<el-button size="default" type="primary">选择文件</el-button>
+							<div slot="tip" class="el-upload__tip">文件大小不超过5M</div>
 						</el-upload>
 					</el-form-item>
 					<el-form-item label="发起人归属大区" v-show="tbInfos.type!==3">
@@ -238,7 +257,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>人力资源</h3>
-				<el-table :data="tbInfos.humanResources" border style="width:80%;" class="mx-table hr-table">
+				<el-table :data="tbInfos.humanResources" border style="width:80%;" class="mx-table hr-table" show-summary :summary-method="getSummaries">
 					<el-table-column prop="gprs" label="网络制式" width='180'>
 						<template slot-scope="scope">
 							<el-select placeholder="请选择" v-model="scope.row.gprs">
@@ -255,22 +274,22 @@
 					</el-table-column>
 					<el-table-column prop="count" label="数量" width='80'>
 					    <template slot-scope="scope">
-						    <el-input v-model='scope.row.count'></el-input>
+						    <el-input v-model='scope.row.count' @change='calInvest(scope.$index,scope.row)'></el-input>
 						</template>
 					</el-table-column>
 					<el-table-column prop="startTime" label="开始日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" :picker-options="pickStartDate"></el-date-picker>
+					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" :picker-options="pickStartDate" value-format="timestamp"  @change='calInvest(scope.$index,scope.row)'></el-date-picker>
 						</template> 
 					</el-table-column>
 					<el-table-column prop="endTime" label="结束日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" :picker-options="pickEndDate"></el-date-picker>
+					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" :picker-options="pickEndDate" value-format="timestamp"  @change='calInvest(scope.$index,scope.row)'></el-date-picker>
 						</template>  
 					</el-table-column>
-					<el-table-column prop="product" label="投入人天" > 
+					<el-table-column prop="product" label="投入人天"> 
 					</el-table-column>
-					<el-table-column prop="average" label="折合人月"> 
+					<el-table-column prop="average" label="折合人月">
 					</el-table-column>
 					<el-table-column prop="remark" label="备注" width='180'>
 						<template slot-scope='scope'>
@@ -414,7 +433,7 @@
 					    </el-select>
 				    </el-form-item>
 				    <el-form-item label="">
-						<el-button type="primary" class="el-icon-check" @click="taskBookSave">添加</el-button>
+						<el-button type="primary" class="el-icon-check" @click="taskBookSave">发送</el-button>
 				    </el-form-item>
 				</el-form>
 			</el-card>
@@ -427,20 +446,53 @@ export default {
 	name: 'TaskBookCreate',
 	data () {
 		return {
+			rules:{
+				type: [
+				    {required:true, message:'项目类型为必填项'}
+				],
+				domesticOrOversea: [
+				    {required:true,message:'国内海外为必填项'}
+				],
+				appField:[{required:true,message:'应用区域为必填项'}],
+				contractName: [{required:true,message:'合同名称为必填项'}],
+				executeCycle: [{required:true,message:'执行周期为必填项'}],
+				contractBill: [{required:true,message:'合同金额为必填项'}],
+				tbFile: [{ required:true, message:'相关附件不能为空'}]
+			},
+			taskIdObj:{
+				taskId:''
+			},
+			fileList:[],
 			tbInfos:{
                 type:1, 
-                typeForm:{},
+                typeForm:{
+                	proName:{
+                		facName:'',
+                	    desInstitute:'',
+                	    city:[],
+                	    operator:'',
+                	    define:'',
+                	    oversea:'',
+                	    proType:'',
+                	    year:'',
+                	    defineEnd:''
+                	},
+                	customer:{
+                		company:'',
+                		define:''
+                	}
+                },
                 projectName:'',
                 userName:'',
                 appField:'',
                 contractName:'',
-                marketUser:'',
-                marketPhone:'',
+                marketUser:'',  //市场归口人
+                marketPhone:'', //联系电话
                 executeCycle:[],
                 contractBill:'',
                 contractBillChinesize:'',
                 contractBillRemark:'',
-                region:'一大区',
+                region:'',
                 proDemand:'',
                 proDemandRemark:'',
                 domesticOrOversea:1,
@@ -461,68 +513,6 @@ export default {
                 proExecuteSubject:'',
                 proExecutePeople:''
 			},
-			facForm:{
-				proName:{
-					facName:'',
-					city:[],
-					operator:'',
-					define:'',
-					proType:'',
-					year:'',
-					defineEnd:''
-				},
-				customer:{
-					company:'',
-					define:''
-				}
-			},
-			triForm:{
-				proName:{
-					city:[],
-					operator:'',
-					proType:'',
-					year:'',
-					defineEnd:''
-				},
-				customer:{
-					company:'',
-					define:''
-				}
-			},
-			desForm:{
-				domProName:{
-					desInstitute:'',
-					city:[],
-					operator:'',
-					proType:'',
-					year:'',
-					defineEnd:''
-				},
-				oveProName:{
-					desInstitute:'',
-                	oversea:'', 
-                	proType:'',
-                	year:'',
-                	defineEnd:''
-                },
-                customer:{
-                	company:'',
-                	define:''
-                }	
-            },    
-            sofForm:{
-                proName:{
-                	city:[],
-                	operator:'',
-                	proType:'',
-                	year:'',
-                	defineEnd:''
-                },
-                customer:{
-                	company:'',
-                	define:''
-                }
-            },
 			facFirstList:[],
 			facThirdList:[],
 			facFourthList:[],
@@ -565,7 +555,11 @@ export default {
 		}
 	},
 	mounted (){
-		this.axios.get('/api/factory/first/list').then((res)=>{
+		let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+		this.tbInfos.marketUser = userInfo.userName;
+		this.tbInfos.marketPhone = userInfo.phone;
+		this.tbInfos.region = userInfo.region;
+		this.axios.get('/api/project/name/list?type=1&order=1').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.facFirstList = model;
@@ -573,70 +567,72 @@ export default {
 		this.axios.get('/api/provinces-district/list').then((res)=>{
 			/* let 定义变量；const 定义常量，被设置就不能再修改 都是块级作用域*/
 			const data = res.data;
-			const model = data.model;
-			model.forEach((val,ind)=>{
-				const cities = val.cities||[];
-				let obj = {};
-				obj.value = val.proName;
-				obj.label = val.proName; 
-				if(cities.length>0){
-					obj.children = [];
-					cities.forEach((value,index)=>{
-						let cityObj = {};
-						cityObj.value = value.name;
-						cityObj.label = value.name;
-						obj.children.push(cityObj);
-					})
-				}
-				this.provincesList.push(obj);
-			})
+			if(data.code == 200){
+				const model = data.model;
+				model.forEach((val,ind)=>{
+					const cities = val.cities||[];
+					let obj = {};
+					obj.value = val.proName;
+					obj.label = val.proName; 
+					if(cities.length>0){
+						obj.children = [];
+						cities.forEach((value,index)=>{
+							let cityObj = {};
+							cityObj.value = value.name;
+							cityObj.label = value.name;
+							obj.children.push(cityObj);
+						})
+					}
+					this.provincesList.push(obj);
+				})
+			}
 		});
-		this.axios.get('/api/factory/third/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=1&order=3').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.facThirdList = model;
 		});
-		this.axios.get('/api/factory/fourth/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=1&order=4').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.facFourthList = model;
 		});
-		this.axios.get('/api/factory/fifth/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=1&order=5').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.yearList = model;
 		});
-		this.axios.get('/api/three/second/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=2&order=2').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.triSecondList = model;
 		});
-		this.axios.get('/api/three/third/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=2&order=3').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.triThirdList = model;
 		});
-		this.axios.get('/api/design/first/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=3&order=1').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.desFirstList = model;
 		});
-		this.axios.get('/api/design/third/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=3&order=3').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.desThirdList = model;
 		});
-		this.axios.get('/api/design/fourth/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=3&order=4').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.desFourthList = model;
 		});
-		this.axios.get('/api/software/second/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=4&order=2').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.sofSecondList = model;
 		});
-		this.axios.get('/api/software/third/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=4&order=3').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.sofThirdList = model;
@@ -646,22 +642,22 @@ export default {
 			const model = data.model;
 			this.appAreaList = model;
 		});
-		this.axios.get('/api/name/factory/list').then((res)=>{
+		this.axios.get('/api/guest/name/list?type=1').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.facUserNameList = model;
 		});
-		this.axios.get('/api/name/three/list').then((res)=>{
+		this.axios.get('/api/guest/name/list?type=2').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.triUserNameList = model;
 		});
-		this.axios.get('/api/name/design/list').then((res)=>{
+		this.axios.get('/api/guest/name/list?type=3').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.desUserNameList = model;
 		});
-		this.axios.get('/api/name/software/list').then((res)=>{
+		this.axios.get('/api/guest/name/list?type=4').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.sofUserNameList = model;
@@ -696,31 +692,74 @@ export default {
 			const model = data.model;
 			this.proDeptList = model;
 		});
-		this.axios.get('/api/design/Oversea/second/list').then((res)=>{
+		this.axios.get('/api/project/name/list?type=3&order=2').then((res)=>{
 			const data = res.data;
 			const model = data.model;
 			this.desOverList = model;
 		});
 	},
 	methods:{
-		handleRemove(file,fileList){
-
+		emptyProName(){
+            this.tbInfos.typeForm.proName.city=[];
+            this.tbInfos.typeForm.proName.facName='';
+            this.tbInfos.typeForm.proName.desInstitute='';
+            this.tbInfos.typeForm.proName.operator='';
+            this.tbInfos.typeForm.proName.define='';
+            this.tbInfos.typeForm.proName.oversea='';
+            this.tbInfos.typeForm.proName.proType='';
+            this.tbInfos.typeForm.proName.year='';
+            this.tbInfos.typeForm.proName.defineEnd='';
+            this.tbInfos.typeForm.customer.company='';
+            this.tbInfos.typeForm.customer.define='';
 		},
-		handlePreview(file){
-
+		emptyDesProName(){
+            this.tbInfos.typeForm.proName.city=[];
+            this.tbInfos.typeForm.proName.facName='';
+            this.tbInfos.typeForm.proName.desInstitute='';
+            this.tbInfos.typeForm.proName.operator='';
+            this.tbInfos.typeForm.proName.define='';
+            this.tbInfos.typeForm.proName.oversea='';
+            this.tbInfos.typeForm.proName.proType='';
+            this.tbInfos.typeForm.proName.year='';
+            this.tbInfos.typeForm.proName.defineEnd='';
 		},
-		handleExceed(files,fileList){
-
+		calInvest(index, row){
+			row.product = (row.endTime && row.startTime && row.count)?((row.endTime - row.startTime)/(1000*60*60*24)+1)*row.count:0;
+			row.average = row.product?(row.product/30).toFixed(2):0;
+		},
+		getSummaries(param) {
+			return this.tableSum(param);
+		},
+		handleUppercase(e){
+			// 校验输入的为金额——正数，整数部分不超过9位数，小数部分不超过两位小数
+			let amount= this.tbInfos.contractBill;
+            amount = this.amountInWords(amount);
+			this.tbInfos.contractBillChinesize = amount;
+		},
+		investHandleUppercase(e){
+			// 校验输入的为金额——正数，最多保留两位小数
+			let amount= this.tbInfos.amountOfInvest; 
+			amount = this.amountInWords(amount);
+			this.tbInfos.investChinesize = amount;
 		},
 		beforeRemove(file,fileList){
-			return this.$confirm('确定移除${file.name}?');
+			return this.$confirm('确定移除该文件?');
 		},
 		hrDelRow(index,row){
 			this.tbInfos.humanResources.splice(index,1);
 		},
 		hrAddRow(){
 			//往表格里添加数据
-			let rowData = {gprs:"",scale:"",count:"", startTime:"", endTime:"", product:"", average:'', remark:""};
+			let rowData = {gprs:"",scale:"",count:"", product:"", average:'', remark:""};
+			let humanResources = this.tbInfos.humanResources;
+			let startTime = '';
+			let endTime = '';
+			if(humanResources.length >= 1){
+				startTime = humanResources[0].startTime;
+				endTime = humanResources[0].endTime;
+			}
+			rowData.startTime = startTime;
+			rowData.endTime = endTime;
 			this.tbInfos.humanResources.push(rowData);
 		},
 		carDelRow(index,row){
@@ -754,58 +793,32 @@ export default {
 				this.proManagerList = model;
 			});
 		},
+		uploadUrl(){
+			/*return 'http://192.168.1.2:2000/api/upload-files';*/
+			return 'http://163.53.91.130:5005/api/upload-files';
+		},
 		taskBookSave(){
 			// 项目任务书提交
 			let params={};
 			let tbInfos = this.tbInfos;
-			if(tbInfos.type == 1){
-				tbInfos.typeForm = this.facForm;
-				let proName = this.facForm.proName;
-				let str = '';
-				str = proName.facName + (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
-				tbInfos.projectName = str;
-				let userName = this.facForm.customer;
-				tbInfos.userName = userName.company +(userName.define?("（"+ userName.define +"）"):'');
-			}else if(tbInfos.type == 2){
-				tbInfos.typeForm = this.triForm;
-                let proName = this.triForm.proName;
-				let str = '';
-				str = (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator + proName.proType+proName.year+ (proName.defineEnd?'（'+proName.defineEnd+'）':'');
-				tbInfos.projectName = str;
-				let userName = this.triForm.customer;
-				tbInfos.userName = userName.company + (userName.define?("（"+ userName.define +"）"):'');
-			}else if(tbInfos.type == 3){
-				tbInfos.typeForm.customer = this.desForm.customer;
-				if(tbInfos.domesticOrOversea == 1){
-					let proName = this.desForm.domProName;
-				    let str = '';
-				    str = proName.desInstitute + (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator + proName.proType+proName.year+(proName.defineEnd?'（'+proName.defineEnd+'）':'');
-				    tbInfos.projectName = str;
-				    tbInfos.typeForm.proName = this.desForm.domProName;
-				}else if(tbInfos.domesticOrOversea == 2){
-					let proName = this.desForm.oveProName;
-				    let str = '';
-				    str = proName.desInstitute + proName.oversea + proName.operator + proName.proType + proName.year+ (proName.defineEnd?'（'+proName.defineEnd+'）':'') ;
-				    tbInfos.projectName = str;
-				    tbInfos.typeForm.proName = this.desForm.oveProName;
-				}
-				let userName = this.desForm.customer;
-				tbInfos.userName = userName.company + (userName.define?("（"+ userName.define +"）"):'');
-			}else if(tbInfos.type == 4){
-				tbInfos.typeForm = this.sofForm;
-				let proName = this.sofForm.proName;
-				let str = '';
-				str = (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator + proName.proType+proName.year+ (proName.defineEnd?'（'+proName.defineEnd+'）':'');
-				tbInfos.projectName = str;
-				let userName = this.sofForm.customer;
-				tbInfos.userName = userName.company + (userName.define? ("（"+ userName.define +"）"):'');
-			}
-            params = this.tbInfos;
-			console.log(params);
+			let proName = tbInfos.typeForm.proName;
+			let str = '';
+			str = proName.facName + proName.desInstitute + (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+ proName.oversea +proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
+			tbInfos.projectName = str;
+			let userName = tbInfos.typeForm.customer;
+			tbInfos.userName = userName.company +(userName.define?("（"+ userName.define +"）"):'');
+            params = tbInfos;
 			this.axios.post('/api/task/add',params).then((res)=>{
                 const data = res.data;
-                let msg = data.message;
-                this.$alert(msg,'提示');
+                const msg = data.message;
+                if(data.code == 200){
+                	let model = data.model;
+                	this.taskIdObj.taskId = model;
+                	this.$refs.upload.submit();
+                    this.$alert(msg,'提示');
+                }else{
+                	this.$alert(msg,'错误提示');
+                }  
 			}).catch((error)=>{
                
 			});

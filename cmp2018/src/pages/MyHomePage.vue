@@ -9,10 +9,10 @@
 		<div class="page-content">
 			<el-card class="box-card" shadow="always" :model="userInfo">
 				<h3>个人信息</h3>
-				<div class="user-info">姓名：{{userInfo.userName}}</div>
-				<div class="user-info">类型：{{userInfo.userType}}</div>
-				<div class="user-info">部门：{{userInfo.department}}</div>
-				<div class="user-info">职务：{{userInfo.userPost}}</div>
+				<div class="user-info">姓名：<span>{{userInfo.userName}}</span></div>
+				<div class="user-info">类型：<span>{{userInfo.type}}</span></div>
+				<div class="user-info">部门：<span>{{userInfo.executeDept}}</span></div>
+				<div class="user-info">职务：<span>{{userInfo.duties}}</span></div>
 			</el-card>
 		</div>
 	</div>
@@ -30,13 +30,17 @@ export default {
 	},
 	data () {
 		return {
-			userInfo:{
-				userName:"Admin",
-				userType:"管理员",
-				department:"",
-				userPost:"管理员"
-			}
+			userInfo:{}
 		}
+	},
+	mounted(){
+		let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+		if( userInfo.type == 1){
+			userInfo.type = '管理员'
+		}else if(userInfo.type == 2){
+			userInfo.type = '普通用户';
+		}
+		this.userInfo = userInfo;
 	}
 }
 </script>
@@ -44,5 +48,6 @@ export default {
 <style scoped>
 .page-content .box-card{ width: 440px;color:#48576a;}
 .page-content h3{ border-bottom: 1px solid #e6e6e6; margin: 0 0 10px 0;padding-bottom: 10px;}
-.page-content .user-info{ height: 30px;line-height: 30px; }
+.page-content .user-info{ height: 30px;line-height: 30px;}
+.page-content .user-info span{ font-weight: 600px; }
 </style>

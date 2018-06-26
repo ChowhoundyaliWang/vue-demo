@@ -3,8 +3,8 @@
 		<div class="page-title mb-16">
 			<el-breadcrumb separator="/">
 				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>已审核的项目任务书</el-breadcrumb-item>
+				<el-breadcrumb-item>项目号分配</el-breadcrumb-item>
+				<el-breadcrumb-item>待分配的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
 		<div class="page-content">
@@ -24,10 +24,10 @@
 				<el-table :data="tableData" stripe border class="mb-16">
 					<el-table-column prop="operate" label="操作" width="60px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
-							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
+							<el-button type="text" @click="handleAllot(scope.$index,scope.row)">分配</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='220px'  show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
@@ -92,7 +92,7 @@
 				</el-dialog>
 
                 <!-- 对比更新区域 -->
-                <el-dialog title="更新记录" :visible.sync="contrastVisible" width='92%'>
+                <el-dialog title="更新记录" :visible.sync="contrastVisible" width='95%'>
                 	<contrast-update v-bind:tb-infos='tbInfos' v-bind:another='another' v-bind:ano-manager='anoProManagerList' v-bind:dept-list='proDeptList' v-bind:manager-list='proManagerList'></contrast-update>
                 	<div slot="footer" class="dialog-footer">
                 		<el-button type="primary" @click="contrastVisible = false">关闭</el-button>
@@ -106,7 +106,7 @@
 <script>
 import contrastUpdate from '../components/contrastUpdate'
 export default {
-	name: 'TaskBookAudited',
+	name: 'TaskBookToBeAllocated',
 	components:{
 		"contrast-update":contrastUpdate
 	},
@@ -118,7 +118,6 @@ export default {
 			pageSize:0,
 			updateList:[],
 			dialogVisible: false,
-
 			contrastVisible: false,
 			tbInfos:{},
 			another:{},
@@ -128,8 +127,8 @@ export default {
 		}
 	},
 	mounted (){
-		// 请求参数 status 1-未审核；2-已通过；3-已分配；4-未通过;5-待审核；6-已审核
-		this.axios.get('/api/task/list?status=6').then((res)=>{
+		// 请求参数 status 0-历史版本；1-未审核；2-已通过；3-已分配；4-未通过
+		this.axios.get('/api/task/list?status=7').then((res)=>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
@@ -150,11 +149,11 @@ export default {
 		doFilter(){
 			console.log('table过滤');
 		},
-		// 表格点击 审核任务书事件
-		handleView(index,row){
+		// 表格点击查看事件
+		handleAllot(index,row){
             let curId = row.id;
             this.$router.push({
-            	name:'TaskBookView', params:{ id: curId}
+            	name:'TaskBookAllot', params:{ id: curId}
             })
 		},
 		viewUpdate(id){
@@ -233,7 +232,7 @@ export default {
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/task/list?pageNum='+val+'&status=6').then((res)=>{
+			this.axios.get('/api/task/list?pageNum='+val+'&status=7').then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;

@@ -7,7 +7,8 @@
 			</el-breadcrumb>
 		</div>
 		<div class="page-content">
-			<!-- 工具条 -->
+			<el-card class='box-card mb-16' shadow='always'>
+				<!-- 工具条 -->
 			<el-col :span="24" class="mx-tool-bar mb-16">
 				<el-form :inline="true">
 					<el-form-item>
@@ -17,15 +18,48 @@
 				    	<el-button type="primary" @click="doFilter" icon="el-icon-search">查询</el-button>
 				    </el-form-item>
 				    <el-form-item>
-				    	<router-link to="/UserCreate"><el-button type="primary" @click="createUser" class="fl"><i class="el-icon-plus"></i>新建用户</el-button></router-link>
+				    	<router-link to="/UserCreate"><el-button type="primary" class="fl"><i class="el-icon-plus"></i>新建用户</el-button></router-link>
 				    </el-form-item>
 				</el-form>
 			</el-col>
 
-			<!-- 表格 -->
-			<el-table :data="tableData" border style="width:100%;">
-				<el-table-column prop="data" ></el-table-column>
+			<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
+			<el-table :data="tableData" stripe border class="mb-16">
+				<el-table-column prop="operate" label="操作" width="150px" tooltip-effect='dark'> 
+					<template slot-scope="scope">
+						<el-button type="text" @click="handleView(scope.$index, scope.row)">查看</el-button>
+						<el-button type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+						<el-button type="text" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column prop="userName" label="用户名" show-overflow-tooltip> 
+				</el-table-column>
+				<el-table-column prop="type" label="用户类型" show-overflow-tooltip>
+				</el-table-column>
+				<el-table-column prop="name" label="姓名" show-overflow-tooltip> 
+				</el-table-column>
+				<el-table-column prop="phone" label="联系电话" show-overflow-tooltip> 
+				</el-table-column>
+				<el-table-column prop="duties" label="职务" show-overflow-tooltip> 
+				</el-table-column>
+				<el-table-column prop="region" label="所属销售大区" show-overflow-tooltip> 
+				</el-table-column>
+				<el-table-column prop="executeDept" label="所属执行部门" show-overflow-tooltip> 
+				</el-table-column>
 			</el-table>
+			<div>
+				<div style="width:100%;text-align:center;">
+					<el-pagination 
+					background 
+					@current-change="handleCurrentChange"
+					:current-page.sync="pageNum"
+					:page-size="pageSize"
+					layout="total,prev,pager,next"
+					:total="totalNum"></el-pagination>
+					<!-- current-change currentPage改变时会触发 -->
+				</div>
+			</div>
+			</el-card>
 		</div>
 	</div>
 </template>
@@ -35,15 +69,52 @@ export default {
 	name: 'UserManage',
 	data () {
 		return {
-			
+			tableData:[],
+			pageNum: 0,
+			pageSize: 0,
+			totalNum: 0
 		}
+	},
+	mounted(){
+		this.axios.get('/api/user/find').then((res) =>{
+			let data = res.data;
+			if(data.code == 200){
+				let model = data.model;
+				this.tableData = model.data;
+				this.pageNum = model.pageNum;
+				this.pageSize = model.pageSize;
+				this.totalNum = model.totalNum;
+			}else{
+				this.$alert(data.message, '提示');
+			}
+		})
 	},
 	methods:{
 		doFilter(){
 			console.log("查询，代码待补充")
 		},
-		createUser(){
-			console.log("新建用户，代码待补充")
+		handleView(index, row){
+			//查看用户
+		},
+		handleEdit(index, row){
+			//编辑用户
+		},
+		handleDel(index, row){
+			//删除用户
+		},
+		handleCurrentChange(val){
+			this.axios.get('/api/user/find?pageNum='+val).then((res) =>{
+				let data = res.data;
+				if(data.code == 200){
+					let model = data.model;
+					this.tableData = model.data;
+					this.pageNum = model.pageNum;
+					this.pageSize = model.pageSize;
+					this.totalNum = model.totalNum;
+				}else{
+					this.$alert(data.message, '提示');
+				}
+			})
 		}
 	}
 }

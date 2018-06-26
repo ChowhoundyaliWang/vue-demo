@@ -36,7 +36,8 @@ module.exports = {
     cssSourceMap: true,
     proxyTable: {
       '/api': {
-        target: 'http://192.168.1.2:2000',
+        target: 'http://192.168.1.2:5005',   //局域网
+        /*target: 'http://163.53.91.130:5005',*/
         changeOrigin: true //允许跨域
       }
     }

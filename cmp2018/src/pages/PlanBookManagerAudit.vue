@@ -2,15 +2,26 @@
 	<div>
 		<div class="page-title mb-16">
 			<el-breadcrumb separator="/">
-				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>待审核的项目任务书</el-breadcrumb-item>
+				<el-breadcrumb-item>项目计划书</el-breadcrumb-item>
+				<el-breadcrumb-item>项目计划书审核</el-breadcrumb-item>
+				<el-breadcrumb-item>待审核的项目计划书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<task-book  v-bind:tb-infos='tbInfos' v-bind:dept-list='proDeptList' v-bind:manager-list='proManagerList'></task-book>
+		<plan-book  v-bind:plan-book='planBook'></plan-book>
 		<div class="page-content">
+			<el-card class="box-card mb-16 inp-middle" shadow="always" v-if='planBook.records[0] && planBook.records[0].type == 2'>
+				<h3>执行部门经理审核</h3>
+				<el-form label-width="150px">
+					<el-form-item label="审核意见">
+						<el-input type='textarea' :rows='4' v-model='planBook.records[0] && planBook.records[0].remark' style="width:40%;"></el-input>
+					</el-form-item>
+					<el-form-item label="审核结果"> 
+						<span v-text="planBook.records[0] && planBook.records[0].status == 3?'通过':'未通过'"></span>
+					</el-form-item>
+				</el-form>
+			</el-card>
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
-				<h3>任务书审核</h3>
+				<h3>计划书审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
 						<el-input type='textarea' :rows='4' v-model='remark' style="width:40%;"></el-input>
@@ -26,50 +37,29 @@
 </template>
 
 <script>
-import TaskBook from '../components/TaskBook'
+import PlanBook from '../components/PlanBook.vue'
 export default {
-	name: 'TaskBookAuditing',
-	components:{
-		"task-book": TaskBook
+	name: 'PlanBookManagerAudit',
+	components: {
+		"plan-book": PlanBook
 	},
 	data () {
 		return {
-			tbInfos:{
-				record:{
-					remark:'',
-					status:''
-				}
-			},
-			proDeptList:[],
-			proManagerList:[],
-			remark:'',
-			taskId: this.$route.params.id
+			planBook:{},
+			curId: this.$route.params.id,
+			type: 1
 		}
 	},
 	mounted (){
-		this.axios.get('/api/pro-dept/list').then((res)=>{
+		this.axios.get('/api/planPaper/get/'+ this.curId).then((res)=>{
 			const data = res.data;
-			const model = data.model;
-			this.proDeptList = model;
-		});
-		this.axios.get('/api/task/get/'+ this.taskId).then((res)=>{
-			let data = res.data;
 			if(data.code == 200){
-				let model = data.model;
-				console.log(model);
-				this.tbInfos = model;
-				this.axios.get('/api/pro-management/list',{params:{'id': this.tbInfos.proExecuteSubject}}).then((res)=>{
-			       const data = res.data;
-			       const model = data.model;
-			       this.proManagerList = model;
-		        });
+				const model = data.model;
+				this.planBook = model;
 			}
 		});
 	},
 	methods:{
-		getSummaries(param) {
-			return this.tableSum(param);
-		},
 		pass(){
 			this.$confirm('确定审核通过吗？','提示',{
 				confirmButtonText:'确定',
@@ -77,17 +67,18 @@ export default {
 				type:'info'
 			}).then(()=>{
 				let params = {};
-				params.status = 2;
-				params.taskId = this.taskId;
+				params.status = 3;
+				params.planPaperId = this.curId;
 				params.remark = this.remark;
-				this.axios.post('/api/task/audit',params).then((res)=>{
+				params.type = this.type;
+				this.axios.post('/api/planPaper/audit',params).then((res)=>{
 					let data = res.data;
 					if(data.code == 200){
 						this.$alert("审核成功！",'提示',{
 							confirmButtonText:'确定',
 							callback: action => {
 								this.$router.push({
-									path:'/TaskBookAudited'
+									path:'/planBooksAudited'
 								});
 							}
 						})
@@ -109,17 +100,18 @@ export default {
 				type: 'info'
 			}).then(() => {
 				let params = {};
-				params.status = 4;
-				params.taskId = this.taskId;
+				params.status = 5;
+				params.planPaperId = this.curId;
 				params.remark = this.remark;
-				this.axios.post('/api/task/audit',params).then((res)=>{
+				params.type = this.type;
+				this.axios.post('/api/planPaper/audit',params).then((res)=>{
 					let data = res.data;
 					if(data.code == 200){
 						this.$alert("审核成功！",'提示', {
 							confirmButtonText:'确定',
 							callback: action => {
 								this.$router.push({
-									path:'/TaskBookAudited'
+									path:'/planBooksAudited'
 								})
 							}
 						})

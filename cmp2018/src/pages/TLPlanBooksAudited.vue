@@ -2,9 +2,9 @@
 	<div>
 		<div class="page-title mb-16">
 			<el-breadcrumb separator="/">
-				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>已审核的项目任务书</el-breadcrumb-item>
+				<el-breadcrumb-item>项目计划书</el-breadcrumb-item>
+				<el-breadcrumb-item>项目计划书审核</el-breadcrumb-item>
+				<el-breadcrumb-item>已审核TL的项目计划书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
 		<div class="page-content">
@@ -22,27 +22,27 @@
 				</el-col>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
 				<el-table :data="tableData" stripe border class="mb-16">
-					<el-table-column prop="operate" label="操作" width="60px" tooltip-effect='dark'> 
+					<el-table-column prop="operate" label="操作" width="100px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='220px'  show-overflow-tooltip>
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNumber" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectNo" label="项目号" show-overflow-tooltip>
 					</el-table-column>
-					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip> 
+					<el-table-column prop="region" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
+					<el-table-column prop="createdUser" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="createdTime" label="创建时间" width='200px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditor" label="审核人" show-overflow-tooltip> 
+					<el-table-column prop="auditUser" label="审核人" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditTime" label="审核时间" width='200px' show-overflow-tooltip> 
 					</el-table-column>
@@ -60,6 +60,7 @@
 					</div>
 				</div>
 				
+
 				<!-- 更新记录对话框 -->
 				<el-dialog title="更新记录" :visible.sync="dialogVisible">
 					<el-table :data="updateList" stripe border style="width:100%;" class="mb-16" height="300">
@@ -106,9 +107,9 @@
 <script>
 import contrastUpdate from '../components/contrastUpdate'
 export default {
-	name: 'TaskBookAudited',
+	name: 'TLPlanBooksAudited',
 	components:{
-		"contrast-update":contrastUpdate
+		"contrast-update": contrastUpdate
 	},
 	data () {
 		return {
@@ -118,7 +119,6 @@ export default {
 			pageSize:0,
 			updateList:[],
 			dialogVisible: false,
-
 			contrastVisible: false,
 			tbInfos:{},
 			another:{},
@@ -128,8 +128,7 @@ export default {
 		}
 	},
 	mounted (){
-		// 请求参数 status 1-未审核；2-已通过；3-已分配；4-未通过;5-待审核；6-已审核
-		this.axios.get('/api/task/list?status=6').then((res)=>{
+		this.axios.get('/api/planPaper/list?status=6').then((res)=>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
@@ -150,11 +149,18 @@ export default {
 		doFilter(){
 			console.log('table过滤');
 		},
-		// 表格点击 审核任务书事件
+		// 表格点击查看事件
 		handleView(index,row){
             let curId = row.id;
             this.$router.push({
-            	name:'TaskBookView', params:{ id: curId}
+            	name:'TaskBookReceived', params:{ id: curId}
+            })
+		},
+		// 表格点击更新事件
+		handleUpdate(index,row){
+			let curId = row.id;
+            this.$router.push({
+            	name:'TaskBookUpdate', params:{ id: curId}
             })
 		},
 		viewUpdate(id){
@@ -233,7 +239,7 @@ export default {
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/task/list?pageNum='+val+'&status=6').then((res)=>{
+			this.axios.get('/api/task/list?pageNum='+val+'&status=2').then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;

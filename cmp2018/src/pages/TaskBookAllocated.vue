@@ -3,8 +3,8 @@
 		<div class="page-title mb-16">
 			<el-breadcrumb separator="/">
 				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>已审核的项目任务书</el-breadcrumb-item>
+				<el-breadcrumb-item>项目号分配</el-breadcrumb-item>
+				<el-breadcrumb-item>已分配的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
 		<div class="page-content">
@@ -27,7 +27,7 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='220px'  show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
@@ -40,11 +40,11 @@
 					</el-table-column>
 					<el-table-column prop="createTime" label="创建时间" width='200px' show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
+					<el-table-column prop="allocationStatus" label="分配状态" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditor" label="审核人" show-overflow-tooltip> 
+					<el-table-column prop="allocationName" label="分配人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="allocationTime" label="分配时间" width='200px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -92,7 +92,7 @@
 				</el-dialog>
 
                 <!-- 对比更新区域 -->
-                <el-dialog title="更新记录" :visible.sync="contrastVisible" width='92%'>
+                <el-dialog title="更新记录" :visible.sync="contrastVisible" width='95%'>
                 	<contrast-update v-bind:tb-infos='tbInfos' v-bind:another='another' v-bind:ano-manager='anoProManagerList' v-bind:dept-list='proDeptList' v-bind:manager-list='proManagerList'></contrast-update>
                 	<div slot="footer" class="dialog-footer">
                 		<el-button type="primary" @click="contrastVisible = false">关闭</el-button>
@@ -106,7 +106,7 @@
 <script>
 import contrastUpdate from '../components/contrastUpdate'
 export default {
-	name: 'TaskBookAudited',
+	name: 'TaskBookAllocated',
 	components:{
 		"contrast-update":contrastUpdate
 	},
@@ -120,16 +120,26 @@ export default {
 			dialogVisible: false,
 
 			contrastVisible: false,
-			tbInfos:{},
-			another:{},
+			tbInfos:{
+				record:{
+					remark:'',
+					status:''
+				}
+			},
+			another:{
+				record:{
+					remark:'',
+					status:''
+				}
+			},
 			anoProManagerList:[],
 			proDeptList:[],
 			proManagerList:[]
 		}
 	},
 	mounted (){
-		// 请求参数 status 1-未审核；2-已通过；3-已分配；4-未通过;5-待审核；6-已审核
-		this.axios.get('/api/task/list?status=6').then((res)=>{
+		// 请求参数 status 0-历史版本；1-未审核；2-已通过；3-已分配；4-未通过
+		this.axios.get('/api/task/list?status=3').then((res)=>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
@@ -150,7 +160,7 @@ export default {
 		doFilter(){
 			console.log('table过滤');
 		},
-		// 表格点击 审核任务书事件
+		// 表格点击查看事件
 		handleView(index,row){
             let curId = row.id;
             this.$router.push({
@@ -233,7 +243,7 @@ export default {
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/task/list?pageNum='+val+'&status=6').then((res)=>{
+			this.axios.get('/api/task/list?pageNum='+val+'&status=3').then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;

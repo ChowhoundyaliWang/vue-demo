@@ -1,3 +1,9 @@
+button.green{ color:#67c23a; }
+button.red{color: #f56c6c;}
+h4.tb-title{ text-align: center; color:#1f7ab7; }
+p.p-hei{height: 42px;}
+
+
 .mb-16{margin-bottom: 16px;}
 .fl{float:left;}
 .min-w{min-width: 1280px;}
@@ -8,11 +14,15 @@
 .page-content h3{ border-bottom: 1px solid #e6e6e6; margin: 0 0 20px 0;padding-bottom: 10px;color: #48576a;}
 .page-content .el-form-item{margin:20px 0;}
 #userCreate .inp-long .el-input{width: 400px;}
-.page-content .el-input, #userCreate .inp-middle .el-input{width: 246px;}
-#userCreate .el-input{width:150px;}
+/* .page-content .el-input */
+#userCreate .inp-middle .el-input{width: 246px;} 
+#userCreate .el-input, .inp-middle .el-input{ width:150px; }
+.inp-mini .el-input{ width:50px; }
+.tb-inp .el-date-editor.el-input{ width: 100%; }
 
 /* TABLE 样式设置 */
 .page-content .mx-table .el-input__inner{height:29px;line-height: 29px;}
+.page-content .inp-mini .mx-table .el-input__inner{height: 22px; line-height: 22px;padding:0 5px;}
 .page-content .mx-table .el-input__icon{ line-height: 30px; }
 .page-content .mx-table .el-table__empty-block{min-height: 40px;}
 .page-content .el-table td,.page-content .el-table th.is-leaf{border-bottom: 1px solid #cacbce;padding: 5px 0;}

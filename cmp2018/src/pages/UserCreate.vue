@@ -72,14 +72,7 @@
 export default {
 	name: 'UserCreate',
 	created (){
-		this.axios.get('/api/dept/list').then(function(res){
-			let dutiesData = res.data.model;
-			sessionStorage.setItem('dutiesData',JSON.stringify(dutiesData));
-		});
-		this.axios.get('/api/menu/list').then((res)=>{
-			let menuList = res.data.model;
-			sessionStorage.setItem('menuList',JSON.stringify(menuList));
-		});
+		/*sessionStorage.setItem('0',1);*/
 	},
 	data () {
 		return {
@@ -89,13 +82,13 @@ export default {
 				password:"",
 				name:"",
 				phone:"",
-				roleIds:[],
+				dutyIds:[],
 				regionId:"",
 				proDeptId:'',
 				pramsList:[]
 			},
-			dutiesData:[],
 			menuList:[],
+			dutiesData:[],
 			regionList:[],
 			deptList:[],
 			regionShowFlag: false,
@@ -103,16 +96,19 @@ export default {
 		}
 	},
 	mounted (){
-		let dutiesData = sessionStorage.getItem('dutiesData');
-		dutiesData = JSON.parse(dutiesData);
-		dutiesData.forEach((val, ind)=>{
-			val.disabled = "true";
-		})
-		this.dutiesData = dutiesData;
-
-		let menuList = sessionStorage.getItem('menuList');
-		menuList = JSON.parse(menuList);
-		this.menuList = menuList;
+		this.axios.get('/api/dept/list').then((res)=>{
+			const data = res.data;
+			const model = data.model;
+			model.forEach((val, ind)=>{
+				val.disabled = "true";
+			})
+			this.dutiesData = model;
+		});
+		this.axios.get('/api/menu/list').then((res)=>{
+			const data = res.data;
+			const model = data.model;
+			this.menuList = model;
+		});
 		
 		this.axios.get('/api/region/list').then((res)=>{
 			const data = res.data;
@@ -163,7 +159,7 @@ export default {
 		},
 		createUser(){
 			this.userData.type = parseInt(this.userData.type);
-			this.userData.roleIds = this.$refs.dutyTree.getCheckedKeys();
+			this.userData.dutyIds = this.$refs.dutyTree.getCheckedKeys();
 			this.userData.pramsList = this.$refs.authorityTree.getCheckedKeys();
 			console.log(this.userData);
 			let params = this.userData;

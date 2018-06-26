@@ -7,7 +7,10 @@
           <el-input v-model="user.userName"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="user.password" auto-complete="off"></el-input>
+          <el-input type="password" v-model="user.password" auto-complete="off" @keyup.enter.native='login()'></el-input>
+        </el-form-item>
+        <el-form-item label="" prop="password" class='remCheck'>
+          <el-checkbox v-model='remPsw' @change='remPswChange'>记住密码</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="login()">登录</el-button>
@@ -26,31 +29,36 @@ export default {
       mxTitle: '明讯网络项目流程控制平台CMPv1.0',
       user:{
         userName:'',
-        password:''
+        password:'',
+        remPsw: false
       }
     }
   },
   methods:{
+    remPswChange(val){
+      console.log(val)
+    },
     login(){
       let params = {};
       params = this.user;
-      console.log(params);
       this.axios.post("/api/login",params,{ headers:{'Content-Type':'application/json;charset=UTF-8'} }).then((res)=>{
         let data = res.data;
+        let msg = data.message;
         if(data.code == 200){
-          let model = data.model;
-          localStorage.removeItem('token');
-          localStorage.setItem('token', model.token);
-          /*localStorage.setItem('userData',model.)*/
-          let redirect = decodeURIComponent(this.$route.query.redirect||'');
-          if (redirect) { // 跳转到指定链接
-            this.$router.push({path: redirect});
-          } else {
-            this.$router.push({path: '/'});
-          }
+           let model = data.model;
+           localStorage.removeItem('token');
+           localStorage.removeItem('userInfo');
+           localStorage.setItem('token', model.token);
+           localStorage.setItem('userInfo', JSON.stringify(model));
+           let redirect = decodeURIComponent(this.$route.query.redirect||'');
+           if (redirect) { // 跳转到指定链接
+             this.$router.push({path: redirect});
+           } else {
+             this.$router.push({path: '/'});
+           }
         }else{
           //请求失败
-          console.log("请求失败");
+          this.$alert(msg, '错误提示')
         }
       }).catch((res)=>{
         //请求异常处理
@@ -63,6 +71,8 @@ export default {
 <style>
 /* login 登录界面 */
 #log{width: 100%; height: 100vh;background:url("../assets/login-bg.png") no-repeat;background-size: cover;padding-top:12%;box-sizing: border-box;}
-.log-content{ width: 400px;height: 300px;border: 1px solid #f5f7f9;border-radius: 5px;background: transparent;color: #ffffff;margin-left: 50%; }
+.log-content{ width: 400px;height: 320px;border: 1px solid #f5f7f9;border-radius: 5px;background: transparent;color: #ffffff;margin-left: 50%; }
 .log-content h3{text-align: center;margin:35px 0;font-size: 18px;}
+.remCheck .el-form-item__content{ line-height: 14px; }
+.remCheck .el-checkbox{ color:#fff;}
 </style>

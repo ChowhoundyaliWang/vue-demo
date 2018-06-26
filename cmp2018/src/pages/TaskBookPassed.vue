@@ -10,7 +10,7 @@
 		<div class="page-content">
 			<el-card class="box-card mb-16" shadow="always">
 				<!-- 工具条 -->
-				<el-col style="width:80%;" class="mx-tool-bar mb-16">
+				<el-col class="mx-tool-bar mb-16">
 					<el-form :inline="true">
 						<el-form-item>
 							<el-input placeholder="请输入关键词"></el-input>
@@ -21,7 +21,7 @@
 					</el-form>
 				</el-col>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
-				<el-table :data="tableData" stripe border style="width:80%;" class="mb-16">
+				<el-table :data="tableData" stripe border class="mb-16">
 					<el-table-column prop="operate" label="操作" width="100px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
@@ -48,7 +48,7 @@
 					<el-table-column prop="auditTime" label="审核时间" width='200px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
-				<div style="width:80%;">
+				<div>
 					<div style="width:100%;text-align:center;">
 						<el-pagination 
 						background 
@@ -94,7 +94,7 @@
 				</el-dialog>
 
                 <!-- 对比更新区域 -->
-                <el-dialog title="更新记录" :visible.sync="contrastVisible" width='86%'>
+                <el-dialog title="更新记录" :visible.sync="contrastVisible" width='92%'>
                 	<contrast-update v-bind:tb-infos='tbInfos' v-bind:another='another' v-bind:ano-manager='anoProManagerList' v-bind:dept-list='proDeptList' v-bind:manager-list='proManagerList'></contrast-update>
                 	<div slot="footer" class="dialog-footer">
                 		<el-button type="primary" @click="contrastVisible = false">关闭</el-button>
@@ -242,7 +242,16 @@ export default {
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			console.log( val);
+			this.axios.get('/api/task/list?pageNum='+val+'&status=2').then((res)=>{
+				let data = res.data;
+				if(data.code == 200){
+					let model = data.model;
+					this.tableData = model.data;
+					this.totalNum = model.totalNum;
+					this.pageNum = model.pageNum;
+					this.pageSize = model.pageSize;
+				}
+			});
 		}
 	}
 }

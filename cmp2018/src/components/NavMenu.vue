@@ -23,8 +23,8 @@
 			</el-submenu>
 			<el-submenu index="2-3">
 				<template slot="title"  class="menu-title">项目号分配</template>
-				<el-menu-item index="2-3-1">待分配的项目任务书</el-menu-item>
-				<el-menu-item index="2-3-2">已分配的项目任务书</el-menu-item>
+				<el-menu-item index="/TaskBookToBeAllocated">待分配的项目任务书</el-menu-item>
+				<el-menu-item index="/TaskBookAllocated">已分配的项目任务书</el-menu-item>
 			</el-submenu>
 			<el-submenu index="2-4">
 				<template slot="title"  class="menu-title">合同管理</template>
@@ -36,46 +36,46 @@
 			<template slot="title"  class="menu-title"><i class="el-icon-edit-outline"></i>项目计划书</template>
 			<el-submenu index="3-1">
 				<template slot="title"  class="menu-title">项目任务书接收</template>
-				<el-menu-item index="3-1-1">待接收的项目任务书</el-menu-item>
-				<el-menu-item index="3-1-2">已接收的项目任务书</el-menu-item>
-				<el-menu-item index="3-1-3">TL已接收的项目任务书</el-menu-item>
+				<el-menu-item index="/TaskBookToBeReceived">待接收的项目任务书</el-menu-item>
+				<el-menu-item index="/TaskBooksReceived">已接收的项目任务书</el-menu-item>
+				<el-menu-item index="/TLTaskBooksReceived">TL已接收的项目任务书</el-menu-item>
 			</el-submenu>
 			<el-submenu index="3-2">
 				<template slot="title"  class="menu-title">人力资源申请</template>
-				<el-menu-item index="3-2-1">未反馈的人力资源申请</el-menu-item>
-				<el-menu-item index="3-2-2">待接收的人力资源反馈</el-menu-item>
+				<el-menu-item index="/HRNonFeedback">未反馈的人力资源申请</el-menu-item>
+				<el-menu-item index="/HRToBeReceived">待接收的人力资源反馈</el-menu-item>
 			</el-submenu>
 			<el-submenu index="3-3">
 				<template slot="title"  class="menu-title">人力资源申请反馈</template>
-				<el-menu-item index="3-3-1">待反馈的人力资源申请</el-menu-item>
-				<el-menu-item index="3-3-2">已反馈的人力资源申请</el-menu-item>
+				<el-menu-item index="/HRPendingFeedback">待反馈的人力资源申请</el-menu-item>
+				<el-menu-item index="/HRFeedback">已反馈的人力资源申请</el-menu-item>
 			</el-submenu>
 			<el-submenu index="3-4">
 				<template slot="title"  class="menu-title">项目计划书</template>
-				<el-menu-item index="3-4-1">部门经理未审核的项目</el-menu-item>
-				<el-menu-item index="3-4-2">执行副总未审核的项目</el-menu-item>
-				<el-menu-item index="3-4-3">已通过的项目计划书</el-menu-item>
-				<el-menu-item index="3-4-4">未通过的项目计划书</el-menu-item>
-				<el-menu-item index="3-4-5">设计类项目计划书</el-menu-item>
+				<el-menu-item index="/UnauditedProTL">部门经理未审核的项目</el-menu-item>
+				<el-menu-item index="/UnauditedProManager">执行副总未审核的项目</el-menu-item>
+				<el-menu-item index="/PlanBooksPassed">已通过的项目计划书</el-menu-item>
+				<el-menu-item index="/PlanBooksNotPassed">未通过的项目计划书</el-menu-item>
+				<el-menu-item index="/PlanBooksDesign">设计类项目计划书</el-menu-item>
 			</el-submenu>
 			<el-submenu index="3-5">
 				<template slot="title"  class="menu-title">项目计划书审核</template>
-				<el-menu-item index="3-5-1">待审核TL的项目计划书</el-menu-item>
-				<el-menu-item index="3-5-2">已审核TL的项目计划书</el-menu-item>
-				<el-menu-item index="3-5-3">待审核的项目计划书</el-menu-item>
-				<el-menu-item index="3-5-4">已审核的项目计划书</el-menu-item>
+				<el-menu-item index="/TLPlanBooksToBeAudited">待审核TL的项目计划书</el-menu-item>
+				<el-menu-item index="/TLPlanBooksAudited">已审核TL的项目计划书</el-menu-item>
+				<el-menu-item index="/planBooksToBeAudited">待审核的项目计划书</el-menu-item>
+				<el-menu-item index="/planBooksAudited">已审核的项目计划书</el-menu-item>
 			</el-submenu>
 			<el-submenu index="3-6">
 				<template slot="title"  class="menu-title">项目预算</template>
-				<el-menu-item index="3-6-1">需提交预算的项目</el-menu-item>
-				<el-menu-item index="3-6-2">已提交预算的项目</el-menu-item>
-				<el-menu-item index="3-6-3">已通过预算审批的项目</el-menu-item>
-				<el-menu-item index="3-6-4">未通过预算审批的项目</el-menu-item>
+				<el-menu-item index="/ProBudgetToSumbit">需提交预算的项目</el-menu-item>
+				<el-menu-item index="/ProBudgetSumbitted">已提交预算的项目</el-menu-item>
+				<el-menu-item index="/ProBudgetPassed">已通过预算审批的项目</el-menu-item>
+				<el-menu-item index="/ProBudgetNotPassed">未通过预算审批的项目</el-menu-item>
 			</el-submenu>
 			<el-submenu index="3-7">
 				<template slot="title"  class="menu-title">预算审批</template>
-				<el-menu-item index="3-7-1">待审批预算的项目计划书</el-menu-item>
-				<el-menu-item index="3-7-2">已审批预算的项目计划书</el-menu-item>
+				<el-menu-item index="/ProBudgetToApprove">待审批预算的项目计划书</el-menu-item>
+				<el-menu-item index="/ProBudgetApproved">已审批预算的项目计划书</el-menu-item>
 			</el-submenu>
 		</el-submenu>
 		<el-submenu index="4">

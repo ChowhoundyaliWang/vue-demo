@@ -2,9 +2,9 @@
 	<div>
 		<div class="page-title mb-16">
 			<el-breadcrumb separator="/">
-				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>项目任务书</el-breadcrumb-item>
-				<el-breadcrumb-item>查看项目任务书</el-breadcrumb-item>
+				<el-breadcrumb-item>项目计划书</el-breadcrumb-item>
+				<el-breadcrumb-item>项目预算</el-breadcrumb-item>
+				<el-breadcrumb-item>未通过预算审批的项目</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
 		<div class="page-content">
@@ -22,27 +22,35 @@
 				</el-col>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
 				<el-table :data="tableData" stripe border class="mb-16">
-					<el-table-column prop="operate" label="操作" width="100px" tooltip-effect='dark'> 
-						<template slot-scope="scope" width='60px'>
-							<el-button type="text" @click="handleModify(scope.$index,scope.row)">修改</el-button>
-							<el-button type="text" @click="handleDel(scope.$index,scope.row)">删除</el-button>
+					<el-table-column prop="operate" label="操作" width="60px" tooltip-effect='dark'> 
+						<template slot-scope="scope">
+							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='210px'  show-overflow-tooltip></el-table-column>
+					<el-table-column prop="projectNo" label="项目号" width='145px' show-overflow-tooltip>
 					</el-table-column>
-					<el-table-column prop="projectNumber" label="项目号" show-overflow-tooltip>
-					</el-table-column>
-					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip> 
+					<el-table-column prop="region" label="应用区域" show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="budgetSubmitter" label="预算提交人" width='100px' show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
+					<el-table-column prop="budgetCommitTime" label="提交时间" width='170px' show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditor" label="审核人" show-overflow-tooltip> 
+					<el-table-column prop="contractBill" label="合同金额" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="humanCost" label="人力成本" show-overflow-tooltip> 
+					</el-table-column>
+					<el-table-column prop="carCost" label="车辆成本" show-overflow-tooltip> 
+					</el-table-column>
+					<el-table-column prop="otherCost" label="其他费用" show-overflow-tooltip> 
+					</el-table-column>
+					<el-table-column prop="budgetAuditResult" label="预算审批结果" width='110px' show-overflow-tooltip> 
+					</el-table-column>
+					<el-table-column prop="budgetAuditor" label="审批人" show-overflow-tooltip> 
+					</el-table-column>
+					<el-table-column prop="budgetAuditTime" label="审批时间" width='170px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -64,7 +72,7 @@
 
 <script>
 export default {
-	name: 'TaskBookNotPassed',
+	name: 'ProBudgetNotPassed',
 	data () {
 		return {
 			tableData:[],
@@ -74,8 +82,8 @@ export default {
 		}
 	},
 	mounted (){
-		// 请求参数 status 1-未审核；2-已通过；3-；4-未通过
-		this.axios.get('/api/task/list?status=4').then((res)=>{
+		//0-已提交预算的项目， 1-已通过预算审批的项目，2-未通过预算审批的项目，3-待审批预算的项目计划书，4-已审批预算的项目计划书
+		this.axios.get('/api/projectBudget/list?status=2').then((res)=>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
@@ -92,44 +100,15 @@ export default {
 			console.log('table过滤');
 		},
 		// 表格点击查看事件
-		handleModify(index,row){
+		handleView(index,row){
             let curId = row.id;
             this.$router.push({
-            	name:'TaskBookModify', params:{ id: curId}
+            	name:'TaskBookReceived', params:{ id: curId}
             })
-		},
-		// 表格点击更新事件
-		handleDel(index,row){
-			let curId = row.id;
-			this.$confirm('此操作将永久删除该项目任务书，是否继续？','提示',{
-				confirmButtonText: '确定',
-                cancelButtonText: '取消',
-				type:'warning'
-			}).then(()=>{
-				this.axios.get('/api/task/delete/'+curId).then((res)=>{
-						let data = res.data;
-						if(data.code == 200){
-							this.axios.get('/api/task/list?status=4').then((res)=>{
-								let data = res.data;
-								if(data.code == 200){
-									let model = data.model;
-									this.tableData = model.data;
-									this.totalNum = model.totalNum;
-									this.pageNum = model.pageNum;
-									this.pageSize = model.pageSize;
-								}
-							});
-						}
-			    }).catch((error)=>{
-
-			    });
-			}).catch(()=>{
-
-			})			
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/task/list?pageNum='+val+'&status=4').then((res)=>{
+			this.axios.get('/api/projectBudget/list?status=2&pageNum='+val).then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;

@@ -8,13 +8,24 @@
 			</el-breadcrumb>
 		</div>
 		<task-book  v-bind:tb-infos='tbInfos' v-bind:dept-list='proDeptList' v-bind:manager-list='proManagerList'></task-book>
+		<div class="page-content">
+			<el-card class="box-card mb-16 inp-middle" shadow="always">
+			<h3>任务书接收</h3>
+			<el-form label-width="120px">
+				<el-form-item label=" "> 
+					<el-button type="success" @click="" class="fl" icon="el-icon-star-off">申请人力资源</el-button>
+					<el-button type="success" @click="toCreate" class="fl" icon="el-icon-circle-check-outline">创建项目计划书</el-button>
+				</el-form-item>
+			</el-form>	
+		</el-card>
+		</div>
 	</div>
 </template>
 
 <script>
 import TaskBook from '../components/TaskBook.vue'
 export default {
-	name: 'TaskBookView',
+	name: 'TaskBookReceived',
 	components: {
 		"task-book": TaskBook
 	},
@@ -53,6 +64,11 @@ export default {
 	methods:{
 		getSummaries(param){
 			return this.tableSum(param);
+		},
+		toCreate(){
+			 this.$router.push({
+            	name:'PlanBookCreate', params:{ id: this.taskId}
+            })
 		}
 	}
 }
