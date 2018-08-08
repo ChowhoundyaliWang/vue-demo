@@ -225,10 +225,6 @@
 <script>
 export default {
 	name: 'TaskBook',
-	data () {
-		return {
-		}
-	},
 	props:{
 		tbInfos:{
 			type: Object,

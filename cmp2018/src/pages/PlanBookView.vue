@@ -6,7 +6,7 @@
 				<el-breadcrumb-item>查看项目计划书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<plan-book  v-bind:plan-book='planBook'></plan-book>
+		<plan-book  v-bind:plan-book='planBook' :view-only='viewOnly'></plan-book>
 	</div>
 </template>
 
@@ -20,7 +20,8 @@ export default {
 	data () {
 		return {
 			planBook:{},
-			curId: this.$route.params.id
+			curId: this.$route.params.id,
+			viewOnly: true
 		}
 	},
 	mounted (){
@@ -31,9 +32,6 @@ export default {
 				this.planBook = model;
 			}
 		});
-	},
-	methods:{
-		
 	}
 }
 </script>

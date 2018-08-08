@@ -8,23 +8,7 @@
 			</el-breadcrumb>
 		</div>
 		<div class="page-content min-w" id="userCreate"> 
-			<el-card class="box-card mb-16" shadow="always">
-				<el-row>
-					<el-col :span='20'>
-						<el-steps :active="1">
-							<el-step title="步骤 1"></el-step>
-							<el-step title="步骤 2"></el-step>
-							<el-step title="步骤 3"></el-step>
-							<el-step title="步骤 4"></el-step>
-							<el-step title="步骤 5"></el-step>
-							<el-step title="步骤 6"></el-step>
-						</el-steps>
-					</el-col>
-					<el-col :span='4'>
-						
-					</el-col>
-				</el-row>
-			</el-card>
+			<steps :procedures='procedures'></steps>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>任务书信息</h3>
 				<el-form :model="tbInfos" :rules='rules' ref='ruleForm' label-width="150px">
@@ -410,7 +394,7 @@
 				<div style="margin-top:20px;width:80%;height:40px;position:relative;">
 					<el-button @click="lowAddRow" type="primary" class="el-icon-plus" style="position:absolute;top:0;right:0;">添加</el-button>
 				</div>
-			</el-card>
+			</el-card> 
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
 				<h3>项目执行</h3>
 				<el-form label-width="150px">
@@ -442,12 +426,17 @@
 </template>
 
 <script>
+import steps from '../components/Steps.vue'
 export default {
 	name: 'TaskBookCreate',
+	components:{
+		"steps": steps
+	},
 	data () {
 		return {
+			procedures:[],
 			rules:{
-				type: [
+				/*type: [
 				    {required:true, message:'项目类型为必填项'}
 				],
 				domesticOrOversea: [
@@ -457,7 +446,7 @@ export default {
 				contractName: [{required:true,message:'合同名称为必填项'}],
 				executeCycle: [{required:true,message:'执行周期为必填项'}],
 				contractBill: [{required:true,message:'合同金额为必填项'}],
-				tbFile: [{ required:true, message:'相关附件不能为空'}]
+				tbFile: [{ required:true, message:'相关附件不能为空'}]*/
 			},
 			taskIdObj:{
 				taskId:''
@@ -698,6 +687,13 @@ export default {
 			this.desOverList = model;
 		});
 	},
+	beforeRouteLeave( to, from, next){
+		//导航离开时清除定时器
+		if(this.stepsTimer){
+			clearInterval(this.stepsTimer);
+		}
+		next();
+	},
 	methods:{
 		emptyProName(){
             this.tbInfos.typeForm.proName.city=[];
@@ -803,7 +799,7 @@ export default {
 			let tbInfos = this.tbInfos;
 			let proName = tbInfos.typeForm.proName;
 			let str = '';
-			str = proName.facName + proName.desInstitute + (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+ proName.oversea +proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
+			str = proName.facName + proName.desInstitute + (proName.city.length > 0? proName.city[proName.city.length - 1]:'') + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+ proName.oversea +proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
 			tbInfos.projectName = str;
 			let userName = tbInfos.typeForm.customer;
 			tbInfos.userName = userName.company +(userName.define?("（"+ userName.define +"）"):'');

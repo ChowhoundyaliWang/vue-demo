@@ -7,21 +7,11 @@
 				<el-breadcrumb-item>已提交预算的项目</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<div class="page-content">
+		<div class="page-content search-page">
 			<el-card class="box-card mb-16" shadow="always">
-				<!-- 工具条 -->
-				<el-col class="mx-tool-bar mb-16">
-					<el-form :inline="true">
-						<el-form-item>
-							<el-input placeholder="请输入关键词"></el-input>
-						</el-form-item>
-						<el-form-item>
-							<el-button type="primary" @click="doFilter" icon="el-icon-search">查询</el-button>
-						</el-form-item>
-					</el-form>
-				</el-col>
+				<search :status='status' :search-url='searchUrl' v-on:tableDataChange='dataChange'></search>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
-				<el-table :data="tableData" stripe border class="mb-16">
+				<el-table :data="tableData.data" stripe border class="mb-16">
 					<el-table-column prop="operate" label="操作" width="60px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
@@ -58,10 +48,10 @@
 						<el-pagination 
 						background 
 						@current-change="handleCurrentChange"
-						:current-page.sync="pageNum"
-						:page-size="pageSize"
+						:current-page.sync="tableData.pageNum"
+						:page-size="tableData.pageSize"
 						layout="total,prev,pager,next"
-						:total="totalNum"></el-pagination>
+						:total="tableData.totalNum"></el-pagination>
 					</div>
 				</div>
 			</el-card>
@@ -70,14 +60,22 @@
 </template>
 
 <script>
+import search from '../components/Search.vue'
 export default {
 	name: 'ProBudgetSumbitted',
+	components:{
+		"search": search
+	},
 	data () {
 		return {
-			tableData:[],
-			totalNum:0,
-			pageNum:0,
-			pageSize:0
+		    status: 0,
+		    searchUrl: '/api/projectBudget/list',
+			tableData:{
+				data:[],
+				totalNum:0,
+			    pageNum:0,
+			    pageSize:0
+			}
 		}
 	},
 	mounted (){
@@ -85,17 +83,14 @@ export default {
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
-				this.tableData = model.data;
-				this.totalNum = model.totalNum;
-				this.pageNum = model.pageNum;
-				this.pageSize = model.pageSize;
+				this.tableData = model;
 			}
 		});
 	},
 	methods:{
 		//表格搜索过滤事件
-		doFilter(){
-			console.log('table过滤');
+		dataChange(data){
+			this.tableData = data;
 		},
 		// 表格点击查看事件
 		handleView(index,row){
@@ -110,10 +105,7 @@ export default {
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;
-					this.tableData = model.data;
-					this.totalNum = model.totalNum;
-					this.pageNum = model.pageNum;
-					this.pageSize = model.pageSize;
+					this.tableData = model;
 				}
 			});
 		}

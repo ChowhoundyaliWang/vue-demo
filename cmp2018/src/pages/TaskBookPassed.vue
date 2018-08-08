@@ -7,21 +7,11 @@
 				<el-breadcrumb-item>已通过的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<div class="page-content">
+		<div class="page-content  search-page">
 			<el-card class="box-card mb-16" shadow="always">
-				<!-- 工具条 -->
-				<el-col class="mx-tool-bar mb-16">
-					<el-form :inline="true">
-						<el-form-item>
-							<el-input placeholder="请输入关键词"></el-input>
-						</el-form-item>
-						<el-form-item>
-							<el-button type="primary" @click="doFilter" icon="el-icon-search">查询</el-button>
-						</el-form-item>
-					</el-form>
-				</el-col>
+				<search :status='status' :search-url='searchUrl' v-on:tableDataChange='dataChange'></search>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
-				<el-table :data="tableData" stripe border class="mb-16">
+				<el-table :data="tableData.data" stripe border class="mb-16">
 					<el-table-column prop="operate" label="操作" width="100px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
@@ -53,15 +43,13 @@
 						<el-pagination 
 						background 
 						@current-change="handleCurrentChange"
-						:current-page.sync="pageNum"
-						:page-size="pageSize"
+						:current-page.sync="tableData.pageNum"
+						:page-size="tableData.pageSize"
 						layout="total,prev,pager,next"
-						:total="totalNum"></el-pagination>
-						<!-- current-change currentPage改变时会触发 -->
+						:total="tableData.totalNum"></el-pagination>
 					</div>
 				</div>
 				
-
 				<!-- 更新记录对话框 -->
 				<el-dialog title="更新记录" :visible.sync="dialogVisible">
 					<el-table :data="updateList" stripe border style="width:100%;" class="mb-16" height="300">
@@ -106,21 +94,27 @@
 </template>
 
 <script>
+import search from '../components/Search.vue'
 import contrastUpdate from '../components/contrastUpdate'
 export default {
 	name: 'TaskBookPassed',
 	components:{
+		'search': search,
 		"contrast-update": contrastUpdate
 	},
 	data () {
 		return {
-			tableData:[],
-			totalNum:0,
-			pageNum:0,
-			pageSize:0,
+		    // 请求参数 status 1-未审核；2-已通过；3-；4-未通过
+			status:2,
+			searchUrl:"/api/task/list",
+			tableData:{
+				data:[],
+			    totalNum:0,
+			    pageNum:0,
+			    pageSize:0
+			}, 
 			updateList:[],
 			dialogVisible: false,
-
 			contrastVisible: false,
 			tbInfos:{},
 			another:{},
@@ -130,15 +124,11 @@ export default {
 		}
 	},
 	mounted (){
-		// 请求参数 status 1-未审核；2-已通过；3-；4-未通过
-		this.axios.get('/api/task/list?status=2').then((res)=>{
+		this.axios.get('/api/task/list?status='+ this.status).then((res)=>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
-				this.tableData = model.data;
-				this.totalNum = model.totalNum;
-				this.pageNum = model.pageNum;
-				this.pageSize = model.pageSize;
+				this.tableData = model;
 			}
 		});
 		this.axios.get('/api/pro-dept/list').then((res)=>{
@@ -148,9 +138,8 @@ export default {
 		});
 	},
 	methods:{
-		//表格搜索过滤事件
-		doFilter(){
-			console.log('table过滤');
+		dataChange(data){
+			this.tableData = data;
 		},
 		// 表格点击查看事件
 		handleView(index,row){
@@ -231,7 +220,7 @@ export default {
 						const data = res.data;
 						const model = data.model;
 						this.anoProManagerList = model;
-					});
+					}); 
                 }else{
                     //请求失败
                     this.$alert("请求失败", '提示');
@@ -242,14 +231,11 @@ export default {
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/task/list?pageNum='+val+'&status=2').then((res)=>{
+			this.axios.get('/api/task/list?pageNum='+val+'&status='+ this.status).then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;
-					this.tableData = model.data;
-					this.totalNum = model.totalNum;
-					this.pageNum = model.pageNum;
-					this.pageSize = model.pageSize;
+					this.tableData = model;
 				}
 			});
 		}

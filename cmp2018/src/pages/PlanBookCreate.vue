@@ -21,7 +21,7 @@
 					</el-form-item>
 				</el-form>	
 			</el-card>
-			<el-card  class="box-card mb-16 inp-middle" shadow="always">
+  			<el-card  class="box-card mb-16 inp-middle" shadow="always">
 				<h3>质量目标</h3>
 				<el-row :gutter='50'>
 					<el-col :span="12">

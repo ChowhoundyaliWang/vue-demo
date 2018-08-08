@@ -14,6 +14,10 @@ p.p-hei{height: 42px;}
 .page-content h3{ border-bottom: 1px solid #e6e6e6; margin: 0 0 20px 0;padding-bottom: 10px;color: #48576a;}
 .page-content .el-form-item{margin:20px 0;}
 #userCreate .inp-long .el-input{width: 400px;}
+.search-page .el-input__inner{ width:180px; }
+.search-page .el-form--inline .el-form-item{ margin-right: 30px; }
+.search-page .el-date-editor.el-input, .search-page .el-date-editor.el-input__inner{ width: 180px; }
+
 /* .page-content .el-input */
 #userCreate .inp-middle .el-input{width: 246px;} 
 #userCreate .el-input, .inp-middle .el-input{ width:150px; }
@@ -39,3 +43,77 @@ p.p-hei{height: 42px;}
 .constrat .el-card {border: 1px solid #c2c6d0;}
 .changed .el-form-item__label{color: red;}
 h3.red{color: red;}
+
+/* steps步骤样式 */
+.cm-steps .el-steps{display: flex;}
+.cm-steps .el-steps--horizontal{ white-space: nowrap; }
+.cm-steps .el-step{ position: relative;flex-shrink: 1; }
+.cm-steps .el-step.isis-horizontal{display: inline-block;}
+.cm-steps .el-step.is-center .el-step__head, .el-step.is-center .el-step__main{ text-align: center; }
+.cm-steps .el-step__head{ position: relative;width: 100%; }
+.cm-steps .el-step__main{ white-space: normal; }
+.cm-steps .el-step.is-center .el-step__line{ left: 50%;right: -50%; }
+.cm-steps .el-step.is-horizontal .el-step__line{ height: 2px;top: 11px; }
+.cm-steps .el-step__icon.is-icon{ width: 40px; }
+.cm-steps .el-step__icon{ position: relative;z-index: 1;display: inline-flex;-webkit-box-pack:center;justify-content: center; --webkit-box-align: center;align-items: center;height: 24px;font-size: 14px;box-sizing: border-box;background: #fff; }
+.cm-steps .el-step__icon-inner{ font-size: 25px;font-weight: 400; }
+.cm-steps .el-step__icon-inner{ display: inline-block;user-select: none;text-align: center;line-height: 1;color: inherit; }
+.cm-steps [class*=" el-icon-"]{ font-family: element-icons!important; speak: none; font-style: normal; font-weight: 400; font-variant: normal; text-transform: none; line-height: 1; vertical-align: baseline; display: inline-block; -webkit-font-smoothing: antialiased;}
+.cm-steps .el-step__head.is-wait{ color:#c0c4cc;border-color: #c0c4cc; }
+.cm-steps .el-step__title.is-wait{ color:#c0c4cc; }
+.cm-steps .is-finish .el-step__line-inner{ width:100%; }
+.cm-steps .el-step__main{ margin-top: 6px;}
+.cm-steps .el-step__title{ font-size:13px; line-height:18px;}
+.cm-steps .el-step__icon{ transition: none;}
+.cm-steps .is-finish .el-step__line-inner{ transition: none;animation:lineChange 1s 1; -moz-animation:lineChange 1s 1;-webkit-animation:lineChange 1s 1;-o-animation:lineChange 1s 1;} 
+@keyframes lineChange{
+	from{ width: 0%; }
+	to{ width: 100%; }
+}
+@-moz-keyframes lineChange{
+	from{ width: 0%; }
+	to{ width: 100%; }
+}
+@-webkit-keyframes lineChange{
+	from{ width: 0%; }
+	to{ width: 100%; }
+}
+@-o-keyframes lineChange{
+	from{ width: 0%; }
+	to{ width: 100%; }
+}
+.cm-steps .el-step__title.is-finish{ animation: tColorChange 1s 1 ;-moz-animation:tColorChange 1s 1 ;-webkit-animation:tColorChange 1s 1 ;-o-animation:tColorChange 1s 1 ; }
+@keyframes tColorChange{
+	from{ color:#303133; }
+	to{ color:#409EFF; }
+}
+@-moz-keyframes tColorChange{
+	from{ color:#303133; }
+	to{ color:#409EFF; }
+}
+@-webkit-keyframes tColorChange{
+	from{ color:#303133; }
+	to{ color:#409EFF; }
+}
+@-o-keyframes tColorChange{
+	from{ color:#303133; }
+	to{ color:#409EFF; }
+}
+/*.cm-step .el-step__head.is-finish{ color:#c0c4cc; border-color: #c0c4cc;}*/
+.cm-steps .el-step__head.is-finish{ animation: iColorChange 1s 1 ;-moz-animation:iColorChange 1s 1 ;-webkit-animation:iColorChange 1s 1 ;-o-animation:iColorChange 1s 1 ; }
+@keyframes iColorChange{
+	from{ color:#303133;border-color: #303133; }
+	to{ color:#409EFF;border-color: #409EFF;}
+}
+@-moz-keyframes iColorChange{
+	from{ color:#303133;border-color: #303133; }
+	to{ color:#409EFF;border-color: #409EFF;}
+}
+@-webkit-keyframes iColorChange{
+	from{ color:#303133;border-color: #303133; }
+	to{ color:#409EFF;border-color: #409EFF;}
+}
+@-o-keyframes iColorChange{
+	from{ color:#303133;border-color: #303133; }
+	to{ color:#409EFF;border-color: #409EFF;}
+} 

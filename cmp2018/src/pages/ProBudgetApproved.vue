@@ -7,24 +7,14 @@
 				<el-breadcrumb-item>已审批预算的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<div class="page-content">
+		<div class="page-content search-page">
 			<el-card class="box-card mb-16" shadow="always">
-				<!-- 工具条 -->
-				<el-col class="mx-tool-bar mb-16">
-					<el-form :inline="true">
-						<el-form-item>
-							<el-input placeholder="请输入关键词"></el-input>
-						</el-form-item>
-						<el-form-item>
-							<el-button type="primary" @click="doFilter" icon="el-icon-search">查询</el-button>
-						</el-form-item>
-					</el-form>
-				</el-col>
+				<search :status='status' :search-url='searchUrl' :select-show='selectShow' v-on:tableDataChange='dataChange'></search>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
-				<el-table :data="tableData" stripe border class="mb-16">
+				<el-table :data="tableData.data" stripe border class="mb-16">
 					<el-table-column prop="operate" label="操作" width="60px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
-							<el-button type="text" @click="handleApprove(scope.$index,scope.row)">审批</el-button>
+							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
 					<el-table-column prop="projectName" label="项目名称" width='210px'  show-overflow-tooltip></el-table-column>
@@ -58,10 +48,10 @@
 						<el-pagination 
 						background 
 						@current-change="handleCurrentChange"
-						:current-page.sync="pageNum"
-						:page-size="pageSize"
+						:current-page.sync="tableData.pageNum"
+						:page-size="tableData.pageSize"
 						layout="total,prev,pager,next"
-						:total="totalNum"></el-pagination>
+						:total="tableData.totalNum"></el-pagination>
 						<!-- current-change currentPage改变时会触发 -->
 					</div>
 				</div>
@@ -71,14 +61,23 @@
 </template>
 
 <script>
+import search from '../components/Search.vue'
 export default {
 	name: 'ProBudgetApproved',
+	components:{
+		'search': search
+	},
 	data () {
 		return {
-			tableData:[],
-			totalNum:0,
-			pageNum:0,
-			pageSize:0
+			status:4,
+			searchUrl:'/api/projectBudget/list',
+			selectShow: true,
+			tableData:{
+				data:[],
+				totalNum:0,
+			    pageNum:0,
+			    pageSize:0
+			}
 		}
 	},
 	mounted (){
@@ -86,20 +85,17 @@ export default {
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
-				this.tableData = model.data;
-				this.totalNum = model.totalNum;
-				this.pageNum = model.pageNum;
-				this.pageSize = model.pageSize;
+				this.tableData = model;
 			}
 		});
 	},
 	methods:{
 		//表格搜索过滤事件
-		doFilter(){
-			console.log('table过滤');
+		dataChange(data){
+			this.tableData = data;
 		},
 		// 表格点击查看事件
-		handleSubmit(index,row){
+		handleView(index,row){
             let curId = row.planPaperId;
             this.$router.push({
             	name:'PlanBookView', params:{ id: curId}
@@ -107,14 +103,11 @@ export default {
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/task/list?pageNum='+val+'&status=2').then((res)=>{
+			this.axios.get('/api/projectBudget/list?pageNum='+val+'&status=4').then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;
-					this.tableData = model.data;
-					this.totalNum = model.totalNum;
-					this.pageNum = model.pageNum;
-					this.pageSize = model.pageSize;
+					this.tableData = model;
 				}
 			});
 		}

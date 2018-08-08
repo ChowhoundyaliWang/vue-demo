@@ -10,7 +10,7 @@
           <el-input type="password" v-model="user.password" auto-complete="off" @keyup.enter.native='login()'></el-input>
         </el-form-item>
         <el-form-item label="" prop="password" class='remCheck'>
-          <el-checkbox v-model='remPsw' @change='remPswChange'>记住密码</el-checkbox>
+          <el-checkbox @change='remPswChange'>记住密码</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="login()">登录</el-button>
@@ -30,7 +30,7 @@ export default {
       user:{
         userName:'',
         password:'',
-        remPsw: false
+        //remPsw: false
       }
     }
   },

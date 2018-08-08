@@ -32,7 +32,7 @@
 					<el-form-item label="联系电话"> 
 						<el-input v-model="userData.phone"></el-input>
 					</el-form-item>
-					<el-form-item label="职务" :rules="[{required:true,message:'职务为必填项'}]"> 
+					<el-form-item label="职务" :rules="[{required:true, message:'职务为必填项'}]"> 
 						<el-card>
 							<el-tree ref="dutyTree" :data="dutiesData" show-checkbox node-key="id" :default-expand-all="true" @node-click="handleNodeClick" @check-change="handleCheckChange"></el-tree>
 						</el-card>
@@ -55,7 +55,7 @@
 					<el-form-item label="权限" :rules="[
 					{required:true,message:'权限为必填项'}]"> 
 						<el-card>
-							<el-tree ref="authorityTree" node-key="id" :data="menuList" show-checkbox :default-expand-all="true"></el-tree>
+							<el-tree ref="authTree" node-key="id" :data="menuList" show-checkbox :default-expand-all="true"></el-tree>
 						</el-card>
 					</el-form-item>
 					<el-form-item label=" "> 
@@ -71,9 +71,6 @@
 <script>
 export default {
 	name: 'UserCreate',
-	created (){
-		/*sessionStorage.setItem('0',1);*/
-	},
 	data () {
 		return {
 			userData:{
@@ -133,8 +130,7 @@ export default {
 			// data —— 节点对应的对象
 			// checked —— 节点本身是否被选中
 			// indeterminate —— 节点的子树中是否有被选中的节点
-			console.log(data);
-			console.log(checked);
+			
 			//销售ID为11
 			if(data.id == 11 && checked){
 				this.regionShowFlag = true;
@@ -154,23 +150,21 @@ export default {
 			//总经理ID为18
 			if(data.id == 18 && checked){
 				let arrId = [1,94,9,41,42,18,67,68];
-				this.$refs.authorityTree.setCheckedKeys(arrId, true);
+				this.$refs.authTree.setCheckedKeys(arrId, true);
 			}
 		},
 		createUser(){
 			this.userData.type = parseInt(this.userData.type);
 			this.userData.dutyIds = this.$refs.dutyTree.getCheckedKeys();
-			this.userData.pramsList = this.$refs.authorityTree.getCheckedKeys();
-			console.log(this.userData);
+			this.userData.pramsList = this.$refs.authTree.getCheckedKeys();
 			let params = this.userData;
 			this.axios.post("/api/user/save",params,{ headers:{'Content-Type':'application/json;charset=UTF-8'} }).then((res)=>{
 				let data = res.data;
+				let message = data.message;
 				if(data.code == 200){
-					//待做 增加提示框，提示添加成功
-					let message = data.message;
+					this.$alert( message , '提示');
                 }else{
-                    //请求失败
-                    console.log("请求失败");
+					this.$alert( message , '错误提示');
                 }
             }).catch((res)=>{
                //请求异常处理

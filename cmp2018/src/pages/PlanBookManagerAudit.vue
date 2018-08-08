@@ -9,17 +9,6 @@
 		</div>
 		<plan-book  v-bind:plan-book='planBook'></plan-book>
 		<div class="page-content">
-			<el-card class="box-card mb-16 inp-middle" shadow="always" v-if='planBook.records[0] && planBook.records[0].type == 2'>
-				<h3>执行部门经理审核</h3>
-				<el-form label-width="150px">
-					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='planBook.records[0] && planBook.records[0].remark' style="width:40%;"></el-input>
-					</el-form-item>
-					<el-form-item label="审核结果"> 
-						<span v-text="planBook.records[0] && planBook.records[0].status == 3?'通过':'未通过'"></span>
-					</el-form-item>
-				</el-form>
-			</el-card>
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
 				<h3>计划书审核</h3>
 				<el-form label-width="150px">
@@ -47,7 +36,8 @@ export default {
 		return {
 			planBook:{},
 			curId: this.$route.params.id,
-			type: 1
+			type: 1,
+			remark:''
 		}
 	},
 	mounted (){

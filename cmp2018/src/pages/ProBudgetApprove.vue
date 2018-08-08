@@ -36,9 +36,9 @@ export default {
 	data () {
 		return {
 			remark:'',
-			projectBudgetId:'',
 			planBook:{},
 			curId: this.$route.params.id,
+			projectBudgetId: this.$route.params.budgetId,
 			type: 1
 		}
 	},
@@ -48,7 +48,6 @@ export default {
 			if(data.code == 200){
 				const model = data.model;
 				this.planBook = model;
-				this.projectBudgetId = model.projectBudgetId;
 			}
 		});
 	},

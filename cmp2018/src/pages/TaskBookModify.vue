@@ -7,6 +7,7 @@
 				<el-breadcrumb-item>未审核的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
+		<steps :procedures='procedures'></steps>
 		<div class="page-content min-w" id="userCreate"> 
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>任务书信息</h3>
@@ -424,13 +425,18 @@
 </template>
 
 <script>
+import steps from '../components/Steps.vue'
 export default {
 	name: 'TaskBookModify',
+	components:{
+		"steps" : steps
+	},
 	data () {
 		return {
 			taskIdObj:{
 				taskId:''
 			},
+			procedures:[],
 			tbInfos:{},
 			facFirstList:[],
 			facThirdList:[],
@@ -481,6 +487,7 @@ export default {
 				let model = data.model;
 				this.tbInfos = model;
 				this.taskIdObj.taskId = model.id;
+				this.procedures = model.procedures;
 				this.axios.get('/api/pro-management/list',{params:{'id': this.tbInfos.proExecuteSubject}}).then((res)=>{
 			       const data = res.data;
 			       const model = data.model;
@@ -734,7 +741,7 @@ export default {
 			let tbInfos = this.tbInfos;
 			let proName = tbInfos.typeForm.proName;
 			let str = '';
-			str = proName.facName + proName.desInstitute + (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+ proName.oversea +proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
+			str = proName.facName + proName.desInstitute + (proName.city.length > 0? proName.city[proName.city.length - 1]:'') + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+ proName.oversea +proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
 			tbInfos.projectName = str;
 			let userName = tbInfos.typeForm.customer;
 			tbInfos.userName = userName.company +(userName.define?("（"+ userName.define +"）"):'');

@@ -7,6 +7,7 @@
 				<el-breadcrumb-item>待审核的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
+		<steps :procedures = 'procedures'></steps>
 		<task-book  v-bind:tb-infos='tbInfos' v-bind:dept-list='proDeptList' v-bind:manager-list='proManagerList'></task-book>
 		<div class="page-content">
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
@@ -27,9 +28,11 @@
 
 <script>
 import TaskBook from '../components/TaskBook'
+import steps from '../components/Steps.vue'
 export default {
 	name: 'TaskBookAuditing',
 	components:{
+		"steps": steps,
 		"task-book": TaskBook
 	},
 	data () {
@@ -40,6 +43,7 @@ export default {
 					status:''
 				}
 			},
+			procedures:[],
 			proDeptList:[],
 			proManagerList:[],
 			remark:'',
@@ -56,8 +60,8 @@ export default {
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
-				console.log(model);
 				this.tbInfos = model;
+				this.procedures = model.procedures;
 				this.axios.get('/api/pro-management/list',{params:{'id': this.tbInfos.proExecuteSubject}}).then((res)=>{
 			       const data = res.data;
 			       const model = data.model;

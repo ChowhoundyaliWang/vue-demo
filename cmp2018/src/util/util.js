@@ -13,8 +13,6 @@ export default{
             
         }
 
-		
-
         Vue.prototype.amountInWords = function(amount){
         	const maxNum = 999999999.99;
         	const lastUnit = '元';
@@ -109,5 +107,66 @@ export default{
         	return sums;
         }
 	
+        Vue.prototype.stepsAnimation = function( steps, stepHeads, stepTitles){
+                /*let steps = this.steps;
+                let stepHeads = this.$refs.stepHead;
+                let stepTitles = this.$refs.stepTitle;*/
+                let stepsLen = steps.length;
+                let waitArr = [] ;  // 哪几步等待中
+                let finishArr = [];  // 哪几步完成了
+                let processStep = 0;  // 正在进行中的步骤
+                const time = 1000;
+
+            if(steps.length > 0){
+                steps.forEach((val, ind)=>{
+                        if(val.status === 1){
+                                finishArr.push(ind);
+                                stepHeads[ind].setAttribute('class', 'el-step__head is-process');
+                                stepTitles[ind].setAttribute('class', 'el-step__title is-process');
+                        }else if(val.status === 2){
+                                processStep = ind;
+                                stepHeads[ind].setAttribute('class', 'el-step__head is-process');
+                                stepTitles[ind].setAttribute('class', 'el-step__title is-process');
+                        }else{
+                                waitArr.push(ind);
+                        }
+                })
+
+                let realActive = finishArr.length;
+                let stepsMove = function(){
+                        let index = 0;
+                        let stepTimer = setInterval(()=>{
+                                if(index == processStep){
+                                        clearInterval(stepTimer);
+                                        stepHeads.forEach((val, ind)=>{
+                                                if(finishArr.indexOf(ind) > -1){
+                                                        val.setAttribute('class', 'el-step__head is-process');
+                                                }
+                                        })
+                                        stepTitles.forEach((val,ind)=>{
+                                                if(finishArr.indexOf(ind) > -1){
+                                                        val.setAttribute('class', 'el-step__title is-process');
+                                                }
+                                        })
+                                }
+                                        //如果是已完成步骤，执行动画
+                                        if(finishArr.indexOf(index) > -1){
+                                                if(stepHeads.length<1){
+                                                        clearInterval(stepTimer);
+                                                }else{
+                                                        stepHeads[index].setAttribute('class', 'el-step__head is-finish');
+                                                        stepTitles[index].setAttribute('class', 'el-step__title is-finish');
+                                                        index++;
+                                                }
+                                        }
+                                        while( waitArr.indexOf(index) > -1){
+                                                index++;
+                                        }
+                                },time);
+                        return stepsMove;
+                }
+                this.stepsTimer = setInterval(stepsMove(), (realActive+1)*time);
+            }
+          }
 	}
 }

@@ -204,10 +204,10 @@
 						<h3>任务书审核</h3>
 						<el-form label-width="150px">
 							<el-form-item label="审核意见">
-								<el-input type='textarea' :rows='4' v-model='tbInfos.record.remark' readonly='true' style="width: 80%;"></el-input>
+								<el-input type='textarea' :rows='4' v-model='remark' readonly='true' style="width: 80%;"></el-input>
 							</el-form-item>
 							<el-form-item label="审核结果">
-								<span v-text="tbInfos.record.status == 2 ?'通过':'不通过'"></span>
+								<span v-text="status == 2 ?'通过':'不通过'"></span>
 							</el-form-item>
 						</el-form>
 					</el-card>
@@ -413,10 +413,10 @@
 						<h3>任务书审核</h3>
 						<el-form label-width="150px">
 							<el-form-item label="审核意见">
-								<el-input type='textarea' :rows='4' v-model='another.record.remark' readonly='true' style="width: 80%;"></el-input>
+								<el-input type='textarea' :rows='4' v-model='anoRemark' readonly='true' style="width: 80%;"></el-input>
 							</el-form-item>
 							<el-form-item label="审核结果">
-								<span v-text="another.record.status == 2?'通过':'不通过'"></span>
+								<span v-text="anoStatus == 2?'通过':'不通过'"></span>
 							</el-form-item>
 						</el-form>
 					</el-card>
@@ -430,7 +430,10 @@ export default {
 	name: 'contrastUpdate',
 	data () {
 		return {
-
+			remark: '',
+			anoRemark: '',
+			status: '',
+			anoStatus: ''
 		}
 	},
 	props:{
@@ -453,6 +456,20 @@ export default {
 		managerList:{
 			type: Array,
 			required: true
+		}
+	},
+	watch: {
+		tbInfos(val){
+			if(val.record){
+				this.remark = val.record.remark;
+				this.status = val.record.status;
+			}
+		},
+		another(val){
+			if(val.record){
+				this.anoRemark = val.record.remark;
+				this.anoStatus = val.record.status;
+			}
 		}
 	},
 	methods:{

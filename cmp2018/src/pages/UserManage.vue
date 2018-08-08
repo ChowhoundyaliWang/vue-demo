@@ -11,11 +11,11 @@
 				<!-- 工具条 -->
 			<el-col :span="24" class="mx-tool-bar mb-16">
 				<el-form :inline="true">
-					<el-form-item>
-						<el-input placeholder="请输入关键词"></el-input>
+					<el-form-item label='关键字：'>
+						<el-input v-model='keyword'></el-input>
 					</el-form-item>
 				    <el-form-item>
-				    	<el-button type="primary" @click="doFilter" icon="el-icon-search">查询</el-button>
+				    	<el-button type="primary" @click="dataChange" icon="el-icon-search">查询</el-button>
 				    </el-form-item>
 				    <el-form-item>
 				    	<router-link to="/UserCreate"><el-button type="primary" class="fl"><i class="el-icon-plus"></i>新建用户</el-button></router-link>
@@ -24,7 +24,7 @@
 			</el-col>
 
 			<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
-			<el-table :data="tableData" stripe border class="mb-16">
+			<el-table :data="tableData.data" stripe border class="mb-16">
 				<el-table-column prop="operate" label="操作" width="150px" tooltip-effect='dark'> 
 					<template slot-scope="scope">
 						<el-button type="text" @click="handleView(scope.$index, scope.row)">查看</el-button>
@@ -52,10 +52,10 @@
 					<el-pagination 
 					background 
 					@current-change="handleCurrentChange"
-					:current-page.sync="pageNum"
-					:page-size="pageSize"
+					:current-page.sync="tableData.pageNum"
+					:page-size="tableData.pageSize"
 					layout="total,prev,pager,next"
-					:total="totalNum"></el-pagination>
+					:total="tableData.totalNum"></el-pagination>
 					<!-- current-change currentPage改变时会触发 -->
 				</div>
 			</div>
@@ -69,48 +69,79 @@ export default {
 	name: 'UserManage',
 	data () {
 		return {
-			tableData:[],
-			pageNum: 0,
-			pageSize: 0,
-			totalNum: 0
+			keyword:'',
+			tableData:{
+				data:[],
+				pageNum: 0,
+			    pageSize: 0,
+			    totalNum: 0
+			}
 		}
 	},
 	mounted(){
-		this.axios.get('/api/user/find').then((res) =>{
+		this.getUserData();
+	},
+	methods:{
+		getUserData(){
+			this.axios.get('/api/user/find').then((res) =>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
-				this.tableData = model.data;
-				this.pageNum = model.pageNum;
-				this.pageSize = model.pageSize;
-				this.totalNum = model.totalNum;
+				this.tableData = model;
 			}else{
 				this.$alert(data.message, '提示');
 			}
-		})
-	},
-	methods:{
-		doFilter(){
-			console.log("查询，代码待补充")
+		    })
+		},
+		dataChange(){
+			if(this.keyword !== ''){
+				this.axios.get( '/api/user/find?keyword='+ this.keyword).then((res)=>{
+				let data = res.data;
+				if(data.code == 200){
+					let model = data.model;
+					this.tableData = model;
+				}
+			});
+			}
 		},
 		handleView(index, row){
 			//查看用户
+			let userId = row.userId;
+			this.$router.push({
+            	name:'UserInfoView', params:{ userId: userId}
+            })
 		},
 		handleEdit(index, row){
 			//编辑用户
+			let userId = row.userId;
+			this.$router.push({
+            	name:'UserInfoEdit', params:{ userId: userId}
+            })
 		},
 		handleDel(index, row){
 			//删除用户
+			this.$confirm('是否确认删除用户“'+row.name+'”？','提示',{
+				confirmButtonText:'确定',
+				cancelButtonText:'取消',
+				type:'warning'
+			}).then(()=>{
+				// 删除用户的接口
+				this.axios.get('/api/user/delete/' + row.userId).then((res)=>{
+					let data = res.data;
+					let msg = data.message;
+					this.$alert(msg, '提示');
+					this.getUserData();
+				})
+			}).catch(()=>{
+
+			})
 		},
 		handleCurrentChange(val){
 			this.axios.get('/api/user/find?pageNum='+val).then((res) =>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;
-					this.tableData = model.data;
-					this.pageNum = model.pageNum;
-					this.pageSize = model.pageSize;
-					this.totalNum = model.totalNum;
+					this.tableData = model;
 				}else{
 					this.$alert(data.message, '提示');
 				}

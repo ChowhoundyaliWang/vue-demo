@@ -8,7 +8,7 @@
       <el-col :span="24" class="container">
         <el-container>
         <el-aside>
-          <NavMenu></NavMenu>
+          <NavMenu :menu-datas='authorList' :admin-menu='adminMenu'></NavMenu>
         </el-aside>
         <el-main>
           <router-view></router-view>
@@ -27,6 +27,25 @@ export default {
   components:{ 
     Header, 
     NavMenu 
+  },
+  data(){
+    return{
+      authorList:[],
+      adminMenu:{}
+    }
+  },
+  mounted(){
+     let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+     let authorList = userInfo.authorList;
+     authorList.forEach((val,ind)=>{
+      if(val.id == 1){
+        authorList.splice(ind,1);
+      }else if(val.id == 6){
+        this.adminMenu = authorList[ind];
+        authorList.splice(ind,1);
+      }
+     })
+     this.authorList = authorList;
   }
 }
 </script>

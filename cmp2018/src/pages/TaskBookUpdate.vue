@@ -7,6 +7,7 @@
 				<el-breadcrumb-item>已通过的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
+		<steps :procedures='procedures'></steps>
 		<div class="page-content min-w" id="userCreate"> 
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>任务书信息</h3>
@@ -261,12 +262,12 @@
 					</el-table-column>
 					<el-table-column prop="startTime" label="开始日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" :picker-options="pickStartDate" value-format="timestamp" @change='calInvest(scope.$index, scope.row)'></el-date-picker>
+					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" value-format="timestamp" @change='calInvest(scope.$index, scope.row)'></el-date-picker>
 						</template> 
 					</el-table-column>
 					<el-table-column prop="endTime" label="结束日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" :picker-options="pickEndDate" value-format="timestamp"
+					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" value-format="timestamp"
 					         @change='calInvest(scope.$index, scope.row)'></el-date-picker>
 						</template>  
 					</el-table-column>
@@ -425,10 +426,15 @@
 </template>
 
 <script>
+import steps from '../components/Steps.vue'
 export default {
 	name: 'TaskBookUpdate',
+	components:{
+		"steps": steps
+	},
 	data () {
 		return {
+			procedures:[],
 			taskIdObj:{
 				taskId:''
 			},
@@ -458,20 +464,6 @@ export default {
 			lowList:[],
 			proDeptList:[],  //项目执行主体列表
 			proManagerList:[], //项目执行人列表
-			pickStartDate:{
-				disabledDate:(time)=>{
-					// 开始日期只能选择结束日期之前的
-					/*let endDateVal = 
-					return time.getTime() > endDateVal;*/ 
-				}
-			},
-			pickEndDate:{
-				disabledDate:(time)=>{
-					// 结束日期只能选择开始日期之后的
-					/*let startDateVal = 
-					return time.getTime() < startDateVal;*/
-				}
-			},
 			taskId: this.$route.params.id
 		}
 	},
@@ -482,6 +474,7 @@ export default {
 				let model = data.model;
 				this.tbInfos = model;
 				this.taskIdObj.taskId = model.id;
+				this.procedures = model.procedures;
 				this.axios.get('/api/pro-management/list',{params:{'id': this.tbInfos.proExecuteSubject}}).then((res)=>{
 			       const data = res.data;
 			       const model = data.model;
@@ -644,7 +637,6 @@ export default {
 			return 'http://163.53.91.130:5005/api/upload-files';
 		},
 		beforeRemove(file,fileList){
-			console.log(file);
 			return this.$confirm('确定移除该文件?');
 		},
 		//附件文件下载
@@ -735,7 +727,7 @@ export default {
 			let tbInfos = this.tbInfos;
 			let proName = tbInfos.typeForm.proName;
 			let str = '';
-			str = proName.facName + proName.desInstitute + (proName.city.length == 1? proName.city[0]:proName.city[1]) + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+ proName.oversea +proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
+			str = proName.facName + proName.desInstitute + (proName.city.length > 0? proName.city[proName.city.length -1]:'') + proName.operator+ (proName.define ?'（'+proName.define+'）':'')+ proName.oversea +proName.proType+proName.year+( proName.defineEnd?('（'+proName.defineEnd +'）'):'');
 			tbInfos.projectName = str;
 			let userName = tbInfos.typeForm.customer;
 			tbInfos.userName = userName.company +(userName.define?("（"+ userName.define +"）"):'');

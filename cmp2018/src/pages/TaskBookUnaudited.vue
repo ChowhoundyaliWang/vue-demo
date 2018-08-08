@@ -7,13 +7,24 @@
 				<el-breadcrumb-item>未审核的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<div class="page-content">
+		<div class="page-content search-page">
 			<el-card class="box-card mb-16" shadow="always">
-				<!-- 工具条 -->
+				<!-- 按条件搜索图表 -->
 				<el-col class="mx-tool-bar mb-16">
 					<el-form :inline="true">
-						<el-form-item>
-							<el-input placeholder="请输入关键词"></el-input>
+						<el-form-item label='开始时间：'>
+							<el-date-picker v-model='searchData.startTime' type='date' placeholder='选择开始时间' format='yyyy-MM-dd' value-format='yyyy-MM-dd'></el-date-picker>
+						</el-form-item>
+						<el-form-item label='结束时间：'>
+							<el-date-picker v-model='searchData.endTime' type='date' placeholder='选择结束时间' format='yyyy-MM-dd' value-format='yyyy-MM-dd'></el-date-picker>
+						</el-form-item>
+						<br>
+						<el-form-item label='应用区域：'>
+							<el-input v-model='searchData.appField' placeholder=""></el-input>
+						</el-form-item>
+						&nbsp;
+						<el-form-item label='关 键 字：'>
+							<el-input v-model='searchData.keyword' placeholder=""></el-input>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" @click="doFilter" icon="el-icon-search">查询</el-button>
@@ -68,16 +79,22 @@ export default {
 	name: 'TaskBookUnaudited',
 	data () {
 		return {
+			status: 1,
+			searchData:{
+				startTime:"",
+				endTime:"",
+				appField:"",
+				keyword:""
+			},
 			tableData:[],
-			totalNum:0,
-			pageNum:0,
-			pageSize:0,
-			taskId: this.$route.params.id
+			totalNum: 0,
+			pageNum: 0,
+			pageSize: 0
 		}
 	},
 	mounted (){
 		// 请求参数 status 1-未审核；2-已通过；3-；4-未通过
-		this.axios.get('/api/task/list?status=1').then((res)=>{
+		this.axios.get('/api/task/list?status='+ this.status).then((res)=>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
@@ -91,7 +108,16 @@ export default {
 	methods:{
 		//表格搜索过滤事件
 		doFilter(){
-			console.log('table过滤');
+			this.axios.get('/api/task/list?status='+ this.status +'&startTime='+this.searchData.startTime+'&endTime='+this.searchData.endTime+'&keyword='+this.searchData.keyword+'&appField='+this.searchData.appField).then((res)=>{
+				let data = res.data;
+				if(data.code == 200){
+					let model = data.model;
+					this.tableData = model.data;
+					this.totalNum = model.totalNum;
+					this.pageNum = model.pageNum;
+					this.pageSize = model.pageSize;
+				}
+			});
 		},
 		// 表格点击查看事件
 		handleModify(index,row){
@@ -100,10 +126,6 @@ export default {
             	name:'TaskBookModify', params:{ id: curId}
             })
 		},
-		// 表格点击更新事件
-		/*handleUpdate(index,row){
-			console.log(index,row);
-		},*/
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
 			this.axios.get('/api/task/list?pageNum='+val+'&status=1').then((res)=>{
