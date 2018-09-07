@@ -37,14 +37,13 @@ export default {
   mounted(){
      let userInfo = JSON.parse(localStorage.getItem('userInfo'));
      let authorList = userInfo.authorList;
-     authorList.forEach((val,ind)=>{
-      if(val.id == 1){
-        authorList.splice(ind,1);
-      }else if(val.id == 6){
-        this.adminMenu = authorList[ind];
-        authorList.splice(ind,1);
-      }
-     })
+     for(let i=0; i<authorList.length; i++){
+       let cur = authorList[i];
+       if(cur.id == 6){
+        this.adminMenu = authorList[i];
+         authorList.splice(i, 1);
+       }
+     }
      this.authorList = authorList;
   }
 }

@@ -33,19 +33,19 @@
 						<span>{{tbInfos.userName}}</span>
 					</el-form-item>
 					<el-form-item label="合同名称" class="inp-long" v-show="tbInfos.type !== 3">
-						<el-input v-model="tbInfos.contractName"  readonly='true'></el-input>
+						<el-input v-model="tbInfos.contractName"  readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="项目负责人" v-if="tbInfos.type==3">
-						<el-input v-model="tbInfos.projectManager"  readonly='true'></el-input>
+						<el-input v-model="tbInfos.projectManager"  readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="联系电话" v-if="tbInfos.type==3">
-						<el-input v-model="tbInfos.managerPhone"  readonly='true'></el-input>
+						<el-input v-model="tbInfos.managerPhone"  readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="市场归口人">
-						<el-input v-model="tbInfos.marketUser"  readonly='true'></el-input>
+						<el-input v-model="tbInfos.marketUser"  readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="联系电话">
-						<el-input v-model="tbInfos.marketPhone"  readonly='true'></el-input>
+						<el-input v-model="tbInfos.marketPhone"  readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="投资金额类型" v-if="tbInfos.type==3">
 						<el-radio-group v-model="tbInfos.billType">
@@ -55,48 +55,48 @@
 					</el-form-item>
 					<div v-if="tbInfos.billType == 1 && tbInfos.type==3">
 						<el-form-item label="投资金额">
-							<el-input v-model="tbInfos.amountOfInvest"  readonly='true'></el-input>
+							<el-input v-model="tbInfos.amountOfInvest"  readOnly='true'></el-input>
 						</el-form-item>
 						<el-form-item label="投资金额大写">
 							<span v-text='tbInfos.investChinesize'></span>
 						</el-form-item>
 						<el-form-item label="取费标准">
-							<el-input v-model="tbInfos.chargeStandard"  readonly='true'></el-input>%
+							<el-input v-model="tbInfos.chargeStandard"  readOnly='true'></el-input>%
 						</el-form-item>
 					</div>
 					<div v-if="tbInfos.billType ==2&&tbInfos.type==3">
 						<el-form-item label="当期设计费">
-							<el-input v-model="tbInfos.amountOfInvest"  readonly='true'></el-input>
+							<el-input v-model="tbInfos.amountOfInvest"  readOnly='true'></el-input>
 						</el-form-item>
 						<el-form-item label="当期设计费大写">
 							<span>{{tbInfos.investChinesize}}</span>
 						</el-form-item>
 					</div>
 					<el-form-item label="分包比例" v-if='tbInfos.type==3'>
-							<el-input v-model="tbInfos.chargePercent"  readonly='true'></el-input>%
+							<el-input v-model="tbInfos.chargePercent"  readOnly='true'></el-input>%
 						</el-form-item>	
 					<el-form-item label="执行周期">
 						<el-date-picker v-model="tbInfos.executeCycle" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" disabled>
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item label="合同金额">
-						<el-input  v-model="tbInfos.contractBill"  readonly='true'></el-input>
+						<el-input  v-model="tbInfos.contractBill"  readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="合同金额大写">
 						<span v-text="tbInfos.contractBillChinesize"></span>
 					</el-form-item>
 					<el-form-item label="金额备注" class="inp-long">
-						<el-input v-model="tbInfos.contractBillRemark"  readonly='true'></el-input>
+						<el-input v-model="tbInfos.contractBillRemark"  readOnly='true'></el-input>
 					</el-form-item>
                     <div  v-if=" tbInfos.billType == 2&&tbInfos.type==3">
                     	<el-form-item label="回款周期">
-						     <el-input v-model="tbInfos.returnBillRecycle"  readonly='true'></el-input>
+						     <el-input v-model="tbInfos.returnBillRecycle"  readOnly='true'></el-input>
 					    </el-form-item>
 					    <el-form-item label="院方主管领导">
-						     <el-input v-model="tbInfos.jiaLeader"  readonly='true'></el-input>
+						     <el-input v-model="tbInfos.jiaLeader"  readOnly='true'></el-input>
 					    </el-form-item>
 					    <el-form-item label="院方项目负责人">
-						     <el-input v-model="tbInfos.jiaManager"  readonly='true'></el-input>
+						     <el-input v-model="tbInfos.jiaManager"  readOnly='true'></el-input>
 					    </el-form-item>
                     </div>
 					<el-form-item label="相关附件">
@@ -109,20 +109,20 @@
                         <span>{{tbInfos.region}}</span>
 					</el-form-item>
 					<el-form-item label="项目执行要求">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand" readonly='true'></el-input>
+						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand" readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="备注">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark" readonly='true'></el-input>
+						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark" readOnly='true'></el-input>
 					</el-form-item>
 				</el-form>
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>人力资源</h3>
-				<el-table :data="tbInfos.humanResources" border style="width:80%;" class="mx-table hr-table" show-summary :summary-method="getSummaries">
-					<el-table-column prop="gprs" label="网络制式" width='180'>
+				<el-table :data="tbInfos.humanResources" border class="mx-table hr-table" show-summary :summary-method="getSummaries">
+					<el-table-column prop="gprs" label="网络制式">
 							 
 					</el-table-column>
-					<el-table-column prop="scale" label="级别" width='180'>
+					<el-table-column prop="scale" label="级别" width='150'>
 					    
 					</el-table-column>
 					<el-table-column prop="count" label="数量" width='80'>
@@ -130,17 +130,17 @@
 					</el-table-column>
 					<el-table-column prop="startTime" label="开始日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp"></el-date-picker>
+					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp" class='date-inp'></el-date-picker>
 						</template> 
 					</el-table-column>
 					<el-table-column prop="endTime" label="结束日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp"></el-date-picker>
+					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp" class='date-inp'></el-date-picker>
 						</template>  
 					</el-table-column>
-					<el-table-column prop="product" label="投入人天">
+					<el-table-column prop="product" label="投入人天" width='80'>
 					</el-table-column>
-					<el-table-column prop="average" label="折合人月">
+					<el-table-column prop="average" label="折合人月" width='80'>
 					</el-table-column>
 					<el-table-column prop="remark" label="备注" width='180'>
 					</el-table-column>
@@ -148,7 +148,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>车辆资源</h3>
-				<el-table :data="tbInfos.carResources" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.carResources" border class="mx-table">
 					<el-table-column prop="scale" label="级别">
 					</el-table-column>
 					<el-table-column prop="count" label="数量">
@@ -161,7 +161,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>固定资产</h3>
-				<el-table :data="tbInfos.fixedAssets" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.fixedAssets" border class="mx-table">
 					<el-table-column prop="type" label="设备类型">
 					</el-table-column>
 					<el-table-column prop="count" label="数量">
@@ -174,7 +174,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>低值易耗</h3>
-				<el-table :data="tbInfos.lowExpend" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.lowExpend" border class="mx-table">
 					<el-table-column prop="type" label="设备类型">
 					</el-table-column>
 					<el-table-column prop="count" label="数量">
@@ -212,7 +212,7 @@
 				<h3>任务书审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='tbInfos.record.remark' readonly='true' style="width: 40%;"></el-input>
+						<el-input type='textarea' :rows='4' v-model='tbInfos.record.remark' readOnly='true' style="width: 40%;"></el-input>
 					</el-form-item>
 					<el-form-item label="审核结果">
 						<span v-text="tbInfos.record.status == 2?'通过':'不通过'"></span>

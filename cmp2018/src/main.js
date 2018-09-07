@@ -3,14 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import Vuex from 'Vuex'
 import axios from 'axios'
 
 Vue.use(ElementUI)
-Vue.use(Vuex)
 Vue.prototype.axios=axios
 
 import Common from '../src/util/util.js'
@@ -51,6 +50,7 @@ axios.interceptors.request.use(config => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

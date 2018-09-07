@@ -4,7 +4,7 @@
 			<template slot="title" class="menu-title first-title"><i class="el-icon-menu"></i>首页</template>
 			<el-menu-item index="/cmp">我的首页</el-menu-item>
 		</el-submenu>
-		<el-submenu v-for='(menuData, fInd) in menuDatas' :index="fInd+''" :key='fInd'>
+		<el-submenu v-for='(menuData, fInd) in menuDatas' :index="fInd+''" :key='fInd' v-show='menuData.id !== 1'>
 			<template slot="title"  class="menu-title"><i :class="menuData.icon"></i>{{menuData.label}}</template>
 			<el-submenu v-for='(menu, sInd) in menuData.children' :index="fInd+'-'+sInd" :key='sInd'>
 				<template slot="title"  class="menu-title">{{menu.label}}</template>

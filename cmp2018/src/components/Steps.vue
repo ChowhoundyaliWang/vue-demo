@@ -2,7 +2,7 @@
 	<div>
 		<el-card class="box-card mb-16 cm-steps" shadow="always">
 			<el-row>
-				<el-col :span='20'>
+				<el-col :span='24'>
 					<div class='el-steps el-steps--horizontal'>
 						<div class="el-step is-horizontal is-center" style='flex-basis:5.5556%;margin-right: 0px;' v-for='(step,index) in steps' :key='index'>
 							<div class="el-step__head" :class="[ step.status == 1? finishClass:(step.status == 2? processClass:waitClass)]">
@@ -21,9 +21,9 @@
 						</div>
 					</div>
 				</el-col>
-				<el-col :span='4'>
-
-				</el-col>
+				<!-- <el-col :span='4'>
+				
+				</el-col> -->
 			</el-row>
 		</el-card>
 	</div>
@@ -60,15 +60,11 @@ export default {
 			waitClass:'is-wait',
 			finishClass:'is-finish',
 			processClass:'is-process',
-			stepTimer:'',
 			stepsTimer:''
 		}
 	},
 	destroyed(){
 		//组件销毁后，清除定时器
-		if(this.stepTimer){
-			clearInterval(this.stepTimer);
-		}
 		if(this.stepsTimer){
 			clearInterval(this.stepsTimer);
 		}
@@ -76,7 +72,7 @@ export default {
 	watch: {
 		procedures(val) {			
 			this.steps = val;
-			this.stepsAnimation(this.steps, this.stepTimer);
+			this.stepsAnimation(this.steps);
 		}
 	},
 	mounted (){
@@ -93,28 +89,37 @@ export default {
 			}
 		},
 		//流程图动画效果显示
-		stepsAnimation(steps, stepTimer){
+		stepsAnimation(steps){
+			console.log(steps);
 			let stepsLen = steps.length;
             let waitArr = [] ;  // 哪几步等待中——状态 0
             let finishArr = [];  // 哪几步完成了——状态 1
+            let processArr = [];  // 哪几步正在进行中——状态 2
             let processStep = 0;  // 正在进行中的步骤——状态 2
             const time = 1000;
 
             if(stepsLen > 0){
             	steps.forEach((val, ind)=>{
-            		if(val.status === 1){
+            		// 在正在进行中的步骤之前的已完成
+            		if( val.status === 1 && !processStep){
             			finishArr.push(ind);
             			val.status = 2;
+            		}else if(val.status === 1 && processStep){
+            			val.status = 2;
             		}else if(val.status === 2){
-            			processStep = ind;
+            			processArr.push(ind);
+            			if(processArr.length > 0){
+            				processStep = processArr[0];
+            			}
             		}else{
             			waitArr.push(ind);
             		}
             	})
+
             	let realActive = finishArr.length;
             	let stepsMove = function(){
             		let index = 0;
-            		stepTimer = setInterval(()=>{
+            		let stepTimer = setInterval( function(){
             			if(index == processStep){
             				clearInterval(stepTimer);
             				steps.forEach((val, ind)=>{
@@ -123,23 +128,19 @@ export default {
             					}
             				})
             			}
-					//如果是已完成步骤，执行动画
-					if(finishArr.indexOf(index) > -1){
-						if(stepsLen < 1){
-							clearInterval(stepTimer);
-						}else{
-							steps[index].status = 1;
-							index++;
-						}
-					}
-					while( waitArr.indexOf(index) > -1){
-						index++;
-					}
-					console.log(index);
-				},time);
-            		return stepsMove;
+            			//如果是已完成步骤，执行动画
+            			if(finishArr.indexOf(index) > -1){
+            				steps[index].status = 1;
+            				index++;
+            			}
+            			while( waitArr.indexOf(index) > -1){
+            				index++;
+            			}
+					    console.log(index);
+				    }, time );
             	}
-            	this.stepsTimer = setInterval(stepsMove(), (realActive+1)*time);
+            	stepsMove();
+            	this.stepsTimer = setInterval(stepsMove, (realActive+1)*time);
             }
 		}
 	}

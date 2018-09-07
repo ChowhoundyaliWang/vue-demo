@@ -8,7 +8,7 @@
 						<span>{{appointBook.projectName}}</span>
 					</el-form-item>
 					<el-form-item label="应用区域"> 
-						<el-input v-model='appointBook.appField' readonly></el-input>
+						<el-input v-model='appointBook.appField' readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="项目号修正"> 
 						<span>{{appointBook.projectName}}</span>
@@ -108,26 +108,26 @@
 				<h3>其他信息</h3>
 				<el-form label-width="120px">
 					<el-form-item label="个人简历">
-						<el-input readonly='true' v-model='appointBook.resume'></el-input>
+						<el-input readOnly='true' v-model='appointBook.resume'></el-input>
 					</el-form-item>
 					<el-form-item label="预计工期">
 						<el-date-picker v-model="appointBook.expectedTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" disabled>
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item label="工作内容">
-						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workContent' readonly></el-input>
+						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workContent' readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="工作界面">
-						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workspace' readonly></el-input>
+						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workspace' readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="备注">
-						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workRemark' readonly></el-input>
+						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workRemark' readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="发送给">
-						<el-input readonly='true' v-model='appointBook.sendToUser'></el-input>
+						<el-input readOnly='true' v-model='appointBook.sendToUser'></el-input>
 					</el-form-item>
 					<el-form-item label="" v-if='!viewFlag'>
-						<el-button type="primary" class="el-icon-refresh" @click="taskBookSave">调整</el-button>
+						<el-button type="primary" class="el-icon-refresh" @click="appointBookAdjust">调整</el-button>
 					</el-form-item>
 				</el-form>	
 			</el-card>
@@ -166,6 +166,9 @@ export default {
 		},
 		delRow(index, row){
 			this.appointBook.proManagerTable.splice(index,1);
+		},
+		appointBookAdjust(){
+			
 		}
 	}
 }

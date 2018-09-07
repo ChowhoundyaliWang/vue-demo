@@ -26,26 +26,26 @@
 							<el-form-item label="应用区域" :class="{ changed: tbInfos.appField !== another.appField}">
 								<span>{{tbInfos.appField}}</span>
 							</el-form-item>	
-							<el-form-item label="项目号">
-								<span>项目号参数待加</span>
+							<el-form-item label="项目号" :class="{ changed: tbInfos.projectNumber !== another.projectNumber}" v-show='tbInfos.projectNumber'>
+								<span>{{tbInfos.projectNumber}}</span>  
 							</el-form-item>	
 							<el-form-item label="用户名称" :class="{ changed: tbInfos.userName !== another.userName}">
 								<span>{{tbInfos.userName}}</span>
 							</el-form-item>
 							<el-form-item label="合同名称" class="inp-long" v-show="tbInfos.type !== 3"  :class="{ changed: tbInfos.contractName !== another.contractName}">
-								<el-input v-model="tbInfos.contractName"  readonly='true'></el-input>
+								<el-input v-model="tbInfos.contractName"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="项目负责人" v-if="tbInfos.type==3" :class="{ changed: tbInfos.projectManager !== another.projectManager}">
-								<el-input v-model="tbInfos.projectManager"  readonly='true'></el-input>
+								<el-input v-model="tbInfos.projectManager"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="联系电话" v-if="tbInfos.type==3" :class="{ changed: tbInfos.managerPhone !== another.managerPhone}">
-								<el-input v-model="tbInfos.managerPhone"  readonly='true'></el-input>
+								<el-input v-model="tbInfos.managerPhone"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="市场归口人" :class="{ changed: tbInfos.marketUser !== another.marketUser}">
-								<el-input v-model="tbInfos.marketUser"  readonly='true'></el-input>
+								<el-input v-model="tbInfos.marketUser"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="联系电话" :class="{ changed: tbInfos.marketPhone !== another.marketPhone}">
-								<el-input v-model="tbInfos.marketPhone"  readonly='true'></el-input>
+								<el-input v-model="tbInfos.marketPhone"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="投资金额类型" v-if="tbInfos.type==3"  :class="{ changed: tbInfos.billType !== another.billType}">
 								<el-radio-group v-model="tbInfos.billType">
@@ -55,48 +55,48 @@
 							</el-form-item>
 							<div v-if="tbInfos.billType == 1 && tbInfos.type==3">
 								<el-form-item label="投资金额" :class="{ changed: tbInfos.amountOfInvest !== another.amountOfInvest}">
-									<el-input v-model="tbInfos.amountOfInvest"  readonly='true'></el-input>
+									<el-input v-model="tbInfos.amountOfInvest"  readOnly='true'></el-input>
 								</el-form-item>
 								<el-form-item label="投资金额大写" :class="{ changed: tbInfos.desInstitute !== another.desInstitute}">
 									<span>{{tbInfos.desInstitute}}</span>
 								</el-form-item>
 								<el-form-item label="取费标准" :class="{ changed: tbInfos.chargeStandard !== another.chargeStandard}">
-									<el-input v-model="tbInfos.chargeStandard"  readonly='true'></el-input>%
+									<el-input v-model="tbInfos.chargeStandard"  readOnly='true'></el-input>%
 								</el-form-item>
 							</div>
 							<div v-if="tbInfos.billType ==2&&tbInfos.type==3">
 								<el-form-item label="当期设计费" :class="{ changed: tbInfos.amountOfInvest !== another.amountOfInvest}">
-									<el-input v-model="tbInfos.amountOfInvest"  readonly='true'></el-input>
+									<el-input v-model="tbInfos.amountOfInvest"  readOnly='true'></el-input>
 								</el-form-item>
 								<el-form-item label="当期设计费大写" :class="{ changed: tbInfos.designChinesize !== another.designChinesize}">
 									<span>{{tbInfos.designChinesize}}</span>
 								</el-form-item>
 							</div>
 							<el-form-item label="分包比例" v-if='tbInfos.type==3' :class="{ changed: tbInfos.chargePercent !== another.chargePercent}">
-								<el-input v-model="tbInfos.chargePercent"  readonly='true'></el-input>%
+								<el-input v-model="tbInfos.chargePercent"  readOnly='true'></el-input>%
 							</el-form-item>	
 							<el-form-item label="执行周期" :class="{ changed: JSON.stringify(tbInfos.executeCycle) !== JSON.stringify(another.executeCycle)}">
 								<el-date-picker v-model="tbInfos.executeCycle" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" disabled>
 								</el-date-picker>
 							</el-form-item>
 							<el-form-item label="合同金额" :class="{ changed: tbInfos.contractBill !== another.contractBill}">
-								<el-input  v-model="tbInfos.contractBill"  readonly='true'></el-input>
+								<el-input  v-model="tbInfos.contractBill"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="合同金额大写" :class="{ changed: tbInfos.contractBillChinesize !== another.contractBillChinesize}">
 								<span>{{tbInfos.contractBillChinesize}}</span>
 							</el-form-item>
 							<el-form-item label="金额备注" class="inp-long" :class="{ changed: tbInfos.contractBillRemark !== another.contractBillRemark}">
-								<el-input v-model="tbInfos.contractBillRemark"  readonly='true'></el-input>
+								<el-input v-model="tbInfos.contractBillRemark"  readOnly='true'></el-input>
 							</el-form-item>
 							<div  v-if=" tbInfos.billType == 2&&tbInfos.type==3">
 								<el-form-item label="回款周期" :class="{ changed: tbInfos.returnBillRecycle !== another.returnBillRecycle}">
-									<el-input v-model="tbInfos.returnBillRecycle"  readonly='true'></el-input>
+									<el-input v-model="tbInfos.returnBillRecycle"  readOnly='true'></el-input>
 								</el-form-item>
 								<el-form-item label="院方主管领导" :class="{ changed: tbInfos.jiaLeader !== another.jiaLeader}">
-									<el-input v-model="tbInfos.jiaLeader"  readonly='true'></el-input>
+									<el-input v-model="tbInfos.jiaLeader"  readOnly='true'></el-input>
 								</el-form-item>
 								<el-form-item label="院方项目负责人" :class="{ changed: tbInfos.jiaManager !== another.jiaManager}">
-									<el-input v-model="tbInfos.jiaManager"  readonly='true'></el-input>
+									<el-input v-model="tbInfos.jiaManager"  readOnly='true'></el-input>
 								</el-form-item>
 							</div>
 							<el-form-item label="相关附件">
@@ -109,10 +109,10 @@
 								<span>{{tbInfos.region}}</span>
 							</el-form-item>
 							<el-form-item label="项目执行要求" :class="{ changed: tbInfos.proDemand !== another.proDemand}">
-								<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand" readonly='true'></el-input>
+								<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand" readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="备注" :class="{ changed: tbInfos.proDemandRemark !== another.proDemandRemark}">
-								<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark" readonly='true'></el-input>
+								<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark" readOnly='true'></el-input>
 							</el-form-item>
 						</el-form>
 					</el-card>
@@ -204,7 +204,7 @@
 						<h3>任务书审核</h3>
 						<el-form label-width="150px">
 							<el-form-item label="审核意见">
-								<el-input type='textarea' :rows='4' v-model='remark' readonly='true' style="width: 80%;"></el-input>
+								<el-input type='textarea' :rows='4' v-model='remark' readOnly='true' style="width: 80%;"></el-input>
 							</el-form-item>
 							<el-form-item label="审核结果">
 								<span v-text="status == 2 ?'通过':'不通过'"></span>
@@ -238,26 +238,26 @@
 							<el-form-item label="应用区域" :class="{ changed: tbInfos.appField !== another.appField}">
 								<span>{{another.appField}}</span>
 							</el-form-item>	
-							<el-form-item label="项目号">
-								<span>项目号参数待加</span>
+							<el-form-item label="项目号" :class="{ changed: tbInfos.projectNumber !== another.projectNumber}" v-show='another.projectNumber'>
+								<span>{{another.projectNumber}}</span>
 							</el-form-item>	
 							<el-form-item label="用户名称" :class="{ changed: tbInfos.userName !== another.userName}">
 								<span>{{another.userName}}</span>
 							</el-form-item>
 							<el-form-item label="合同名称" class="inp-long" v-show="another.type !== 3" :class="{ changed: tbInfos.contractName !== another.contractName}">
-								<el-input v-model="another.contractName"  readonly='true'></el-input>
+								<el-input v-model="another.contractName"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="项目负责人" v-if="another.type==3" :class="{ changed: tbInfos.projectManager !== another.projectManager}">
-								<el-input v-model="another.projectManager"  readonly='true'></el-input>
+								<el-input v-model="another.projectManager"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="联系电话" v-if="another.type==3"  :class="{ changed: tbInfos.managerPhone !== another.managerPhone}">
-								<el-input v-model="another.managerPhone"  readonly='true'></el-input>
+								<el-input v-model="another.managerPhone"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="市场归口人"  :class="{ changed: tbInfos.marketUser !== another.marketUser}">
-								<el-input v-model="another.marketUser"  readonly='true'></el-input>
+								<el-input v-model="another.marketUser"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="联系电话" :class="{ changed: tbInfos.marketPhone !== another.marketPhone}">
-								<el-input v-model="another.marketPhone"  readonly='true'></el-input>
+								<el-input v-model="another.marketPhone"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="投资金额类型" v-if="another.type==3"  :class="{ changed: tbInfos.billType !== another.billType}">
 								<el-radio-group v-model="another.billType">
@@ -267,48 +267,48 @@
 							</el-form-item>
 							<div v-if="another.billType == 1 && another.type==3">
 								<el-form-item label="投资金额" :class="{ changed: tbInfos.amountOfInvest !== another.amountOfInvest}">
-									<el-input v-model="another.amountOfInvest"  readonly='true'></el-input>
+									<el-input v-model="another.amountOfInvest"  readOnly='true'></el-input>
 								</el-form-item>
 								<el-form-item label="投资金额大写" :class="{ changed: tbInfos.desInstitute !== another.desInstitute}">
 									<span>{{another.desInstitute}}</span>
 								</el-form-item>
 								<el-form-item label="取费标准" :class="{ changed: tbInfos.chargeStandard !== another.chargeStandard}">
-									<el-input v-model="another.chargeStandard"  readonly='true'></el-input>%
+									<el-input v-model="another.chargeStandard"  readOnly='true'></el-input>%
 								</el-form-item>
 							</div>
 							<div v-if="another.billType ==2&&another.type==3">
 								<el-form-item label="当期设计费" :class="{ changed: tbInfos.amountOfInvest !== another.amountOfInvest}">
-									<el-input v-model="another.amountOfInvest"  readonly='true'></el-input>
+									<el-input v-model="another.amountOfInvest"  readOnly='true'></el-input>
 								</el-form-item>
 								<el-form-item label="当期设计费大写" :class="{ changed: tbInfos.designChinesize !== another.designChinesize}">
 									<span>{{another.designChinesize}}</span>
 								</el-form-item>
 							</div>
 							<el-form-item label="分包比例" v-if='another.type==3' :class="{ changed: tbInfos.chargePercent !== another.chargePercent}">
-								<el-input v-model="another.chargePercent"  readonly='true'></el-input>%
+								<el-input v-model="another.chargePercent"  readOnly='true'></el-input>%
 							</el-form-item>	
 							<el-form-item label="执行周期" :class="{ changed: JSON.stringify(tbInfos.executeCycle) !== JSON.stringify(another.executeCycle)}">
 								<el-date-picker v-model="another.executeCycle" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" disabled>
 								</el-date-picker>
 							</el-form-item>
 							<el-form-item label="合同金额" :class="{ changed: tbInfos.contractBill !== another.contractBill}">
-								<el-input  v-model="another.contractBill"  readonly='true'></el-input>
+								<el-input  v-model="another.contractBill"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="合同金额大写" :class="{ changed: tbInfos.contractBillChinesize !== another.contractBillChinesize}">
 								<span>{{another.contractBillChinesize}}</span>
 							</el-form-item>
 							<el-form-item label="金额备注" class="inp-long" :class="{ changed: tbInfos.contractBillRemark !== another.contractBillRemark}">
-								<el-input v-model="another.contractBillRemark"  readonly='true'></el-input>
+								<el-input v-model="another.contractBillRemark"  readOnly='true'></el-input>
 							</el-form-item>
 							<div  v-if=" another.billType == 2&&another.type==3">
 								<el-form-item label="回款周期" :class="{ changed: tbInfos.returnBillRecycle !== another.returnBillRecycle}">
-									<el-input v-model="another.returnBillRecycle"  readonly='true'></el-input>
+									<el-input v-model="another.returnBillRecycle"  readOnly='true'></el-input>
 								</el-form-item>
 								<el-form-item label="院方主管领导" :class="{ changed: tbInfos.jiaLeader !== another.jiaLeader}">
-									<el-input v-model="another.jiaLeader"  readonly='true'></el-input>
+									<el-input v-model="another.jiaLeader"  readOnly='true'></el-input>
 								</el-form-item>
 								<el-form-item label="院方项目负责人" :class="{ changed: tbInfos.jiaManager !== another.jiaManager}">
-									<el-input v-model="another.jiaManager"  readonly='true'></el-input>
+									<el-input v-model="another.jiaManager"  readOnly='true'></el-input>
 								</el-form-item>
 							</div>
 							<el-form-item label="相关附件">
@@ -321,10 +321,10 @@
 								<span>{{another.region}}</span>
 							</el-form-item>
 							<el-form-item label="项目执行要求" :class="{ changed: tbInfos.proDemand !== another.proDemand}">
-								<el-input type="textarea" style="width:400px;" v-model="another.proDemand" readonly='true'></el-input>
+								<el-input type="textarea" style="width:400px;" v-model="another.proDemand" readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="备注" :class="{ changed: tbInfos.proDemandRemark !== another.proDemandRemark}">
-								<el-input type="textarea" style="width:400px;" v-model="another.proDemandRemark" readonly='true'></el-input>
+								<el-input type="textarea" style="width:400px;" v-model="another.proDemandRemark" readOnly='true'></el-input>
 							</el-form-item>
 						</el-form>
 					</el-card>
@@ -413,7 +413,7 @@
 						<h3>任务书审核</h3>
 						<el-form label-width="150px">
 							<el-form-item label="审核意见">
-								<el-input type='textarea' :rows='4' v-model='anoRemark' readonly='true' style="width: 80%;"></el-input>
+								<el-input type='textarea' :rows='4' v-model='anoRemark' readOnly='true' style="width: 80%;"></el-input>
 							</el-form-item>
 							<el-form-item label="审核结果">
 								<span v-text="anoStatus == 2?'通过':'不通过'"></span>
