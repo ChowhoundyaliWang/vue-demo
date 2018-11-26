@@ -17,8 +17,8 @@
 							<el-button type="text" @click="handleCreate(scope.$index,scope.row)">创建</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='210px'  show-overflow-tooltip></el-table-column>
-					<el-table-column prop="projectNo" label="项目号" width='145px' show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip></el-table-column>
+					<el-table-column prop="projectNo" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="region" label="应用区域" show-overflow-tooltip>
 					</el-table-column>
@@ -26,7 +26,7 @@
 					</el-table-column>
 					<el-table-column prop="budgetSubmitter" label="预算提交人" width='100px' show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="budgetCommitTime" label="提交时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="budgetCommitTime" label="提交时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="contractBill" label="合同金额" show-overflow-tooltip> 
 					</el-table-column>
@@ -36,11 +36,11 @@
 					</el-table-column>
 					<el-table-column prop="otherCost" label="其他费用" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="budgetAuditResult" label="预算审批结果" width='110px' show-overflow-tooltip> 
+					<el-table-column prop="budgetAuditResult" label="预算审批结果" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="budgetAuditor" label="审批人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="budgetAuditTime" label="审批时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="budgetAuditTime" label="审批时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -70,7 +70,7 @@ export default {
 	data () {
 		return {
 			isLoading: true,
-			status:4,
+			status:5,
 			searchUrl: '/api/projectBudget/list',
 			tableData:{
 				data:[],
@@ -81,7 +81,7 @@ export default {
 		}
 	},
 	mounted (){
-		this.axios.get('/api/projectBudget/list?status=4').then((res)=>{
+		this.axios.get('/api/projectBudget/list?status=5').then((res)=>{
 			const data = res.data;
 			if(data.code == 200){
 				const model = data.model;
@@ -106,7 +106,7 @@ export default {
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/projectBudget/list?pageNum='+val+'&status=4').then((res)=>{
+			this.axios.get('/api/projectBudget/list?pageNum='+val+'&status=5').then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;

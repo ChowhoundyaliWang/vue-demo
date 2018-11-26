@@ -7,11 +7,11 @@
 				<el-breadcrumb-item>创建项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
-		<div class="page-content min-w" id="userCreate"> 
+		<div class="page-content min-w"> 
 			<steps :procedures='procedures'></steps>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>任务书信息</h3>
-				<el-form :model="tbInfos" :rules='rules' ref='ruleForm' label-width="130px">
+				<el-form :model="tbInfos" :rules='rules' ref='ruleForm' label-width="130px" id="userCreate">
 					<el-form-item label="项目类型" prop='type'>
 						<el-radio-group v-model="tbInfos.type" @change='emptyProName'>
 							<el-radio :label="1">厂家</el-radio>
@@ -170,20 +170,20 @@
 						<el-input v-model="tbInfos.marketPhone" readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="投资金额类型" v-if="tbInfos.type==3">
-						<el-radio-group v-model="tbInfos.billType">
+						<el-radio-group v-model="tbInfos.billType" @change='calContractBill'>
 							<el-radio :label="1">运营商当期投资金额</el-radio>
 							<el-radio :label="2">院方当期设计费</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<div v-if="tbInfos.billType == 1 && tbInfos.type==3">
 						<el-form-item label="投资金额">
-							<el-input v-model="tbInfos.amountOfInvest" @blur='investHandleUppercase($event)'></el-input>
+							<el-input v-model="tbInfos.amountOfInvest" @change='calContractBill' @blur='investHandleUppercase($event)'></el-input>
 						</el-form-item>
 						<el-form-item label="投资金额大写">
 							<span v-text="tbInfos.investChinesize"></span>
 						</el-form-item>
 						<el-form-item label="取费标准">
-							<el-input v-model="tbInfos.chargeStandard"></el-input>%
+							<el-input v-model="tbInfos.chargeStandard" @change='calContractBill'></el-input>%
 						</el-form-item>
 					</div>
 					<div v-if="tbInfos.billType ==2&&tbInfos.type==3">
@@ -195,18 +195,18 @@
 						</el-form-item>
 					</div>
 					<el-form-item label="分包比例" v-if='tbInfos.type==3'>
-							<el-input v-model="tbInfos.chargePercent"></el-input>%
+							<el-input v-model="tbInfos.chargePercent" @change='calContractBill'></el-input>%
 						</el-form-item>	
 					<el-form-item label="执行周期" prop='executeCycle'>
-						<!-- <el-date-picker v-model="tbInfos.executeCycle[0]" type='date' placeholder='开始日期'></el-date-picker>
-						<soan>至</soan>
-						<el-date-picker v-model="tbInfos.executeCycle[1]" type='date' placeholder='开始日期'></el-date-picker> -->
+						<el-date-picker v-model="tbInfos.executeCycle[0]" type='date' placeholder='开始日期'></el-date-picker>
+						<span>至</span>
+						<el-date-picker v-model="tbInfos.executeCycle[1]" type='date' placeholder='结束日期'></el-date-picker> 
 
-						<el-date-picker v-model="tbInfos.executeCycle" type="daterange" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+						<!-- <el-date-picker v-model="tbInfos.executeCycle" type="daterange" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> -->
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item label="合同金额" prop='contractBill'>
-						<el-input  v-model="tbInfos.contractBill" min='0.01' step='0.01' @blur='handleUppercase($event)'></el-input>
+						<el-input  v-model="tbInfos.contractBill" min='0.01' step='0.01' @change='handleUppercase($event)'></el-input>
 					</el-form-item>
 					<el-form-item label="合同金额大写">
 						<span v-text='tbInfos.contractBillChinesize'></span>
@@ -227,7 +227,7 @@
                     </div>
 					<el-form-item label="相关附件" prop='tbFile'>
 						<!-- limit——限制上传文件的个数； -->
-						<el-upload :action="uploadUrl()" ref='upload' :auto-upload="false" :file-list='fileList' :data='taskIdObj' :before-remove="beforeRemove">
+						<el-upload action="http://39.105.14.188:5005/api/upload-files" :auto-upload='true' :data='tokenObj' :on-error='uploadFail' :on-success='uploadSuccess' :before-remove="beforeRemove">
 							<el-button size="default" type="primary">选择文件</el-button>
 							<div slot="tip" class="el-upload__tip">文件大小不超过5M</div>
 						</el-upload>
@@ -236,10 +236,10 @@
                         <span>{{tbInfos.region}}</span>
 					</el-form-item>
 					<el-form-item label="项目执行要求">
-						<el-input type="textarea" style="width:60%;" v-model="tbInfos.proDemand" :rows='4'></el-input>
+						<el-input type="textarea" style="width:70%;" v-model="tbInfos.proDemand" :rows='8'></el-input>
 					</el-form-item>
 					<el-form-item label="备注">
-						<el-input type="textarea" style="width:60%;" v-model="tbInfos.proDemandRemark" :rows='4'></el-input>
+						<el-input type="textarea" style="width:70%;" v-model="tbInfos.proDemandRemark" :rows='8'></el-input>
 					</el-form-item>
 				</el-form>
 			</el-card>
@@ -248,16 +248,18 @@
 				<el-table :data="tbInfos.humanResources" border class="mx-table hr-table" show-summary :summary-method="getSummaries">
 					<el-table-column prop="gprs" label="网络制式">
 						<template slot-scope="scope">
-							<el-select placeholder="请选择" v-model="scope.row.gprs">
+							<el-select placeholder="请选择" v-model="scope.row.gprs"  v-show='scope.row.gprs !== "其他（自定义）"'>
 								<el-option v-for="item in gprsList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 							</el-select>
+							<el-input v-model='scope.row.gprDefined' v-show='scope.row.gprs == "其他（自定义）"'></el-input>
 						</template>	 
 					</el-table-column>
-					<el-table-column prop="scale" label="级别" width='150'>
+					<el-table-column prop="scale" label="级别">
 					    <template slot-scope="scope">
-							<el-select placeholder="请选择" v-model="scope.row.scale">
+							<el-select placeholder="请选择" v-model="scope.row.scale" v-show='scope.row.scale !== "其他（自定义）"'>
 								<el-option v-for="item in empGradeList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 							</el-select>
+							<el-input v-model='scope.row.scaleDefined' v-show='scope.row.scale == "其他（自定义）"'></el-input>
 						</template>	
 					</el-table-column>
 					<el-table-column prop="count" label="数量" width='80'>
@@ -267,12 +269,12 @@
 					</el-table-column>
 					<el-table-column prop="startTime" label="开始日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" :picker-options="pickStartDate" value-format="timestamp"  @change='calInvest(scope.$index,scope.row)' class='date-inp'></el-date-picker>
+					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" value-format="timestamp"  @change='calInvest(scope.$index,scope.row)' class='inp-normal'></el-date-picker>
 						</template> 
 					</el-table-column>
 					<el-table-column prop="endTime" label="结束日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" :picker-options="pickEndDate" value-format="timestamp"  @change='calInvest(scope.$index,scope.row)' class='date-inp'></el-date-picker>
+					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" value-format="timestamp"  @change='calInvest(scope.$index,scope.row)' class='inp-normal'></el-date-picker>
 						</template>  
 					</el-table-column>
 					<el-table-column prop="product" label="投入人天" width='80'> 
@@ -297,16 +299,17 @@
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>车辆资源</h3>
 				<el-table :data="tbInfos.carResources" border class="mx-table">
-					<el-table-column prop="scale" label="级别">
+					<el-table-column prop="scale" label="级别" width='310px'>
 					    <template slot-scope="scope">
-							<el-select placeholder="请选择" v-model="scope.row.scale">
+							<el-select placeholder="请选择" v-model="scope.row.scale" v-show='scope.row.scale !== "其他（自定义）"' class='long-sel'>
 								<el-option v-for="item in carList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 							</el-select>
+							<el-input v-model='scope.row.scaleDefined' v-show='scope.row.scale == "其他（自定义）"'></el-input>
 						</template>	
 					</el-table-column>
-					<el-table-column prop="count" label="数量">
+					<el-table-column prop="count" label="数量" width='80'>
 					    <template slot-scope='scope'>
-							<el-input v-model='scope.row.count'></el-input>
+							<el-input v-model='scope.row.count' class='num-inp'></el-input>
 						</template> 
 					</el-table-column>
 					<el-table-column prop="month" label="参与工期（月）">
@@ -332,16 +335,17 @@
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>固定资产</h3>
 				<el-table :data="tbInfos.fixedAssets" border style="width:100%;" class="mx-table">
-					<el-table-column prop="type" label="设备类型">
+					<el-table-column prop="type" label="设备类型" width='310px'>
 					    <template slot-scope="scope">
-							<el-select placeholder="请选择" v-model="scope.row.type">
+							<el-select placeholder="请选择" v-model="scope.row.type" v-show='scope.row.type !== "其他（自定义）"' class='long-sel'>
 								<el-option v-for="item in fixList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 							</el-select>
+							<el-input v-model='scope.row.typeDefined' v-show='scope.row.type == "其他（自定义）"'></el-input>
 						</template>	
 					</el-table-column>
-					<el-table-column prop="count" label="数量">
+					<el-table-column prop="count" label="数量" width='80'>
 					    <template slot-scope='scope'>
-							<el-input v-model='scope.row.count'></el-input>
+							<el-input v-model='scope.row.count' class='num-inp'></el-input>
 						</template> 
 					</el-table-column>
 					<el-table-column prop="month" label="参与工期（月）">
@@ -367,16 +371,17 @@
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>低值易耗</h3>
 				<el-table :data="tbInfos.lowExpend" border style="width:100%;" class="mx-table">
-					<el-table-column prop="type" label="设备类型">
+					<el-table-column prop="type" label="设备类型" width='310px'>
 					    <template slot-scope="scope">
-							<el-select placeholder="请选择" v-model="scope.row.type">
+							<el-select placeholder="请选择" v-model="scope.row.type" v-show='scope.row.type !== "其他（自定义）"' class='long-sel'>
 								<el-option v-for="item in lowList" :key="item.id" :label="item.name" :value="item.name"></el-option>
 							</el-select>
+							<el-input v-model='scope.row.typeDefined' v-show='scope.row.type == "其他（自定义）"'></el-input>
 						</template>	
 					</el-table-column>
-					<el-table-column prop="count" label="数量">
+					<el-table-column prop="count" label="数量" width='80'>
 					    <template slot-scope='scope'>
-							<el-input v-model='scope.row.count'></el-input>
+							<el-input v-model='scope.row.count' class='num-inp'></el-input>
 						</template> 
 					</el-table-column>
 					<el-table-column prop="month" label="参与工期（月）">
@@ -452,10 +457,9 @@ export default {
 				contractBill: [{required:true,message:'合同金额为必填项'}],
 				tbFile: [{ required:true, message:'相关附件不能为空'}]*/
 			},
-			taskIdObj:{
-				taskId:''
+ 			tokenObj:{
+				Authorization:''
 			},
-			fileList:[],
 			tbInfos:{
                 type:1, 
                 typeForm:{
@@ -504,7 +508,8 @@ export default {
                 fixedAssets:[],
                 lowExpend:[],
                 proExecuteSubject:'',
-                proExecutePeople:''
+                proExecutePeople:'',
+                imgList:[]
 			},
 			facFirstList:[],
 			facThirdList:[],
@@ -530,21 +535,7 @@ export default {
 			fixList:[],
 			lowList:[],
 			proDeptList:[],  //项目执行主体列表
-			proManagerList:[], //项目执行人列表
-			pickStartDate:{
-				disabledDate:(time)=>{
-					// 开始日期只能选择结束日期之前的
-					/*let endDateVal = 
-					return time.getTime() > endDateVal;*/ 
-				}
-			},
-			pickEndDate:{
-				disabledDate:(time)=>{
-					// 结束日期只能选择开始日期之后的
-					/*let startDateVal = 
-					return time.getTime() < startDateVal;*/
-				}
-			}
+			proManagerList:[]  //项目执行人列表
 		}
 	},
 	mounted (){
@@ -552,6 +543,7 @@ export default {
 		this.tbInfos.marketUser = userInfo.name;
 		this.tbInfos.marketPhone = userInfo.phone;
 		this.tbInfos.region = userInfo.region;
+		this.tokenObj.Authorization = localStorage.getItem('token');
 		this.axios.get('/api/project/name/list?type=1&order=1').then((res)=>{
 			const data = res.data;
 			const model = data.model;
@@ -722,6 +714,17 @@ export default {
             this.tbInfos.typeForm.proName.year='';
             this.tbInfos.typeForm.proName.defineEnd='';
 		},
+		calContractBill(){
+			if(this.tbInfos.billType == 1 && this.tbInfos.amountOfInvest && this.tbInfos.chargeStandard && this.tbInfos.chargePercent){
+				//当为 运营商当期投资金额时，合同金额 = 投资金额*取费标准*分包比例
+				this.tbInfos.contractBill = this.tbInfos.amountOfInvest * (this.tbInfos.chargeStandard/100) * (this.tbInfos.chargePercent/100);
+				this.handleUppercase();
+			}else if(this.tbInfos.billType == 2&& this.tbInfos.amountOfInvest && this.tbInfos.chargePercent){
+				//当为 院方当期设计费时，合同金额 = 当期设计费*分包比例
+				this.tbInfos.contractBill = this.tbInfos.amountOfInvest * (this.tbInfos.chargePercent/100);
+				this.handleUppercase();
+			}
+		},
 		calInvest(index, row){
 			row.product = (row.endTime && row.startTime && row.count)?((row.endTime - row.startTime)/(1000*60*60*24)+1)*row.count:0;
 			row.average = row.product?(row.product/30).toFixed(2):0;
@@ -731,7 +734,7 @@ export default {
 		},
 		handleUppercase(e){
 			// 校验输入的为金额——正数，整数部分不超过9位数，小数部分不超过两位小数
-			let amount= this.tbInfos.contractBill;
+			let amount= this.tbInfos.contractBill + '';
             amount = this.amountInWords(amount);
 			this.tbInfos.contractBillChinesize = amount;
 		},
@@ -742,14 +745,30 @@ export default {
 			this.tbInfos.investChinesize = amount;
 		},
 		beforeRemove(file,fileList){
-			return this.$confirm('确定移除该文件?');
+			return this.$confirm('确定移除该文件?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(()=>{
+				let url = file.url;
+				let ind = this.tbInfos.imgList.findIndex((val) => val.fileAddress === url)
+				this.tbInfos.imgList.splice(ind, 1);
+			});
+		},
+		uploadFail(response, file, fileList){
+			this.$alert('上传出错');
+		},
+		uploadSuccess(response, file, fileList){
+			if(response.code == 200){
+				this.tbInfos.imgList.push(file.response.model[0]);	
+			}
 		},
 		hrDelRow(index,row){
 			this.tbInfos.humanResources.splice(index,1);
 		},
 		hrAddRow(){
 			//往表格里添加数据
-			let rowData = {gprs:"",scale:"",count:"", product:"", average:'', remark:""};
+			let rowData = {gprs:"",gprDefined: '', scale:"",count:"", product:"", average:'', remark:"" };
 			let humanResources = this.tbInfos.humanResources;
 			let startTime = '';
 			let endTime = '';
@@ -792,10 +811,6 @@ export default {
 				this.proManagerList = model;
 			});
 		},
-		uploadUrl(){
-			/*return 'http://192.168.1.2:2000/api/upload-files';*/
-			return 'http://163.53.91.130:5005/api/upload-files';
-		},
 		taskBookSave(){
 			// 项目任务书提交
 			let params={};
@@ -812,9 +827,14 @@ export default {
                 const msg = data.message;
                 if(data.code == 200){
                 	let model = data.model;
-                	this.taskIdObj.taskId = model;
-                	this.$refs.upload.submit();
-                    this.$alert(msg,'提示');
+                	this.$alert(msg,'提示', {
+                		confirmButtonText:'确定',
+                		callback: action => {
+                			this.$router.push({
+                				path:'/TaskBookUnaudited'
+                			})
+                		}
+                	})
                 }else{
                 	this.$alert(msg,'错误提示');
                 }  

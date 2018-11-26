@@ -36,6 +36,7 @@ export default {
 		}
 	},
 	mounted (){
+		this.$el.parentNode.scrollTop = 0;
 		this.axios.get('/api/planPaper/get/'+ this.curId).then((res)=>{
 			const data = res.data;
 			if(data.code == 200){

@@ -18,7 +18,7 @@
 				<el-col :span="12">
 						<p class='p-hei'>按照公司TL9000质量体系部门质量目标：分管部门必须完成基准目标值，作为考核部门日常项目管理工作的依据。</p>
 						<h4 class='tb-title'>目标执行中心</h4>
-						<el-table :data="qualityTarget" border class="mx-table">
+						<el-table :data="qualityTarget" border class="mx-table view-table">
 							<el-table-column prop="name" label="目标名称" width='220px'></el-table-column>
 							<el-table-column prop="standardGoal" label="基准目标">
 								<template slot-scope="scope">
@@ -35,7 +35,7 @@
 				<el-col :span="12" class='inp-mini'>
 					<p class='p-hei'>按照公司TL9000质量体系，本项目质量目标由部门经理制定。</p>
 					<h4 class='tb-title'>本项目</h4>
-					<el-table :data="planBook.qualityTarget" border class="mx-table">
+					<el-table :data="planBook.qualityTarget" border class="mx-table edit-table">
 						<el-table-column prop="name" label="目标名称" width='220px'></el-table-column>
 						<el-table-column prop="standardGoal" label="基准目标">
 							<template slot-scope="scope">
@@ -55,59 +55,77 @@
 			<h3>进度、要求、资源</h3>
 			<el-form label-width="120px">
 				<el-form-item label="项目进度">
-					<el-input type='textarea' :rows='4' v-model='planBook.projectSchedule' 
+					<el-input type='textarea' :rows='8' style="width:70%;" v-model='planBook.projectSchedule' 
 					:readOnly='viewOnly'></el-input>
 				</el-form-item>
 				<el-form-item label="项目要求">
-					<el-input type='textarea' :rows='4' v-model='planBook.projectDemand' 
+					<el-input type='textarea' :rows='8' style="width:70%;" v-model='planBook.projectDemand' 
 					:readOnly='viewOnly'></el-input>
 				</el-form-item>
 				<el-form-item label="项目资源">
-					<el-input type='textarea' :rows='4' v-model='planBook.projectResource' 
+					<el-input type='textarea' :rows='8' style="width:70%;" v-model='planBook.projectResource' 
 					:readOnly='viewOnly'></el-input>
 				</el-form-item>
 			</el-form>	
 		</el-card>
 		<el-card class="box-card mb-16" shadow="always">
 			<h3>人员配备</h3>
-			<el-table :data="planBook.personalAllocation" border  class="mx-table tb-inp">
+			<el-table :data="curPerAllocation" border  class="mx-table tb-inp">
 				<el-table-column prop="name" label="参与人员"></el-table-column>
-				<el-table-column prop="dept" label="部门"></el-table-column>
-				<el-table-column prop="category" label="工程师类别" width='120'></el-table-column>
-				<el-table-column prop="grade" label="工程师级别"></el-table-column>
+				<el-table-column prop="dept" label="部门" width='150'></el-table-column>
+				<el-table-column prop="category" label="工程师类别" width='180'></el-table-column>
+				<el-table-column prop="grade" label="工程师级别" width='130'></el-table-column>
 				<el-table-column prop="treatment" label="待遇级别"></el-table-column>
 				<el-table-column prop="startTime" label="参与周期开始" width='160'>
 					<template slot-scope='scope'>
-						<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' :readOnly='viewOnly' class='date-inp'></el-date-picker>
+						<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' :disabled='viewOnly' class='date-inp'></el-date-picker>
 					</template>  
 				</el-table-column>
 				<el-table-column prop="endTime" label="参与周期结束" width='160'>
 					<template slot-scope='scope'>
-						<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' :readOnly='viewOnly' class='date-inp'></el-date-picker>
+						<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' :disabled='viewOnly' class='date-inp'></el-date-picker>
 					</template>  
 				</el-table-column>
 				<el-table-column prop="division" label="职责分工" width='140'></el-table-column>
 				<el-table-column prop="remark" label="备注"></el-table-column>
 			</el-table>
+			<div style="width:100%;text-align:right;margin-top: 10px;" v-if='perTotalNum > 1'>
+					<el-pagination 
+					background 
+					@current-change="perHandleCurChange"
+					:current-page.sync="perPageNum"
+					:page-size="pageSize"
+					layout="total,prev,pager,next"
+					:total="perTotalNum"></el-pagination>
+			</div>
 		</el-card>
 		<el-card class="box-card mb-16" shadow="always">
 			<h3>设备配备</h3>
-			<el-table :data="planBook.equipmentAllocation" border class="mx-table tb-inp">
+			<el-table :data="curEqAllocation" border class="mx-table tb-inp">
 				<el-table-column prop="name" label="设备名称"></el-table-column>
 				<el-table-column prop="version" label="型号"></el-table-column>
 				<el-table-column prop="count" label="数量"></el-table-column>
 				<el-table-column prop="startTime" label="参与周期开始" width='160'>
 					<template slot-scope='scope'>
-						<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' :readOnly='viewOnly' class='date-inp'></el-date-picker>
+						<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' :disabled='viewOnly' class='date-inp'></el-date-picker>
 					</template>  
 				</el-table-column>
 				<el-table-column prop="endTime" label="参与周期结束" width='160'>
 					<template slot-scope='scope'>
-						<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' :readOnly='viewOnly' class='date-inp'></el-date-picker>
+						<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' :disabled='viewOnly' class='date-inp'></el-date-picker>
 					</template>  
 				</el-table-column>
 				<el-table-column prop="remark" label="备注"></el-table-column>
 			</el-table>
+			<div style="width:100%;text-align:right;margin-top: 10px;" v-if='eqTotalNum > 1'>
+					<el-pagination 
+					background 
+					@current-change="eqHandleCurChange"
+					:current-page.sync="eqPageNum"
+					:page-size="pageSize"
+					layout="total,prev,pager,next"
+					:total="eqTotalNum"></el-pagination>
+			</div>
 		</el-card>
 		<el-card class="box-card mb-16 inp-middle" shadow="always">
 			<h3>创建</h3>
@@ -118,17 +136,17 @@
 				<el-form-item label="发送给">
 					<el-input readOnly='true' v-model='planBook.sendToUser'></el-input>
 				</el-form-item>
-				<el-form-item label="" v-show='!viewOnly'>
+				<el-form-item label="" v-if='!viewOnly && !auditFlag'>
 					<el-button @click="toUpdate" type="success" class="el-icon-check">更新</el-button>
 				</el-form-item>
 			</el-form>	
 		</el-card>
-		<div v-show='viewOnly'>
+		<div v-show='viewOnly&& !auditFlag'>
 			<el-card class="box-card mb-16 inp-middle" shadow="always" v-show='managerAuditFlag'> 
 				<h3>执行部门经理审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='managerRemark' style="width:40%;" readOnly></el-input>
+						<el-input type='textarea' :rows='4' v-model='managerRemark' style="width:70%;" readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="审核结果"> 
 						<span>{{managerStatus}}</span>
@@ -139,7 +157,7 @@
 				<h3>执行副总审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='excuteRemark' style="width:40%;" readOnly></el-input>
+						<el-input type='textarea' :rows='4' v-model='excuteRemark' style="width:70%;" readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="审核结果"> 
 						<span>{{executeStatus}}</span>
@@ -150,7 +168,7 @@
 				<h3>预算审批</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审批意见">
-						<el-input type='textarea' :rows='4' v-model='budgetRemark' style="width:40%;" readOnly></el-input>
+						<el-input type='textarea' :rows='4' v-model='budgetRemark' style="width:70%;" readOnly></el-input>
 					</el-form-item>
 					<el-form-item label="审批结果"> 
 						<span>{{budgetStatus}}</span>
@@ -171,13 +189,27 @@ export default {
 		},
 		viewOnly: {
 			type: Boolean,
-			default: false,
-			required: true
+			default: false
+		},
+		auditFlag: {
+			type: Boolean,
+			default: false
 		}
 	},
 	data () {
 		return {
-			qualityTarget:[]
+			qualityTarget:[],
+			pageSize: 10,
+			perPageNum: 1,
+			eqPageNum: 1,
+			curPerAllocation: [],
+			curEqAllocation: []
+		}
+	},
+	watch:{
+		planBook: function(newVal){
+			this.curPerAllocation = newVal.personalAllocation.slice(0, this.pageSize);
+			this.curEqAllocation = newVal.equipmentAllocation.slice(0, this.pageSize);
 		}
 	},
 	mounted(){
@@ -189,10 +221,24 @@ export default {
 		});
 	},
 	computed: {
+		perTotalNum: function(){
+			if(this.planBook.personalAllocation){
+				return this.planBook.personalAllocation.length;
+			}
+		},
+		eqTotalNum: function(){
+			if(this.planBook.equipmentAllocation){
+			    return this.planBook.equipmentAllocation.length;				
+		    }
+		},
 	    // 后台传过来的数据规则是： 三个审核字段都会返回，当没审核时，字段值为空对象{}
 	    managerAuditFlag: function(){
-	    	if( !(JSON.stringify(this.planBook.managerAuditRecord) =='{}' || !this.planBook.managerAuditRecord )){
-	    		return true;
+	    	if(this.planBook.managerAuditRecord){
+	    		if( !(JSON.stringify(this.planBook.managerAuditRecord) =='{}' || !this.planBook.managerAuditRecord.remark )){
+	    			return true;
+	    		}else{
+	    			return false;
+	    		}
 	    	}else{
 	    		return false;
 	    	}
@@ -204,12 +250,16 @@ export default {
 	    },
 	    managerStatus: function(){
 	    	if( !(JSON.stringify(this.planBook.managerAuditRecord) =='{}' || !this.planBook.managerAuditRecord )){
-	    		return this.planBook.managerAuditRecord.status == 3?'通过':'不通过';
+	    		return this.planBook.managerAuditRecord.status == 4?'通过':'不通过';
 	    	}
 	    },
 		executeAuditFlag: function(){
-			if(!(JSON.stringify(this.planBook.executeAuditRecord) == '{}' || !this.planBook.executeAuditRecord)){
-				return true;
+			if(this.planBook.executeAuditRecord){
+				if(!(JSON.stringify(this.planBook.executeAuditRecord) == '{}' || !this.planBook.executeAuditRecord.remark )){
+					return true;
+				}else{
+					return false;
+				}
 			}else{
 				return false;
 			}
@@ -225,8 +275,12 @@ export default {
 			}
 		},
 		budgetAuditFlag: function(){
-			if(!(JSON.stringify(this.planBook.budgetAuditRecord) == '{}' || !this.planBook.budgetAuditRecord)){
-				return true;
+			if(this.planBook.budgetAuditRecord){
+				if(!(JSON.stringify(this.planBook.budgetAuditRecord) == '{}' || !this.planBook.budgetAuditRecord.remark)){
+					return true;
+				}else{
+					return false;
+				}
 			}else{
 				return false;
 			}
@@ -243,6 +297,14 @@ export default {
 		}
 	},
 	methods:{
+		perHandleCurChange(val){
+			this.perPageNum = val;
+			this.curPerAllocation = this.planBook.personalAllocation.slice((val -1)*this.pageSize, val*this.pageSize);
+		},
+		eqHandleCurChange(val){
+			this.eqPageNum = val;
+			this.curEqAllocation = this.planBook.equipmentAllocation.slice((val-1)*this.pageSize, val*this.pageSize);
+		},
 		toUpdate(){
 			let params = this.planBook;
 			this.axios.post('/api/planPaper/save', params).then((res) =>{

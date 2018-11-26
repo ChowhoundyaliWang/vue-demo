@@ -18,24 +18,24 @@
 							<el-button type="text" @click="handleModify(scope.$index,scope.row)">修改</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width="200px" show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width="320" show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNumber" label="项目号">
+					<el-table-column prop="projectNumber" label="项目号" width="170" show-overflow-tooltip>
 					</el-table-column>
-					<el-table-column prop="appField" label="应用区域"> 
+					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="creator" label="创建人"> 
+					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间" width='180px' show-overflow-tooltip> 
+					<el-table-column prop="createTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditResult" label="审核结果"> 
 					</el-table-column>
 					<el-table-column prop="auditor" label="审核人"> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='180px' show-overflow-tooltip> 
+					<el-table-column prop="auditTime" label="审核时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div style="width:100%;text-align:center;">
@@ -132,10 +132,7 @@ export default {
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;
-					this.tableData = model.data;
-					this.totalNum = model.totalNum;
-					this.pageNum = model.pageNum;
-					this.pageSize = model.pageSize;
+					this.tableData = model;
 				}
 			});
 		}

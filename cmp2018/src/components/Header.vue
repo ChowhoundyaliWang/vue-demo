@@ -5,15 +5,15 @@
 			<span class="mx-title">{{mxTitle}}</span>
 		</div>
 		<div class="userInfo">
-			<el-dropdown trigger="click">
+			<el-dropdown trigger="click" @command='handleCommand'>
 				<span class="el-dropdown-link name-span">
 					{{userInfo.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
 				</span>
 				<el-dropdown-menu slot="dropdown">
 					<!-- command 指令事件 -->
-					<el-dropdown-item>我的消息</el-dropdown-item>
+					<el-dropdown-item command='viewMessage'>我的消息</el-dropdown-item>
 					<el-dropdown-item>修改密码</el-dropdown-item>
-					<el-dropdown-item><span  @click="logOut()">退出登录</span></el-dropdown-item>
+					<el-dropdown-item command='logOut'>退出登录</el-dropdown-item>
 				</el-dropdown-menu>
 			</el-dropdown>
 		</div>
@@ -36,7 +36,21 @@ export default {
 		this.userInfo = userInfo;
 	},
 	methods:{
+		handleCommand(command){
+			if (command == 'viewMessage') {
+				this.$router.push({
+					name: 'ViewMessage'
+				})
+			};
+			if(command == 'logOut'){
+				this.logOut();
+			}
+		},
+		handleViewMsg(){
+
+		},
 		logOut(){
+			// 退出登录前，关闭右下角通知
 			let token = localStorage.getItem('token');
 			let params = {};
 			params.token = token;
@@ -48,6 +62,7 @@ export default {
                 }else{
                     //请求失败
                     console.log("请求失败");
+                    this.$
                 }
             }).catch((res)=>{
                 //请求异常处理

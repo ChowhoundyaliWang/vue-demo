@@ -36,7 +36,7 @@
 					</el-table-column>
 					<el-table-column prop="createName" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createdOnStr" label="创建时间" width='180px' show-overflow-tooltip> 
+					<el-table-column prop="createdOn" label="创建时间" width='180px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div slot="footer" class="dialog-footer">

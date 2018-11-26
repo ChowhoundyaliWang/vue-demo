@@ -9,7 +9,7 @@
 		</div>
 		<div class="page-content">
 			<el-card class="box-card mb-16 search-page" shadow="always">
-				<search :status='status' :search-url='searchUrl' v-on:tableDataChange='dataChange'></search>
+				<search :status='status' :search-url='searchUrl' :export-show='exportShow' :export-url='exportUrl' v-on:tableDataChange='dataChange'></search>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
 				<el-table :data="tableData.data" stripe border class="mb-16" v-loading='isLoading' element-loading-text='数据加载中...'>
 					<el-table-column prop="operate" label="操作" width="60px" tooltip-effect='dark'> 
@@ -17,24 +17,24 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='220px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNumber" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectNumber" label="项目号" width='170' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="createTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="allocationStatus" label="分配状态" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="allocationName" label="分配人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="allocationTime" label="分配时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="allocationTime" label="分配时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -72,8 +72,10 @@ export default {
 	data () {
 		return {
 			isLoading: true,
+			exportShow: true,
 			status: 3,
 			searchUrl:'/api/task/list',
+			exportUrl: '/api/task/export/allocated',
 			tableData:{
 				data:[],
 				totalNum:0,

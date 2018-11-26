@@ -14,17 +14,17 @@
 				<el-table :data="tableData.data" stripe border class="mb-16">
 					<el-table-column prop="" label="操作" width="60px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
-							<el-button type="text" @click="handleCreate(scope.$index,scope.row)">创建</el-button>
+							<el-button type="text" @click="handleCreate(scope.$index, scope.row)">创建</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='210px'  show-overflow-tooltip></el-table-column>
-					<el-table-column prop="projectNo" label="项目号" width='145px' show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip></el-table-column>
+					<el-table-column prop="projectNo" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="region" label="应用区域" show-overflow-tooltip>
 					</el-table-column>
-					<el-table-column prop="creater" label="会议纪要创建人" show-overflow-tooltip> 
+					<el-table-column prop="creator" label="会议纪要创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createTime" label="会议纪要创建时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="createdTimeStr" label="会议纪要创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -63,7 +63,8 @@ export default {
 		}
 	},
 	mounted (){
-		this.axios.get('/api/projectBudget/list?status=4').then((res)=>{
+		// status 0-未创建
+		this.axios.get('/api/conference/list?status=0').then((res)=>{
 			let data = res.data;
 			if(data.code == 200){
 				let model = data.model;
@@ -76,15 +77,16 @@ export default {
 		dataChange(data){
 			this.tableData = data;
 		},
-		handleCreate(index,row){
-            let curId = row.planPaperId;
+		handleCreate(index, row){
+			const curId = row.managerId;
+			const name = row.projectName;
             this.$router.push({
-            	name:'MeetingSumCreate', params:{ id: curId}
+            	name:'MeetingSumCreate', params:{ id: curId, name: name}
             })
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/task/list?pageNum='+val+'&status=2').then((res)=>{
+			this.axios.get('/api/conference/list?status=0&pageNum='+val).then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;

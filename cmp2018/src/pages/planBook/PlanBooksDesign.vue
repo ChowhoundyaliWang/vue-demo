@@ -27,20 +27,20 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip></el-table-column>
-					<el-table-column prop="projectNumber" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip></el-table-column>
+					<el-table-column prop="projectNumber" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间" width='180px' show-overflow-tooltip> 
+					<el-table-column prop="createTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditor" label="审核人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='180px' show-overflow-tooltip> 
+					<el-table-column prop="auditTime" label="审核时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>

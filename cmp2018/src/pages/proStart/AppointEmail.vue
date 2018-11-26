@@ -20,7 +20,7 @@
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item label="附件">
-						<el-upload action="" ref='upload' :auto-upload="false" :file-list='emailData.fileAddress' disabled  :on-preview='handlePreview'>
+						<el-upload action="111" ref='upload' :auto-upload="false" :file-list='emailData.fileAddress' disabled  :on-preview='handlePreview'>
 							<el-button size="default" type="primary">相关附件</el-button>
 						</el-upload>
 					</el-form-item>

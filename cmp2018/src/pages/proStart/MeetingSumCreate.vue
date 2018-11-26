@@ -12,13 +12,13 @@
 				<h3>会议纪要</h3>
 				<el-form :model='meetingSum' label-width='150px'>
 					<el-form-item label='项目名称'>
-						<span v-text='meetingSum.proName'></span>
+						<span v-text='meetingSum.projectName'></span>
 					</el-form-item>
 					<el-form-item label='备注'>
 						<el-input type='textarea' style='width: 500px;' :rows='5' v-model='meetingSum.remark'></el-input>
 					</el-form-item>
 					<el-form-item label='附件'>
-						<el-upload :action='uploadUrl()' ref='upload' :auto-upload='false' :file-list='fileList' :data='idObj' :before-remove='beforeRemove'>
+						<el-upload action='http://192.168.102.59:5005/api/upload-files' :data='tokenObj' :on-error='uploadFail' :on-success='uploadSuccess' :before-remove="beforeRemove">
 							<el-button size='default' type='primary'>选择文件</el-button>
 						</el-upload>
 					</el-form-item>
@@ -37,25 +37,57 @@ export default {
 	data () {
 		return {
 			meetingSum:{
-				proName:'',
-				remark:''
+				projectName: this.$route.params.name,
+				managerId: this.$route.params.id,
+				imgList: [],
+				remark: ''
 			},
-			fileList:[],
-			idObj:{}
+			tokenObj: {}
 		}
 	},
 	mounted (){
-		
+		this.tokenObj.Authorization = localStorage.getItem('token');
 	},
 	methods:{
-		uploadUrl(){
-			return 'http://163.53.91.130:5005/api/upload-files';
+		beforeRemove(file,fileList){
+			return this.$confirm('确定移除该文件?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(()=>{
+				let url = file.url;
+				let ind = this.meetingSum.imgList.findIndex((val) => val.fileAddress === url)
+				this.meetingSum.imgList.splice(ind, 1);
+			});
 		},
-		beforeRemove(){
-			console.log('table过滤');
+		uploadFail(response, file, fileList){
+			this.$alert('上传出错');
+		},
+		uploadSuccess(response, file, fileList){
+			if(response.code == 200){
+				this.meetingSum.imgList.push(file.response.model[0]);	
+			}
 		},
 		handleSave(){
+			let params = this.meetingSum;
+			this.axios.post('/api/conference/add', params).then((res) => {
+				const data = res.data;
+				const msg = data.message;
+				if(data.code == 200){
+					this.$alert(msg, '提示',{
+						confirmButtonText:'确定',
+						callback: action => {
+							this.$router.push({
+								path:'/MeetingSummaryCreated'
+							});
+						}
+					}).catch(()=>{
 
+					})
+				}else{
+					this.$alert(msg,'错误提示');
+				}
+			})
 		}
 	}
 }

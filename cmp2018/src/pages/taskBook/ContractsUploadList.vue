@@ -19,12 +19,12 @@
 							<el-button type="text" @click="handleDel(scope.$index,scope.row)">删除</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='280px' show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='320px' show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNumber" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectNumber" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="creator" label="项目进度" show-overflow-tooltip> 
 					</el-table-column>

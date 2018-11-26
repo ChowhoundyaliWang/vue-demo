@@ -90,7 +90,7 @@ export default {
 		},
 		//流程图动画效果显示
 		stepsAnimation(steps){
-			console.log(steps);
+			/*console.log(steps);*/
 			let stepsLen = steps.length;
             let waitArr = [] ;  // 哪几步等待中——状态 0
             let finishArr = [];  // 哪几步完成了——状态 1
@@ -136,7 +136,6 @@ export default {
             			while( waitArr.indexOf(index) > -1){
             				index++;
             			}
-					    console.log(index);
 				    }, time );
             	}
             	stepsMove();

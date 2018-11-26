@@ -17,24 +17,24 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip>
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.planPaperId)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNo" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectNo" label="项目号" width='170' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="region" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="createdUser" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createdTime" label="创建时间" width='180px' show-overflow-tooltip> 
+					<el-table-column prop="createdTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditUser" label="审核人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='180px' show-overflow-tooltip> 
+					<el-table-column prop="auditTime" label="审核时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -109,7 +109,7 @@ export default {
 		handleView(index,row){
             let curId = row.planPaperId;
             this.$router.push({
-            	name:'PlanBookView', params:{ id: curId}
+            	name:'PlanBookView', params:{ id: curId, taskId: row.taskId }
             })
 		},
 		viewUpdate(curId){

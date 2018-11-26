@@ -4,16 +4,19 @@
 			<template slot="title" class="menu-title first-title"><i class="el-icon-menu"></i>首页</template>
 			<el-menu-item index="/cmp">我的首页</el-menu-item>
 		</el-submenu>
-		<el-submenu v-for='(menuData, fInd) in menuDatas' :index="fInd+''" :key='fInd' v-show='menuData.id !== 1'>
+		<!-- 三级菜单 -->
+		<el-submenu v-for='(menuData, fInd) in menuDatas' :index="fInd+'3'" :key='fInd' v-show='menuData.id !== 1'>
 			<template slot="title"  class="menu-title"><i :class="menuData.icon"></i>{{menuData.label}}</template>
 			<el-submenu v-for='(menu, sInd) in menuData.children' :index="fInd+'-'+sInd" :key='sInd'>
 				<template slot="title"  class="menu-title">{{menu.label}}</template>
 				<el-menu-item v-for='(child, inInd) in menu.children' :index="'/'+child.address" :key='inInd'>{{child.label}}</el-menu-item>
 			</el-submenu>
 		</el-submenu>
-		<el-submenu index="/99" v-if='adminMenu.id'>
-			<template slot="title"  class="menu-title"><i :class="adminMenu.icon"></i>{{adminMenu.label}}</template>
-			<el-menu-item v-for='(child, aInd) in adminMenu.children' :key='aInd' :index="'/'+child.address">{{child.label}}</el-menu-item>
+
+		<!-- 二级菜单 -->
+		<el-submenu v-for='(data, index) in adminMenu' :index="index+'2'" :key='data.id' v-show='adminMenu.length > 0'>
+			<template slot="title"  class="menu-title"><i :class="data.icon"></i>{{data.label}}</template>
+			<el-menu-item v-for='(child, aInd) in data.children' :key="child.id" :index="'/'+child.address">{{child.label}}</el-menu-item>
 		</el-submenu>
 	</el-menu>
 </template>
@@ -27,7 +30,7 @@ export default {
 			required: true
 		},
 		adminMenu:{
-			type:Object,
+			type:Array,
 			required: true
 		}
 	}

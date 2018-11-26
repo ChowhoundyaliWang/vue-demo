@@ -12,26 +12,26 @@
 				<search :status='status' :search-url='searchUrl' :select-show='selectShow' v-on:tableDataChange='dataChange'></search>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
 				<el-table :data="tableData.data" stripe border class="mb-16" v-loading='isLoading' element-loading-text='数据加载中...'>
-					<el-table-column prop="operate" label="操作" width="100px" tooltip-effect='dark'> 
+					<el-table-column prop="operate" label="操作" width="60px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='220px'  show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip>
 					</el-table-column>
-					<el-table-column prop="projectNo" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectNo" label="项目号" width='170' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="region" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="createdUser" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createdTime" label="创建时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="createdTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditUser" label="审核人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="auditTime" label="审核时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -90,9 +90,9 @@ export default {
 		},
 		// 表格点击查看事件
 		handleView(index,row){
-            let curId = row.id;
+            let curId = row.planPaperId;
             this.$router.push({
-            	name:'TaskBookReceived', params:{ id: curId}
+            	name:'PlanBookView', params:{ id: curId, taskId: row.taskId}
             })
 		},
 		// 翻页 表格当前页码改变触发事件

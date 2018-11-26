@@ -104,13 +104,12 @@ export default{
         		}
         		
         	});
-        	return sums;
+            // index为6时，总计结果保留两位小数
+            sums[6] = Number(sums[6]).toFixed(2);
+            return sums;
         }
 	
         Vue.prototype.stepsAnimation = function( steps, stepHeads, stepTitles){
-                /*let steps = this.steps;
-                let stepHeads = this.$refs.stepHead;
-                let stepTitles = this.$refs.stepTitle;*/
                 let stepsLen = steps.length;
                 let waitArr = [] ;  // 哪几步等待中
                 let finishArr = [];  // 哪几步完成了

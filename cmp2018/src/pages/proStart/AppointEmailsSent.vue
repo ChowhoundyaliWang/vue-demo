@@ -9,7 +9,7 @@
 		</div>
 		<div class="page-content search-page">
 			<el-card class="box-card mb-16" shadow="always">
-				<search :is-adjust='isAdjust' :search-url='searchUrl' v-on:tableDataChange='dataChange'></search>
+				<search :is-adjust='isAdjust' :search-url='searchUrl' :export-show='exportShow' :export-url='exportUrl' v-on:tableDataChange='dataChange'></search>
 				<!-- el-table中定义了height属性，即可实现固定表头的表格 -->
 				<el-table :data="tableData.data" stripe border class="mb-16" v-loading='isLoading' element-loading-text='数据加载中...'>
 					<el-table-column prop="" label="操作" width="100px" tooltip-effect='dark'> 
@@ -18,20 +18,20 @@
 							<el-button type="text" @click="handleSend(scope.row.id)">重发</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='280px'  show-overflow-tooltip></el-table-column>
-					<el-table-column prop="projectNo" label="项目号" width='130px' show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip></el-table-column>
+					<el-table-column prop="projectNo" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createdTime" label="创建时间" width='160px' show-overflow-tooltip> 
+					<el-table-column prop="createdTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="sendStatus" label="发送状态" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="creator" label="发送人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="sendTime" label="发送时间" width='160px' show-overflow-tooltip> 
+					<el-table-column prop="sendTime" label="发送时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -60,8 +60,10 @@ export default {
 	data(){
 		return {
 			isLoading: true,
+			exportShow: true,
 			isAdjust: 1,
 			searchUrl: '/api/manager-paper/list',
+			exportUrl: '/api/manager-paper/export/sent',
 			tableData:{
 				data:[],
 				totalNum:0,

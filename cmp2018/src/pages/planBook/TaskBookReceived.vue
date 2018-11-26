@@ -7,6 +7,7 @@
 				<el-breadcrumb-item>查看项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
+		<steps :procedures = 'procedures'></steps>
 		<task-book  v-bind:tb-infos='tbInfos' v-bind:dept-list='proDeptList' v-bind:manager-list='proManagerList'></task-book>
 		<div class="page-content">
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
@@ -23,14 +24,17 @@
 </template>
 
 <script>
+import steps from '../../components/Steps.vue'
 import TaskBook from '../../components/TaskBook.vue'
 export default {
 	name: 'TaskBookReceived',
 	components: {
+		"steps": steps,
 		"task-book": TaskBook
 	},
 	data () {
 		return {
+			procedures: [],
 			tbInfos:{
 				record:{
 					remark:'',
@@ -40,9 +44,16 @@ export default {
 			proDeptList:[],
 			proManagerList:[],
 			taskId: this.$route.params.id
+
 		}
 	},
 	mounted (){
+		this.$el.parentNode.scrollTop = 0;
+		//获取项目任务书的步骤
+		this.axios.get('/api/task/get/'+ this.taskId).then((res) => {
+			const data = res.data;
+			this.procedures = data.model.procedures;
+		});
 		this.axios.get('/api/pro-dept/list').then((res)=>{
 			const data = res.data;
 			const model = data.model;

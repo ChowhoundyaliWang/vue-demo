@@ -35,6 +35,10 @@ router.beforeEach((to, from, next) =>{
 	}
 })
 
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0);
+})
+
 /* axios请求头带token 拦截 */
 axios.interceptors.request.use(config => {
 	const token = localStorage.getItem('token');

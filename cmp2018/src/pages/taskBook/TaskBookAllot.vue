@@ -7,6 +7,7 @@
 				<el-breadcrumb-item>待分配的项目任务书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
+		<steps :procedures = 'procedures'></steps>
 		<div class="page-content min-w" id="userCreate"> 
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>任务书信息</h3>
@@ -59,7 +60,7 @@
 								<el-option v-for="item in listFifth" :key="item.value" :label="item.value" :value="item.value"></el-option>
 							</el-select>
 						</el-form-item>	
-						<el-form-item label='' v-if="numType == 2">
+						<el-form-item label='' v-if="numType == 2" class='inp-middle'>
 							<el-input v-model='defNumber'></el-input>
 						</el-form-item>
 						<el-form-item label=''>
@@ -138,7 +139,7 @@
 					    </el-form-item>
                     </div>
 					<el-form-item label="相关附件">
-						<el-upload :file-list='tbInfos.files' disabled :on-preview='handlePreview'>
+						<el-upload action='11' :file-list='tbInfos.files' disabled :on-preview='handlePreview'>
 							<el-button size="default" type="primary">选择文件</el-button>
 						</el-upload>
 					</el-form-item>
@@ -146,20 +147,20 @@
                         <span>{{tbInfos.region}}</span>
 					</el-form-item>
 					<el-form-item label="项目执行要求">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand" readOnly='true'></el-input>
+						<el-input type="textarea" :rows='8' style="width:70%;" v-model="tbInfos.proDemand" readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="备注">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark" readOnly='true'></el-input>
+						<el-input type="textarea" :rows='8' style="width:70%;" v-model="tbInfos.proDemandRemark" readOnly='true'></el-input>
 					</el-form-item>
 				</el-form>
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>人力资源</h3>
-				<el-table :data="tbInfos.humanResources" border style="width:80%;" class="mx-table hr-table" show-summary :summary-method="getSummaries">
-					<el-table-column prop="gprs" label="网络制式" width='180'>
+				<el-table :data="tbInfos.humanResources" border style="width:100%;" class="mx-table hr-table" show-summary :summary-method="getSummaries">
+					<el-table-column prop="gprs" label="网络制式">
 							 
 					</el-table-column>
-					<el-table-column prop="scale" label="级别" width='180'>
+					<el-table-column prop="scale" label="级别">
 					    
 					</el-table-column>
 					<el-table-column prop="count" label="数量" width='80'>
@@ -175,17 +176,17 @@
 					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp"></el-date-picker>
 						</template>  
 					</el-table-column>
-					<el-table-column prop="product" label="投入人天">
+					<el-table-column prop="product" label="投入人天" width='80'>
 					</el-table-column>
-					<el-table-column prop="average" label="折合人月">
+					<el-table-column prop="average" label="折合人月" width='80'>
 					</el-table-column>
-					<el-table-column prop="remark" label="备注" width='180'>
+					<el-table-column prop="remark" label="备注" width='100'>
 					</el-table-column>
 				</el-table>
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>车辆资源</h3>
-				<el-table :data="tbInfos.carResources" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.carResources" border style="width:100%;" class="mx-table">
 					<el-table-column prop="scale" label="级别">
 					</el-table-column>
 					<el-table-column prop="count" label="数量">
@@ -198,7 +199,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>固定资产</h3>
-				<el-table :data="tbInfos.fixedAssets" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.fixedAssets" border style="width:100%;" class="mx-table">
 					<el-table-column prop="type" label="设备类型">
 					</el-table-column>
 					<el-table-column prop="count" label="数量">
@@ -211,7 +212,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>低值易耗</h3>
-				<el-table :data="tbInfos.lowExpend" border style="width:80%;" class="mx-table">
+				<el-table :data="tbInfos.lowExpend" border style="width:100%;" class="mx-table">
 					<el-table-column prop="type" label="设备类型">
 					</el-table-column>
 					<el-table-column prop="count" label="数量">
@@ -222,7 +223,7 @@
 					</el-table-column>
 				</el-table>
 			</el-card>
-			<el-card class="box-card mb-16 inp-middle" shadow="always">
+			<el-card class="box-card mb-16 inp-normal" shadow="always">
 				<h3>项目执行</h3>
 				<el-form label-width="150px">
 					<el-form-item label="项目执行主体">
@@ -249,7 +250,7 @@
 				<h3>任务书审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='tbInfos.record.remark' readOnly='true' style="width: 40%;"></el-input>
+						<el-input type='textarea' :rows='4' v-model='tbInfos.record.remark' readOnly='true' style="width: 70%;"></el-input>
 					</el-form-item>
 					<el-form-item label="审核结果">
 						<span v-text="tbInfos.record.status == 2?'通过':'不通过'"></span>
@@ -261,10 +262,15 @@
 </template>
 
 <script>
+import steps from '../../components/Steps.vue'
 export default {
 	name: 'TaskBookAllot',
+	components: {
+		"steps": steps
+	},
 	data () {
 		return {
+			procedures: [],
 			chooseNum:true,
 			tbInfos:{
 				record:{
@@ -302,6 +308,7 @@ export default {
 			if(data.code == 200){
 				let model = data.model;
 				this.tbInfos = model;
+				this.procedures = model.procedures;
 				this.axios.get('/api/pro-management/list',{params:{'id': this.tbInfos.proExecuteSubject}}).then((res)=>{
 			       const data = res.data;
 			       const model = data.model;
@@ -358,11 +365,16 @@ export default {
 				let list = [];
 				for(let i=0;i<model.length;i++){
 					let obj={};
-					obj.value = model[i];
+					let cur = model[i] + '';
+					if(cur.length == 1){
+						cur = '00' + cur;
+					}else if(cur.length == 2){
+						cur = '0' + cur;
+					}
+					obj.value = cur;
 					list.push(obj)
 				}
 				this.listFifth = list;
-				console.log(this.listFifth)
 			});
 		},		
 		getSummaries(param){
@@ -371,11 +383,11 @@ export default {
 		handleAllot(){
 			let params = {};
 			params.id = this.taskId;
-			if(this.chooseNum == 1){
+			if(this.numType == 1){
 				let proNumber = this.proNumber;
 				params.projectNumber = proNumber.num1 +'-'+ proNumber.num2 +proNumber.num3+'-'+proNumber.num4+'-'+proNumber.num5;
-			}else if(this.chooseNum == 2){
-				params.projectNumber = defNumber;
+			}else if(this.numType == 2){
+				params.projectNumber = this.defNumber;
 			}
 			this.axios.post('/api/program/number/allocation',params).then((res)=>{
                 const data = res.data;

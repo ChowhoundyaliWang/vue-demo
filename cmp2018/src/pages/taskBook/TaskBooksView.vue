@@ -17,24 +17,24 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='280px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNumber" label="项目号" width='130px' show-overflow-tooltip>
+					<el-table-column prop="projectNumber" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间" width='160px' show-overflow-tooltip> 
+					<el-table-column prop="createTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditor" label="审核人" width='60' show-overflow-tooltip> 
+					<el-table-column prop="auditor" label="审核人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='160px' show-overflow-tooltip> 
+					<el-table-column prop="auditTime" label="审核时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -50,7 +50,6 @@
 					</div>
 				</div>
 			</el-card>
-
 			<record-dialog></record-dialog>
 			<task-contrast></task-contrast>
 		</div>

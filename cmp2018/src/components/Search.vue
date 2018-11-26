@@ -1,16 +1,16 @@
 <template>
-	<div>
+	<div class="mx-tool-bar mb-16">
 		<!-- 按条件搜索图表 -->
-		<el-col class="mx-tool-bar mb-16">
+		<el-col :span='20'>
 			<el-form :inline="true">
-				<el-form-item label='开始时间：' v-show='!isBudget'>
+				<el-form-item label='开始时间：' v-if='!isBudget'>
 					<el-date-picker v-model='searchData.startTime' type='date' placeholder='选择开始时间' format='yyyy-MM-dd' value-format='yyyy-MM-dd'></el-date-picker>
 				</el-form-item>
-				<el-form-item label='结束时间：' v-show='!isBudget'>
+				<el-form-item label='结束时间：' v-if='!isBudget'>
 					<el-date-picker v-model='searchData.endTime' type='date' placeholder='选择结束时间' format='yyyy-MM-dd' value-format='yyyy-MM-dd'></el-date-picker>
 				</el-form-item>
 				<br>
-				<el-form-item label='应用区域：' v-show='!isBudget'>
+				<el-form-item label='应用区域：' v-if='!isBudget'>
 					<el-input v-model='searchData.appField' placeholder=""></el-input>
 				</el-form-item>&nbsp;
 				<el-form-item label='关 键 字：'>
@@ -22,8 +22,16 @@
 						<el-option value='5' label='不通过'></el-option>
 					</el-select>
 				</el-form-item>
+			</el-form>
+		</el-col>
+		<el-col :span='4'>
+			<el-form :inline="true">
 				<el-form-item>
-					<el-button type="primary" @click="doFilter" icon="el-icon-search">查询</el-button>
+					<el-button type="primary" @click="doExport" icon="el-icon-document" v-if='exportShow'>导出</el-button>
+				</el-form-item>
+				<br>
+				<el-form-item :class='{mt40: !exportShow}'>
+			        <el-button type="primary" @click="doFilter" icon="el-icon-search">查询</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
@@ -43,10 +51,16 @@ export default {
 		isAdjust: Number,  
 		searchUrl: String,
 		selectShow: Boolean,
+		exportShow:{
+			type: Boolean,
+			default: false
+		},
+		exportUrl: String,
 		isBudget: Boolean
 	},
 	data(){
 		return {
+			url: 'http://39.105.14.188:5005',
 			searchData:{
 				startTime:"",
 				endTime:"",
@@ -66,10 +80,20 @@ export default {
 					this.$emit('tableDataChange', model);
 				}
 			});
+		},
+		doExport(){
+			let url = this.url + this.exportUrl;
+			let aLink = document.createElement('a');
+			aLink.style.display = 'none';
+			aLink.href = url;
+			document.body.appendChild(aLink);
+			aLink.click();
+			document.body.removeChild(aLink);
 		}
 	}
 }
 </script>
 
 <style scoped>
+.aColor{ color: #ffffff; }
 </style>

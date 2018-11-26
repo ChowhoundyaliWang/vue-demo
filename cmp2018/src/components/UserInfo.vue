@@ -9,7 +9,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item label="用户名"> 
-						<el-input v-model="userData.userName" readOnly></el-input>
+						<el-input v-model="userData.userName" readOnly style='width: 200px;'></el-input>
 					</el-form-item>
 					<el-form-item label="姓名"> 
 						<el-input v-model="userData.name" :readOnly='isDisabled'></el-input>
@@ -137,7 +137,8 @@ export default {
 				const data = res.data;
 				const model = data.model;
 				if(model.dutyIds && model.dutyIds.length > 0){
-					if(model.dutyIds.indexOf(1) > -1){
+					//销售ID为11，销售总监ID为21
+					if(model.dutyIds.indexOf(11) > -1 || model.dutyIds.indexOf(21) > -1){
 						this.regionShowFlag = true;
 					}
 					if(model.dutyIds.indexOf(13) > -1 || model.dutyIds.indexOf(14) > -1){
@@ -147,11 +148,15 @@ export default {
 				this.userData = model;
 			});
 		},
-		handleNodeClick(data, node, obj){
-			// 点击节点时回调
-			/*console.log(data);
-			console.log(node);
-			console.log(obj);*/
+		addMenu(addArr){
+			let newMenu = new Set(this.userData.pramsList.concat(addArr));
+			this.$refs.authTree.setCheckedKeys(newMenu);
+		},
+		cancleMenu(cancleArr){
+			let newMenu = this.userData.pramsList.filter((val) => { 
+				return cancleArr.indexOf(val) < 0;
+			})
+			this.$refs.authTree.setCheckedKeys(newMenu);
 		},
 		handleCheckChange(data, checked, indeterminate){
 			//节点选中状态发生变化时的回调
@@ -159,27 +164,103 @@ export default {
 			// checked —— 节点本身是否被选中
 			// indeterminate —— 节点的子树中是否有被选中的节点
 			
-			//销售ID为11
-			/*if(data.id == 11 && checked){
+			let dutyKeys = this.$refs.dutyTree.getCheckedKeys();
+			//销售ID为11，销售总监ID为23
+			if( dutyKeys.indexOf(11) > -1 || dutyKeys.indexOf(23) > -1 ){
 				this.regionShowFlag = true;
 			}
-			if(data.id == 11 && !checked){
+			if( dutyKeys.indexOf(11) < 0 && dutyKeys.indexOf(23) < 0 ){
 				this.regionShowFlag = false;
 			}
-
-			// 项目执行中心ID为3
-			if(data.id == 3 && this.deptShowFlag){
-				this.deptShowFlag = false;
-			}
-			if(data.id == 3 && !this.deptShowFlag){
+			// 执行TLID为13，执行部门经理ID为14
+			if( dutyKeys.indexOf(13) > -1 || dutyKeys.indexOf(14) > -1 ){
 				this.deptShowFlag = true;
 			}
+			if( dutyKeys.indexOf(13) < 0 && dutyKeys.indexOf(14) < 0 ){
+				this.deptShowFlag = false;
+			}
 
-			//总经理ID为18
-			if(data.id == 18 && checked){
-				let arrId = [1,94,9,41,42,18,67,68];
-				this.$refs.authTree.setCheckedKeys(arrId, true);
-			}*/
+            //销售 11
+			if(data.id == 11 ){
+				const idArr = [33,34,35,36,100,101,104,105,97,99];
+				if(checked){
+				    this.addMenu(idArr);
+				}else{
+                    this.cancleMenu(idArr);
+				}
+			}
+			//总监 23 
+            if(data.id == 23){
+            	const idArr = [33,34,35,36,100,101,104,105,38,97,99];
+				if(checked){
+				    this.addMenu(idArr);
+				}else{
+                    this.cancleMenu(idArr)
+				}
+			}
+			//运作 12
+			 if(data.id == 12){
+            	const idArr = [43,95,73,74,10,21];
+				if(checked){
+				    this.addMenu(idArr);
+				}else{
+                    this.cancleMenu(idArr)
+				}
+			}
+			//综合查询 20
+
+			//执行TL 13
+			if(data.id == 13){
+            	const idArr = [47,48,54,55,56,57,69,72,75,76,19,22];
+				if(checked){
+				    this.addMenu(idArr);
+				}else{
+                    this.cancleMenu(idArr)
+				}
+			}
+			//执行部门经理 14
+			if(data.id == 14){
+            	const idArr = [39,47,48,49,12,55,56,57,59,60,63,64,65,66,69,72,75,76,17,19,22];
+				if(checked){
+				    this.addMenu(idArr);
+				}else{
+                    this.cancleMenu(idArr)
+				}
+			}
+
+			//人力 15
+
+			//副总 16
+
+			//执行副总 17
+			if(data.id == 17){
+            	const idArr = [61,62];
+				if(checked){
+				    this.addMenu(idArr);
+				}else{
+                    this.cancleMenu(idArr)
+				}
+			}
+			//总经理 18
+			if(data.id == 18){
+            	const idArr = [41,42,67 ,68,102,103,9,18,98];
+				if(checked){
+				    this.addMenu(idArr);
+				}else{
+                    this.cancleMenu(idArr)
+				}
+			}
+
+			//管理员 19
+			if(data.id == 19){
+            	const idArr = [31,6];
+				if(checked){
+				    this.addMenu(idArr);
+				}else{
+                    this.cancleMenu(idArr)
+				}
+			}
+
 		},
 		editUser(){
 			this.userData.type = parseInt(this.userData.type);

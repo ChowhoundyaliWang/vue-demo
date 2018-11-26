@@ -14,23 +14,23 @@
 				<el-table :data="tableData.data" stripe border class="mb-16" v-loading='isLoading' element-loading-text='数据加载中...'>
 					<el-table-column prop="operate" label="操作" width="60px" tooltip-effect='dark'> 
 						<template slot-scope="scope">
-							<el-button type="text" @click="handleAudit(scope.$index,scope.row)">审核</el-button>
+							<el-button type="text" @click="handleAudit(scope.row.planPaperId, scope.row.taskId)">审核</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='220px'  show-overflow-tooltip></el-table-column>
-					<el-table-column prop="projectNo" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip></el-table-column>
+					<el-table-column prop="projectNo" label="项目号" width='170' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="region" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="createdUser" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createdTime" label="创建时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="createdTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditUser" label="审核人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="auditTime" label="审核时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -88,10 +88,9 @@ export default {
 			this.tableData = data;
 		},
 		// 表格点击查看事件
-		handleAudit(index,row){
-            let curId = row.planPaperId;
+		handleAudit(curId, taskId){
             this.$router.push({
-            	name:'PlanBookManagerAudit', params:{ id: curId }
+            	name:'PlanBookManagerAudit', params:{ id: curId, taskId: taskId }
             })
 		},
 		// 翻页 表格当前页码改变触发事件

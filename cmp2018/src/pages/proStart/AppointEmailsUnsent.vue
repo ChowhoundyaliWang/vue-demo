@@ -17,20 +17,20 @@
 							<el-button type="text" @click="handleSend(scope.$index,scope.row)">发送</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='210px'  show-overflow-tooltip></el-table-column>
-					<el-table-column prop="projectNo" label="项目号" width='145px' show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip></el-table-column>
+					<el-table-column prop="projectNo" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createdTime" label="创建时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="createdTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="sendStatus" label="发送状态" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="creator" label="发送人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="sendTime" label="发送时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="sendTime" label="发送时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>

@@ -17,12 +17,12 @@
 							<el-button type="text" @click="handleApprove(scope.$index,scope.row)">审批</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='210px'  show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip>
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.planPaperId)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNo" label="项目号" width='145px' show-overflow-tooltip>
+					<el-table-column prop="projectNo" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="region" label="应用区域" show-overflow-tooltip>
 					</el-table-column>
@@ -30,7 +30,7 @@
 					</el-table-column>
 					<el-table-column prop="budgetSubmitter" label="预算提交人" width='100px' show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="budgetCommitTime" label="提交时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="budgetCommitTime" label="提交时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="contractBill" label="合同金额" show-overflow-tooltip> 
 					</el-table-column>
@@ -44,7 +44,7 @@
 					</el-table-column>
 					<el-table-column prop="budgetAuditor" label="审批人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="budgetAuditTime" label="审批时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="budgetAuditTime" label="审批时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -119,7 +119,7 @@ export default {
 		handleApprove(index,row){
             let curId = row.planPaperId;
             this.$router.push({
-            	name:'ProBudgetApprove', params:{ id: curId, budgetId: row.projectBudgetId}
+            	name:'ProBudgetApprove', params:{ id: curId, budgetId: row.projectBudgetId, taskId: row.taskId }
             })
 		},
 		viewUpdate(curId){

@@ -7,13 +7,14 @@
 				<el-breadcrumb-item>待审核的项目计划书</el-breadcrumb-item>
 			</el-breadcrumb>
 		</div>
+		<steps :procedures = 'procedures'></steps>
 		<plan-book  v-bind:plan-book='planBook' :view-only='viewOnly'></plan-book>
 		<div class="page-content">
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
 				<h3>计划书审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='remark' style="width:40%;"></el-input>
+						<el-input type='textarea' :rows='8' v-model='remark' style="width:70%;"></el-input>
 					</el-form-item>
 					<el-form-item label=" "> 
 						<el-button type="primary" @click="pass" class="fl" icon="el-icon-circle-check-outline">通过</el-button>
@@ -26,22 +27,31 @@
 </template>
 
 <script>
+import steps from '../../components/Steps.vue'
 import PlanBook from '../../components/PlanBook.vue'
 export default {
 	name: 'PlanBookManagerAudit',
 	components: {
+		"steps": steps,
 		"plan-book": PlanBook
 	},
 	data () {
 		return {
+			procedures: [],
 			planBook:{},
 			viewOnly: true,
 			curId: this.$route.params.id,
-			type: 1,
+			taskId: this.$route.params.taskId,
+			type: 2,
 			remark:''
 		}
 	},
 	mounted (){
+		//获取项目任务书的步骤
+		this.axios.get('/api/task/get/'+ this.taskId).then((res) => {
+			const data = res.data;
+			this.procedures = data.model.procedures;
+		}),
 		this.axios.get('/api/planPaper/get/'+ this.curId).then((res)=>{
 			const data = res.data;
 			if(data.code == 200){

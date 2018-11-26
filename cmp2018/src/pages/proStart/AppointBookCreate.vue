@@ -21,7 +21,7 @@
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>项目经理</h3>
-				<el-table :data="appointBook.proManagerTable" border style="width:80%;" class="mx-table tb-inp">
+				<el-table :data="appointBook.proManagerTable" border class="mx-table tb-inp">
 					<el-table-column prop="status" label="状态" width='110px'>
 					    <template slot-scope="scope">
 							<el-select placeholder="请选择" v-model="scope.row.status" @change='statusChange'>
@@ -29,7 +29,7 @@
 							</el-select>
 						</template>	
 					</el-table-column>
-					<el-table-column prop="empNumber" label="员工号">
+					<el-table-column prop="empNumber" label="员工号" width='170'>
 					    <template slot-scope='scope'>
 							<el-input v-model='scope.row.empNumber'></el-input>
 						</template> 
@@ -58,12 +58,12 @@
 							<el-input v-model='scope.row.email'></el-input>
 						</template>  
 					</el-table-column>
-					<el-table-column prop="startTime" label="任命开始时间">
+					<el-table-column prop="startTime" label="任命开始时间" width='180'>
 					    <template slot-scope='scope'>
 							<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd'></el-date-picker>
 						</template>  
 					</el-table-column>
-					<el-table-column prop="endTime" label="任命结束时间">
+					<el-table-column prop="endTime" label="任命结束时间" width='180'>
 					    <template slot-scope='scope'>
 							<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' v-bind:disabled='scope.row.status'></el-date-picker>
 						</template>  
@@ -74,7 +74,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<div style="margin-top:20px;width:80%;height:40px;position:relative;">
+				<div style="margin-top:20px;width:100%;height:40px;position:relative;">
 					<div style="position:absolute;top:0;right:0;">
 					    <el-button @click="addRow" type="success" class="el-icon-plus">添加</el-button>
 					</div>
@@ -83,21 +83,21 @@
 			<el-card class="box-card mb-16 inp-middle" shadow="always">
 				<h3>其他信息</h3>
 				<el-form label-width="120px">
-					<el-form-item label="个人简历">
+					<!-- <el-form-item label="个人简历">
 						<el-input v-model='appointBook.resume'></el-input>
-					</el-form-item>
+					</el-form-item> -->
 					<el-form-item label="预计工期">
 						<el-date-picker v-model="appointBook.expectedTime" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" disabled>
 						</el-date-picker>
 					</el-form-item>
 					<el-form-item label="工作内容">
-						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workContent'></el-input>
+						<el-input type='textarea' :rows='8' style="width: 70%;" v-model='appointBook.workContent'></el-input>
 					</el-form-item>
 					<el-form-item label="工作界面">
-						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workspace'></el-input>
+						<el-input type='textarea' :rows='8' style="width: 70%;" v-model='appointBook.workspace'></el-input>
 					</el-form-item>
 					<el-form-item label="备注">
-						<el-input type='textarea' :rows='4' style="width: 40%;" v-model='appointBook.workRemark'></el-input>
+						<el-input type='textarea' :rows='8' style="width: 70%;" v-model='appointBook.workRemark'></el-input>
 					</el-form-item>
 					<el-form-item label="发送给">
 						<el-input readOnly='true' v-model='appointBook.sendToUser'></el-input>
@@ -140,6 +140,7 @@ export default {
 		}
 	},
 	mounted (){
+		this.$el.parentNode.scrollTop = 0;
 		this.axios.get('/api/planPaper/get-name/'+ this.appointBook.taskId).then((res)=>{
 			const data = res.data;
 			if(data.code == 200){
@@ -173,7 +174,7 @@ export default {
 				const data = res.data;   
 				const msg = data.message;
 				if(data.code == 200){
-					this.$alert("审核成功！",'提示',{
+					this.$alert("创建成功！",'提示',{
 						confirmButtonText:'确定',
 						callback: action => {
 							this.$router.push({

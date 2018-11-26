@@ -27,12 +27,12 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">接收</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNumber" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectNumber" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="creator" label="反馈人" show-overflow-tooltip> 
 					</el-table-column>

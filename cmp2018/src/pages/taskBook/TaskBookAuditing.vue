@@ -14,7 +14,7 @@
 				<h3>任务书审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='remark' style="width:40%;"></el-input>
+						<el-input type='textarea' :rows='8' v-model='remark' style="width:70%;"></el-input>
 					</el-form-item>
 					<el-form-item label=" "> 
 						<el-button type="primary" @click="pass" class="fl" icon="el-icon-circle-check-outline">通过</el-button>
@@ -41,7 +41,8 @@ export default {
 				record:{
 					remark:'',
 					status:''
-				}
+				},
+				executeCycle: []
 			},
 			procedures:[],
 			proDeptList:[],

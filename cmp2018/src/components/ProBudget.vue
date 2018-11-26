@@ -1,7 +1,7 @@
 <template>
 		<div class="page-content min-w" id="userCreate"> 
 			<el-card class="box-card mb-16" shadow="always">
-				<h3>提交预算</h3>
+				<h3>项目预算</h3>
 				<el-form :model="planBook" label-width="150px">
 					<el-form-item label="项目名称">
 						<span>{{planBook.projectName}}</span>
@@ -13,15 +13,15 @@
 						<span>{{planBook.contractBillChinesize}}</span>
 					</el-form-item>	
 					<el-form-item label='人力成本'>
-						<el-input v-model='planBook.humanCost' :readOnly='viewOnly'></el-input>
+						<el-input v-model='planBook.humanCost' :readOnly='viewOnly' type='number'></el-input>
 						<span class="text-gr">{{ humanPer }}</span>
 					</el-form-item>
 					<el-form-item label='车辆成本'>
-						<el-input v-model='planBook.carCost' :readOnly='viewOnly'></el-input>
+						<el-input v-model='planBook.carCost' :readOnly='viewOnly' type='number'></el-input>
 						<span class='text-gr'>{{ carPer }}</span>
 					</el-form-item>
 					<el-form-item label='其他费用'>
-						<el-input v-model='planBook.otherCost' :readOnly='viewOnly'></el-input>
+						<el-input v-model='planBook.otherCost' :readOnly='viewOnly' type='number'></el-input>
 						<span class='text-gr'>{{ otherPer }}</span>
 					</el-form-item>
 					<el-form-item label='' v-if='!viewOnly'>
@@ -75,10 +75,18 @@ export default {
 		handleUpdate(){
 			this.axios.post('/api/projectBudget/save', this.planBook).then((res)=>{
 				const data = res.data;
+				const msg = data.message;
 				if(data.code == 200){
-					this.$alert(data.message, '提示');
+					this.$alert(msg,'提示',{
+						confirmButtonText:'确定',
+						callback: action => {
+							this.$router.push({
+								path:'/ProBudgetSumbitted'
+							});
+						}
+					})
 				}else{
-					this.$alert( data.message, '错误提示');
+					this.$alert(msg, '错误提示');
 				}
 			})
 		}

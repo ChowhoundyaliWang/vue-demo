@@ -17,8 +17,8 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">查看</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='210px'  show-overflow-tooltip></el-table-column>
-					<el-table-column prop="projectNo" label="项目号" width='145px' show-overflow-tooltip>
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip></el-table-column>
+					<el-table-column prop="projectNo" label="项目号" width='170px' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="region" label="应用区域" show-overflow-tooltip>
 					</el-table-column>
@@ -26,7 +26,7 @@
 					</el-table-column>
 					<el-table-column prop="budgetSubmitter" label="预算提交人" width='100px' show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="budgetCommitTime" label="提交时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="budgetCommitTime" label="提交时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="contractBill" label="合同金额" show-overflow-tooltip> 
 					</el-table-column>
@@ -40,7 +40,7 @@
 					</el-table-column>
 					<el-table-column prop="budgetAuditor" label="审批人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="budgetAuditTime" label="审批时间" width='170px' show-overflow-tooltip> 
+					<el-table-column prop="budgetAuditTime" label="审批时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -69,7 +69,7 @@ export default {
 	data () {
 		return {
 			isLoading: true,
-			status:5,
+			status:6,
 			searchUrl: '/api/projectBudget/list',
 			tableData:{
 				data:[],
@@ -80,7 +80,7 @@ export default {
 		}
 	},
 	mounted (){
-		this.axios.get('/api/projectBudget/list?status=5').then((res)=>{
+		this.axios.get('/api/projectBudget/list?status=6').then((res)=>{
 			const data = res.data;
 			if(data.code == 200){
 				const model = data.model;
@@ -98,14 +98,14 @@ export default {
 		},
 		// 表格点击查看事件
 		handleView(index,row){
-            let curId = row.planPaperId;
+            let curId = row.managerPaperId;
             this.$router.push({
             	name:'AppointBookView', params:{ id: curId}
             })
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/projectBudget/list?pageNum='+val+'&status=5').then((res)=>{
+			this.axios.get('/api/projectBudget/list?pageNum='+val+'&status=6').then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;

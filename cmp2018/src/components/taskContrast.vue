@@ -33,7 +33,7 @@
 							<el-form-item label="用户名称" :class="{ changed: one.userName !== another.userName}">
 								<span>{{one.userName}}</span>
 							</el-form-item>
-							<el-form-item label="合同名称" class="inp-long" v-show="one.type !== 3"  :class="{ changed: one.contractName !== another.contractName}">
+							<el-form-item label="合同名称" class="inp-middle" v-show="one.type !== 3"  :class="{ changed: one.contractName !== another.contractName}">
 								<el-input v-model="one.contractName"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="项目负责人" v-if="one.type==3" :class="{ changed: one.projectManager !== another.projectManager}">
@@ -86,7 +86,7 @@
 							<el-form-item label="合同金额大写" :class="{ changed: one.contractBillChinesize !== another.contractBillChinesize}">
 								<span>{{one.contractBillChinesize}}</span>
 							</el-form-item>
-							<el-form-item label="金额备注" class="inp-long" :class="{ changed: one.contractBillRemark !== another.contractBillRemark}">
+							<el-form-item label="金额备注" class="inp-middle" :class="{ changed: one.contractBillRemark !== another.contractBillRemark}">
 								<el-input v-model="one.contractBillRemark"  readOnly='true'></el-input>
 							</el-form-item>
 							<div  v-if=" one.billType == 2&&one.type==3">
@@ -110,30 +110,38 @@
 								<span>{{one.region}}</span>
 							</el-form-item>
 							<el-form-item label="项目执行要求" :class="{ changed: one.proDemand !== another.proDemand}">
-								<el-input type="textarea" style="width:400px;" v-model="one.proDemand" readOnly='true'></el-input>
+								<el-input type="textarea" :rows='8' style="width:70%;" v-model="one.proDemand" readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="备注" :class="{ changed: one.proDemandRemark !== another.proDemandRemark}">
-								<el-input type="textarea" style="width:400px;" v-model="one.proDemandRemark" readOnly='true'></el-input>
+								<el-input type="textarea" :rows='8' style="width:70%;" v-model="one.proDemandRemark" readOnly='true'></el-input>
 							</el-form-item>
 						</el-form>
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(one.humanResources )!== JSON.stringify(another.humanResources)}">人力资源</h3>
 						<el-table :data="one.humanResources" border style="width:100%;" class="mx-table hr-table" show-summary :summary-method="getSummaries">
-							<el-table-column prop="gprs" label="网络制式">
+							<el-table-column label="网络制式" width='110'>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.gprs !== "其他（自定义）"' v-text='scope.row.gprs'></span>
+									<span v-show='scope.row.gprs == "其他（自定义）"' v-text='scope.row.gprDefined'></span>
+								</template>
 							</el-table-column>
-							<el-table-column prop="scale" label="级别">
+							<el-table-column label="级别" width='100'>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.scale !== "其他（自定义）"' v-text='scope.row.scale'></span>
+									<span v-show='scope.row.scale == "其他（自定义）"' v-text='scope.row.scaleDefined'></span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="count" label="数量" width='50'>
 							</el-table-column>
-							<el-table-column prop="startTime" label="开始日期" width='160'>
+							<el-table-column prop="startTime" label="开始日期" width='180'>
 								<template slot-scope="scope">
-									<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp" class='date-inp'></el-date-picker>
+									<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp" class='inp-normal'></el-date-picker>
 								</template> 
 							</el-table-column>
-							<el-table-column prop="endTime" label="结束日期" width='160'>
+							<el-table-column prop="endTime" label="结束日期" width='180'>
 								<template slot-scope="scope">
-									<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp" class='date-inp'></el-date-picker>
+									<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp" class='inp-normal'></el-date-picker>
 								</template>  
 							</el-table-column>
 							<el-table-column prop="product" label="投入人天" width='60'> 
@@ -147,7 +155,11 @@
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(one.carResources )!== JSON.stringify(another.carResources)}">车辆资源</h3>
 						<el-table :data="one.carResources" border style="width:100%;" class="mx-table">
-							<el-table-column prop="scale" label="级别">
+							<el-table-column label="级别" width='180'>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.scale !== "其他（自定义）"' v-text='scope.row.scale'></span>
+									<span v-show='scope.row.scale == "其他（自定义）"' v-text='scope.row.scaleDefined'></span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
 							</el-table-column>
@@ -160,7 +172,11 @@
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(one.fixedAssets )!== JSON.stringify(another.fixedAssets)}">固定资产</h3>
 						<el-table :data="one.fixedAssets" border style="width:100%;" class="mx-table">
-							<el-table-column prop="type" label="设备类型">
+							<el-table-column label="设备类型" width='180' show-overflow-tooltip>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.type !== "其他（自定义）"' v-text='scope.row.type'></span>
+									<span v-show='scope.row.type == "其他（自定义）"' v-text='scope.row.typeDefined'></span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
 							</el-table-column>
@@ -173,7 +189,11 @@
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(one.lowExpend )!== JSON.stringify(another.lowExpend)}">低值易耗</h3>
 						<el-table :data="one.lowExpend" border style="width:100%;" class="mx-table">
-							<el-table-column prop="type" label="设备类型">
+							<el-table-column label="设备类型" width='180' show-overflow-tooltip>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.type !== "其他（自定义）"' v-text='scope.row.type'></span>
+									<span v-show='scope.row.type == "其他（自定义）"' v-text='scope.row.typeDefined'></span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
 							</el-table-column>
@@ -183,18 +203,19 @@
 							</el-table-column>
 						</el-table>
 					</el-card>
-					<el-card class="box-card mb-16 inp-middle" shadow="always">
+					<el-card class="box-card mb-16 inp-normal" shadow="always">
 						<h3>项目执行</h3>
 						<el-form label-width="150px">
 							<el-form-item label="项目执行主体"  :class="{ changed: one.proExecuteSubject !== another.proExecuteSubject}">
-								<el-select placeholder="请选择" style="width:300px;" v-model="one.proExecuteSubject" disabled>
+								<el-select placeholder="请选择" v-model="one.proExecuteSubject" disabled>
 									<el-option v-for="item in deptList" :key="item.id" :label="item.name" :value="item.id"></el-option>
 								</el-select>
 							</el-form-item>
 							<el-form-item label="具体执行人"  :class="{ changed: one.proExecutePeople !== another.proExecutePeople}">
-								<el-select placeholder="请选择" style="width:300px;" v-model='one.proExecutePeople' disabled>
+								<!-- <el-select placeholder="请选择" v-model='one.proExecutePeople' disabled>
 									<el-option v-for="item in managerList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-								</el-select>
+								</el-select> -->
+								<span>{{managerList}}</span>
 							</el-form-item>
 						</el-form>
 					</el-card>
@@ -242,7 +263,7 @@
 							<el-form-item label="用户名称" :class="{ changed: one.userName !== another.userName}">
 								<span>{{another.userName}}</span>
 							</el-form-item>
-							<el-form-item label="合同名称" class="inp-long" v-show="another.type !== 3" :class="{ changed: one.contractName !== another.contractName}">
+							<el-form-item label="合同名称" class="inp-middle" v-show="another.type !== 3" :class="{ changed: one.contractName !== another.contractName}">
 								<el-input v-model="another.contractName"  readOnly='true'></el-input>
 							</el-form-item>
 							<el-form-item label="项目负责人" v-if="another.type==3" :class="{ changed: one.projectManager !== another.projectManager}">
@@ -295,7 +316,7 @@
 							<el-form-item label="合同金额大写" :class="{ changed: one.contractBillChinesize !== another.contractBillChinesize}">
 								<span>{{another.contractBillChinesize}}</span>
 							</el-form-item>
-							<el-form-item label="金额备注" class="inp-long" :class="{ changed: one.contractBillRemark !== another.contractBillRemark}">
+							<el-form-item label="金额备注" class="inp-middle" :class="{ changed: one.contractBillRemark !== another.contractBillRemark}">
 								<el-input v-model="another.contractBillRemark"  readOnly='true'></el-input>
 							</el-form-item>
 							<div  v-if=" another.billType == 2&&another.type==3">
@@ -319,30 +340,38 @@
 								<span>{{another.region}}</span>
 							</el-form-item>
 							<el-form-item label="项目执行要求" :class="{ changed: one.proDemand !== another.proDemand}">
-								<el-input type="textarea" style="width:400px;" v-model="another.proDemand" readOnly='true'></el-input>
+								<el-input type="textarea" :rows='8' style="width:70%;" v-model="another.proDemand" readOnly='true'></el-input>
 							</el-form-item>
-							<el-form-item label="备注" :class="{ changed: one.proDemandRemark !== another.proDemandRemark}">
-								<el-input type="textarea" style="width:400px;" v-model="another.proDemandRemark" readOnly='true'></el-input>
+							<el-form-item label="备注" :rows='8' :class="{ changed: one.proDemandRemark !== another.proDemandRemark}">
+								<el-input type="textarea" :rows='8' style="width:70%;" v-model="another.proDemandRemark" readOnly='true'></el-input>
 							</el-form-item>
 						</el-form>
 					</el-card>
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(one.humanResources )!== JSON.stringify(another.humanResources)}">人力资源</h3>
 						<el-table :data="another.humanResources" border style="width:100%;" class="mx-table hr-table" show-summary :summary-method="getSummaries">
-							<el-table-column prop="gprs" label="网络制式">
+							<el-table-column label="网络制式" width='110'>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.gprs !== "其他（自定义）"' v-text='scope.row.gprs'></span>
+									<span v-show='scope.row.gprs == "其他（自定义）"' v-text='scope.row.gprDefined'></span>
+								</template>
 							</el-table-column>
-							<el-table-column prop="scale" label="级别">
+							<el-table-column label="级别" width='100'>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.scale !== "其他（自定义）"' v-text='scope.row.scale'></span>
+									<span v-show='scope.row.scale == "其他（自定义）"' v-text='scope.row.scaleDefined'></span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="count" label="数量" width='50'>
 							</el-table-column>
-							<el-table-column prop="startTime" label="开始日期" width='160'>
+							<el-table-column prop="startTime" label="开始日期" width='180'>
 								<template slot-scope="scope">
-									<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp" class='date-inp'></el-date-picker>
+									<el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp" class='inp-normal'></el-date-picker>
 								</template> 
 							</el-table-column>
-							<el-table-column prop="endTime" label="结束日期" width='160'>
+							<el-table-column prop="endTime" label="结束日期" width='180'>
 								<template slot-scope="scope">
-									<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp" class='date-inp'></el-date-picker>
+									<el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp" class='inp-normal'></el-date-picker>
 								</template>  
 							</el-table-column>
 							<el-table-column prop="product" label="投入人天" width='60'> 
@@ -356,7 +385,11 @@
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(one.carResources )!== JSON.stringify(another.carResources)}">车辆资源</h3>
 						<el-table :data="another.carResources" border style="width:100%;" class="mx-table">
-							<el-table-column prop="scale" label="级别">
+							<el-table-column label="级别" width='180'>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.scale !== "其他（自定义）"' v-text='scope.row.scale'></span>
+									<span v-show='scope.row.scale == "其他（自定义）"' v-text='scope.row.scaleDefined'></span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
 							</el-table-column>
@@ -369,7 +402,11 @@
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(one.fixedAssets )!== JSON.stringify(another.fixedAssets)}">固定资产</h3>
 						<el-table :data="another.fixedAssets" border style="width:100%;" class="mx-table">
-							<el-table-column prop="type" label="设备类型">
+							<el-table-column label="设备类型" width='180' show-overflow-tooltip>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.type !== "其他（自定义）"' v-text='scope.row.type'></span>
+									<span v-show='scope.row.type == "其他（自定义）"' v-text='scope.row.typeDefined'></span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
 							</el-table-column>
@@ -382,7 +419,11 @@
 					<el-card class="box-card mb-16" shadow="always">
 						<h3 :class="{ red: JSON.stringify(one.lowExpend )!== JSON.stringify(another.lowExpend)}">低值易耗</h3>
 						<el-table :data="another.lowExpend" border style="width:100%;" class="mx-table">
-							<el-table-column prop="type" label="设备类型">
+							<el-table-column label="设备类型" width='180' show-overflow-tooltip>
+								<template slot-scope='scope'>
+									<span v-show='scope.row.type !== "其他（自定义）"' v-text='scope.row.type'></span>
+									<span v-show='scope.row.type == "其他（自定义）"' v-text='scope.row.typeDefined'></span>
+								</template>
 							</el-table-column>
 							<el-table-column prop="count" label="数量">
 							</el-table-column>
@@ -392,7 +433,7 @@
 							</el-table-column>
 						</el-table>
 					</el-card>
-					<el-card class="box-card mb-16 inp-middle" shadow="always">
+					<el-card class="box-card mb-16 inp-normal" shadow="always">
 						<h3>项目执行</h3>
 						<el-form label-width="150px">
 							<el-form-item label="项目执行主体" :class="{ changed: one.proExecuteSubject !== another.proExecuteSubject}">
@@ -401,9 +442,10 @@
 								</el-select>
 							</el-form-item>
 							<el-form-item label="具体执行人" :class="{ changed: one.proExecutePeople !== another.proExecutePeople}">
-								<el-select placeholder="请选择" style="width:300px;" v-model='another.proExecutePeople' disabled>
+								<!-- <el-select placeholder="请选择" v-model='another.proExecutePeople' disabled>
 									<el-option v-for="item in anoManager" :key="item.id" :label="item.name" :value="item.id"></el-option>
-								</el-select>
+								</el-select> -->
+								<span v-text='anoManager'></span>
 							</el-form-item>
 						</el-form>
 					</el-card>
@@ -465,7 +507,10 @@ export default {
 				this.axios.get('/api/pro-management/list',{params:{'id': this.one.proExecuteSubject}}).then((res)=>{
 					const data = res.data;
 					const model = data.model;
-					return model;
+					let name = model.filter((val)=>{
+						return val.id == this.another.proExecutePeople;
+					})[0].name;
+					return name;
 				}); 
 			}
 		},
@@ -474,7 +519,10 @@ export default {
 				this.axios.get('/api/pro-management/list',{params:{'id': this.another.proExecuteSubject}}).then((res)=>{
 					const data = res.data;
 					const model = data.model;
-					return model;
+					let name = model.filter((val)=>{
+						return val.id == this.another.proExecutePeople;
+					})[0].name;
+					return name;
 				}); 
 			}
 		}

@@ -17,24 +17,24 @@
 							<el-button type="text" @click="handleView(scope.$index,scope.row)">接收</el-button>
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectName" label="项目名称" width='200px'  show-overflow-tooltip> 
+					<el-table-column prop="projectName" label="项目名称" width='320px'  show-overflow-tooltip> 
 						<template slot-scope='scope'>
 							<span v-if="scope.row.updated">【<el-button type="text" v-on:click="viewUpdate(scope.row.id)">更新记录</el-button>】</span>{{scope.row.projectName}}
 						</template>
 					</el-table-column>
-					<el-table-column prop="projectNumber" label="项目号" show-overflow-tooltip>
+					<el-table-column prop="projectNumber" label="项目号" width='170' show-overflow-tooltip>
 					</el-table-column>
 					<el-table-column prop="appField" label="应用区域" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="creator" label="创建人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="createTime" label="创建时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditResult" label="审核结果" show-overflow-tooltip> 
 					</el-table-column>
 					<el-table-column prop="auditor" label="审核人" show-overflow-tooltip> 
 					</el-table-column>
-					<el-table-column prop="auditTime" label="审核时间" width='200px' show-overflow-tooltip> 
+					<el-table-column prop="auditTime" label="审核时间" width='165px' show-overflow-tooltip> 
 					</el-table-column>
 				</el-table>
 				<div>
@@ -86,7 +86,7 @@ export default {
 	},
 	mounted (){
 		// 0-待接收；1-已接收；2-TL已接收
-		this.axios.get('/api/planPaper/task/list?status=0').then((res)=>{
+		this.axios.get(this.searchUrl + '?status=0').then((res)=>{
 			const data = res.data;
 			if(data.code == 200){
 				const model = data.model;
@@ -95,11 +95,6 @@ export default {
 				this.$alert(data.message, '错误提示');
 			}
 			this.isLoading = false;
-		});
-		this.axios.get('/api/pro-dept/list').then((res)=>{
-			const data = res.data;
-			const model = data.model;
-			this.proDeptList = model;
 		});
 	},
 	methods:{
@@ -142,7 +137,7 @@ export default {
 		},
 		// 翻页 表格当前页码改变触发事件
 		handleCurrentChange(val){
-			this.axios.get('/api/planPaper/task/list?pageNum='+ val +'&status=' + this.status).then((res)=>{
+			this.axios.get(this.searchUrl + '?pageNum='+ val +'&status=' + this.status).then((res)=>{
 				let data = res.data;
 				if(data.code == 200){
 					let model = data.model;

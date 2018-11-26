@@ -1,8 +1,8 @@
 <template>
-		<div class="page-content min-w" id="userCreate"> 
+		<div class="page-content min-w"> 
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>任务书信息</h3>
-				<el-form :model="tbInfos" label-width="150px">
+				<el-form :model="tbInfos" label-width="150px" id="userCreate">
 					<el-form-item label="项目类型">
 						<el-radio-group v-model="tbInfos.type">
 							<el-radio :label="1" disabled>厂家</el-radio>
@@ -100,7 +100,7 @@
 					    </el-form-item>
                     </div>
 					<el-form-item label="相关附件">
-						<el-upload action='' :file-list='tbInfos.files' disabled :on-preview='handlePreview'>
+						<el-upload action='11' :file-list='tbInfos.files' disabled :on-preview='handlePreview'>
 							<el-button size="default" type="primary">选择文件</el-button>
 							<div slot="tip" class="el-upload__tip">文件大小不超过5M</div>
 						</el-upload>
@@ -109,49 +109,58 @@
                         <span>{{tbInfos.region}}</span>
 					</el-form-item>
 					<el-form-item label="项目执行要求">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemand" readOnly='true'></el-input>
+						<el-input type="textarea" :rows='8' style="width:70%;" v-model="tbInfos.proDemand" readOnly='true'></el-input>
 					</el-form-item>
 					<el-form-item label="备注">
-						<el-input type="textarea" style="width:400px;" v-model="tbInfos.proDemandRemark" readOnly='true'></el-input>
+						<el-input type="textarea" :rows='8' style="width:70%;" v-model="tbInfos.proDemandRemark" readOnly='true'></el-input>
 					</el-form-item>
 				</el-form>
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>人力资源</h3>
 				<el-table :data="tbInfos.humanResources" border class="mx-table hr-table" show-summary :summary-method="getSummaries">
-					<el-table-column prop="gprs" label="网络制式">
-							 
+					<el-table-column label="网络制式">
+						<template slot-scope='scope'>
+							<span v-show='scope.row.gprs !== "其他（自定义）"' v-text='scope.row.gprs'></span>
+							<span v-show='scope.row.gprs == "其他（自定义）"' v-text='scope.row.gprDefined'></span>
+						</template>
 					</el-table-column>
-					<el-table-column prop="scale" label="级别" width='150'>
-					    
+					<el-table-column label="级别">
+					    <template slot-scope='scope'>
+							<span v-show='scope.row.scale !== "其他（自定义）"' v-text='scope.row.scale'></span>
+							<span v-show='scope.row.scale == "其他（自定义）"' v-text='scope.row.scaleDefined'></span>
+						</template>
 					</el-table-column>
 					<el-table-column prop="count" label="数量" width='80'>
-					    
 					</el-table-column>
 					<el-table-column prop="startTime" label="开始日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp" class='date-inp'></el-date-picker>
+					         <el-date-picker v-model='scope.row.startTime' type='date' placeholder="开始日期" disabled value-format="timestamp" class='inp-normal'></el-date-picker>
 						</template> 
 					</el-table-column>
 					<el-table-column prop="endTime" label="结束日期" width='180'>
 					    <template slot-scope="scope">
-					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp" class='date-inp'></el-date-picker>
+					         <el-date-picker v-model='scope.row.endTime' type='date' placeholder="结束日期" disabled value-format="timestamp" class='inp-normal'></el-date-picker>
 						</template>  
 					</el-table-column>
 					<el-table-column prop="product" label="投入人天" width='80'>
 					</el-table-column>
 					<el-table-column prop="average" label="折合人月" width='80'>
 					</el-table-column>
-					<el-table-column prop="remark" label="备注" width='180'>
+					<el-table-column prop="remark" label="备注" width='100'>
 					</el-table-column>
 				</el-table>
 			</el-card>
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>车辆资源</h3>
 				<el-table :data="tbInfos.carResources" border class="mx-table">
-					<el-table-column prop="scale" label="级别">
+					<el-table-column label="级别">
+						<template slot-scope='scope'>
+							<span v-show='scope.row.scale !== "其他（自定义）"' v-text='scope.row.scale'></span>
+							<span v-show='scope.row.scale == "其他（自定义）"' v-text='scope.row.scaleDefined'></span>
+						</template>
 					</el-table-column>
-					<el-table-column prop="count" label="数量">
+					<el-table-column prop="count" label="数量" width='80'>
 					</el-table-column>
 					<el-table-column prop="month" label="参与工期（月）"> 
 					</el-table-column>
@@ -162,9 +171,13 @@
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>固定资产</h3>
 				<el-table :data="tbInfos.fixedAssets" border class="mx-table">
-					<el-table-column prop="type" label="设备类型">
+					<el-table-column label="设备类型">
+						<template slot-scope='scope'>
+							<span v-show='scope.row.type !== "其他（自定义）"' v-text='scope.row.type'></span>
+							<span v-show='scope.row.type == "其他（自定义）"' v-text='scope.row.typeDefined'></span>
+						</template>
 					</el-table-column>
-					<el-table-column prop="count" label="数量">
+					<el-table-column prop="count" label="数量" width='80'>
 					</el-table-column>
 					<el-table-column prop="month" label="参与工期（月）">
 					</el-table-column>
@@ -175,9 +188,13 @@
 			<el-card class="box-card mb-16" shadow="always">
 				<h3>低值易耗</h3>
 				<el-table :data="tbInfos.lowExpend" border class="mx-table">
-					<el-table-column prop="type" label="设备类型">
+					<el-table-column label="设备类型">
+						<template slot-scope='scope'>
+							<span v-show='scope.row.type !== "其他（自定义）"' v-text='scope.row.type'></span>
+							<span v-show='scope.row.type == "其他（自定义）"' v-text='scope.row.typeDefined'></span>
+						</template>
 					</el-table-column>
-					<el-table-column prop="count" label="数量">
+					<el-table-column prop="count" label="数量" width='80'>
 					</el-table-column>
 					<el-table-column prop="month" label="参与工期（月）">
 					</el-table-column>
@@ -212,7 +229,7 @@
 				<h3>任务书审核</h3>
 				<el-form label-width="150px">
 					<el-form-item label="审核意见">
-						<el-input type='textarea' :rows='4' v-model='tbInfos.record.remark' readOnly='true' style="width: 40%;"></el-input>
+						<el-input type='textarea' :rows='8' v-model='tbInfos.record.remark' readOnly='true' style="width: 70%;"></el-input>
 					</el-form-item>
 					<el-form-item label="审核结果">
 						<span v-text="tbInfos.record.status == 2?'通过':'不通过'"></span>
