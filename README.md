@@ -3,7 +3,6 @@ yali's first vue demo.
 
 #技术栈
 vue2.x+vue-router+axios+elementUI+vuex+webpack
-前后端分离
 
 #项目介绍
 
