@@ -8,5 +8,4 @@ vue2.x+vue-router+axios+elementUI+vuex+webpack
 
 项目流程控制平台。
 ![image](/images/steps.png)
-![image](/images/cmp.png)
 
